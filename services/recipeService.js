@@ -66,7 +66,8 @@ const RecipeService = {
 			console.log(error);
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
-	}
+	},
+	getRecipeById: id => Recipe.getRecipeById(id)
 };
 
 module.exports = RecipeService;
