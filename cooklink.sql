@@ -40,4 +40,4 @@ CREATE table contiene (
   PRIMARY KEY (id_receta, id_ingrediente),
   CONSTRAINT fk_receta_contiene FOREIGN KEY (id_receta) REFERENCES recetas(id) ON DELETE CASCADE,
   CONSTRAINT fk_ingrediente_contiene FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
-)
+);
