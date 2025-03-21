@@ -42,8 +42,6 @@ INSERT INTO ingredientes (nombre, tipoUnidad) VALUES
   ("Sal", "gramos"),
   ("Ajo", "gramos");
 
-
-
 INSERT INTO recetas (nombre, descripcion) VALUES
   ("Pizza Margherita", "Deliciosa pizza con tomate, mozzarella y albahaca."),
   ("Spaghetti Carbonara", "Pasta con huevo, queso, panceta y pimienta negra."),
