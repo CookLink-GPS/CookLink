@@ -3,6 +3,7 @@ const Contains = require("../models/containsModel");
 const Pantry = require("../models/pantryModel");
 const Recipe = require("../models/recipeModel");
 const AppError = require("../utils/AppError");
+const { stringComparator } = require("../utils/stringFunctions");
 
 /**
  *
@@ -45,7 +46,7 @@ const RecipeService = {
 
 			const recipesWithIngredients = await Promise.all(allRecipes.map(async ({ id: recipeId, nombre, descripcion }) => {
 				const ingredients = await Contains.getFromRecipe(recipeId);
-				return { recipeId, nombre, descripcion, ingredients };
+				return { id: recipeId, nombre, descripcion, ingredients };
 			}));
 
 			return recipesWithIngredients.filter(({ ingredients }) => {
@@ -59,7 +60,7 @@ const RecipeService = {
 				});
 
 				return ok;
-			}).map(({ recipeId, nombre, descripcion }) => ({ id: recipeId, nombre, descripcion }));
+			}).toSorted(({ nombre: nameA }, { nombre: nameB }) => stringComparator(nameA, nameB));
 		}
 		catch (error) {
 			console.log(error);
