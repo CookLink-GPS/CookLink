@@ -23,12 +23,23 @@
                 <h1 class="display-4">Lista de recetas</h1>
             </div>
         </div>
+        <% if (recipes.length===0) { %>
+            <div class="d-flex justify-content-center">
+                <div class="card w-50">
+                    <div class="card-body">
+                        <p class="text-center">No hay recetas disponibles para hacer en este momento.</p>
+                    </div>
+                </div>
+            </div>
+            <% } else { %>
 
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            <% recipes.forEach((recipe)=> { %>
-                <%- include("fragments/recipe-card", { recipe }) %>
-                    <% }); %>
-        </div>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <% recipes.forEach((recipe)=> { %>
+                        <%- include("fragments/recipe-card", { recipe }) %>
+                            <% }); %>
+                </div>
+
+                <% } %>
     </div>
 
     <div>

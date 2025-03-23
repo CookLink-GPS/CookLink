@@ -1,17 +1,25 @@
 const db = require("../config/database");
-const { recipeQuerys } = require("../config/querys");
+const { recipeQueries } = require("../config/querys");
 
+/**
+ *
+ * @typedef Recipe
+ * @property {Number} id
+ * @property {String} nombre
+ * @property {String} descripcion
+ *
+ */
 const Recipe = {
-
 	/**
      * Returns  all recipes from the database
-     *
      * @async
-     * @returns {Promise<Array<Recipe>>}
+     * @returns {Promise<Recipe[]>}
      */
 	async getAllRecipes() {
 		try {
-			return await db.query(recipeQuerys.getAllRecipes);
+			const result = await db.query(recipeQueries.getAllRecipes);
+
+			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
 			console.log(error);
