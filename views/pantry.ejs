@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Despensa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/img/Logo.ico" type="image/x-icon">
+</head>
+<body class="bg-light">
+    <!-- NavBar -->
+    <div>
+        <%- include("fragments/nav") %>
+    </div>
+
+    <div class="container content text-center py-5">
+        <h1 class="mb-4 p-3 text-white rounded">Mi Despensa</h1>
+
+        <!-- Tabla de ingredientes -->
+        <div class="table-responsive">
+            <table class="table shadow-sm" style="background-color: #EBD4C3; border: 2px solid #A25E4B;">
+                <thead style="background-color: #8C4A3D; color: #EBD4C3;">
+                    <tr>
+                        <th>ID Ingrediente</th>
+                        <th>Cantidad</th>
+                        <th>Fecha de Caducidad</th>
+                        <th>Remover</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (ingredients.length > 0) { %>
+                        <% ingredients.forEach(ingredient => { %>
+                            <tr>
+                                <td><%= ingredient.id_ingrediente %></td>
+                                <td><%= ingredient.cantidad || "N/A" %> unidades</td>
+                                <td><%= ingredient.caducidad || "No disponible" %></td>
+                                <td>
+                                    <form action="/pantry/delete/<%= ingredient.id_ingrediente %>" method="POST">
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No tienes ingredientes en la despensa.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Botón de Volver -->
+        <a href="/" class="btn btn-custom btn-lg m-2">Volver</a>
+    </div>
+
+    <!-- Footer -->
+    <div>
+        <%- include("fragments/footer") %>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
