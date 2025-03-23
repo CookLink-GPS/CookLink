@@ -2,6 +2,7 @@
 const db = require("../config/database");
 const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
+const { inciarSesion } = require("../services/userService");
 
 const nombreTabla = "usuarios";
 
@@ -78,6 +79,10 @@ const User = {
 			console.log(error);
 			throw new Error("Error al eliminar el usuario");
 		}
+	},
+
+	inciarSesion: async({username, password}) => {
+		return 1;
 	}
 };
 module.exports = User;
