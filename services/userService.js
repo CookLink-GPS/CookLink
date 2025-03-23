@@ -41,7 +41,10 @@ const UserService = {
 	 * @param {number} id - ID del usuario a eliminar.
 	 * @returns {Promise<Object>} - Devuelve el resultado de la operación de eliminación.
 	 */
-	deleteUser: id => User.delete(id)
+	deleteUser: id => User.delete(id),
+	inciarSesion: async user =>{
+		return 1;
+	}
 };
 
 module.exports = UserService;

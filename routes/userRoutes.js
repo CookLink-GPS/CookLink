@@ -8,7 +8,7 @@ const { badRequest } = require("../config/httpcodes");
 
 // /users
 router.get("/", userController.getAllUsers);
-
+router.get("/login", userController.toLogin);
 router.get("/registro", userController.toRegistro);
 
 /**
@@ -37,7 +37,7 @@ router.post(
 
 // /users/create
 router.post("/create", userController.createUser);
-
+router.post("/login", userController.inciarSesion)
 router.delete("/delete/:id", userController.deleteUser);
 
 

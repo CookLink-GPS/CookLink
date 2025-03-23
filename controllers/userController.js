@@ -39,6 +39,18 @@ exports.createUser = async (req, res, next) => {
 	}
 };
 
+exports.inciarSesion = async (req, res, next) => {
+	try {
+		const { name } = req.body;
+		await UserService.inciarSesion(name);
+		res.redirect("/users");
+	}
+	catch (err) {
+		next(err);
+
+	}
+};
+
 /**
  * Redirige a la página de registro de usuario.
  *
@@ -54,6 +66,16 @@ exports.toRegistro = (req, res, next) => {
 		next(err);
 	}
 };
+
+exports.toLogin = (req, res, next) => {
+	try {
+		renderView(res, "login", ok);
+	}
+	catch (err) {
+		next(err);
+	}
+};
+
 
 /**
  * Registra un nuevo usuario en la base de datos y muestra mensajes de éxito o error según el resultado.
