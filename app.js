@@ -6,6 +6,7 @@ const app = express();
 const errorHandler = require("./middlewares/errorHandler");
 const loadRoutes = require("./config/routes");
 const config = require("./config/config");
+const userSession = require("./middlewares/userSession"); // Importa el middleware
 const logRoutes = require("./middlewares/logRoutes"); // Importa el middleware
 
 // Middleware para parsear JSON y datos de formularios
@@ -14,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware para mostrar las rutas por consola
 app.use(logRoutes);
-
+app.use(userSession);
 
 // Configurar Express y motor de vistas
 app.set("view engine", "ejs");

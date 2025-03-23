@@ -1,0 +1,58 @@
+INSERT INTO usuarios (username, password) VALUES ("dummy", "dummy");
+
+INSERT INTO ingredientes (nombre, tipoUnidad) VALUES
+  ("Harina", "gramos"),
+  ("Tomate", "unidades"),
+  ("Mozzarella", "gramos"),
+  ("Albahaca", "unidades"),
+  ("Aceite de Oliva", "mililitros"),
+  ("Pasta", "gramos"),
+  ("Huevo", "unidades"),
+  ("Panceta", "gramos"),
+  ("Queso Pecorino", "gramos"),
+  ("Pimienta Negra", "gramos"),
+  ("Lechuga", "gramos"),
+  ("Crutones", "gramos"),
+  ("Aderezo César", "mililitros"),
+  ("Queso Parmesano", "gramos"),
+  ("Pollo", "gramos"),
+  ("Tortilla", "unidades"),
+  ("Cerdo", "gramos"),
+  ("Piña", "gramos"),
+  ("Cebolla", "unidades"),
+  ("Cilantro", "gramos"),
+  ("Arroz", "gramos"),
+  ("Alga Nori", "unidades"),
+  ("Pescado", "gramos"),
+  ("Aguacate", "unidades"),
+  ("Pepino", "gramos"),
+  ("Pan", "unidades"),
+  ("Carne de Res", "gramos"),
+  ("Queso Cheddar", "gramos"),
+  ("Pasta de Lasagna", "gramos"),
+  ("Salsa Boloñesa", "gramos"),
+  ("Queso Ricotta", "gramos"),
+  ("Bechamel", "gramos"),
+  ("Camarón", "unidades"),
+  ("Limón", "unidades"),
+  ("Berenjena", "gramos"),
+  ("Calabacín", "gramos"),
+  ("Pimiento", "gramos"),
+  ("Chimichurri", "mililitros"),
+  ("Sal", "gramos"),
+  ("Ajo", "gramos");
+
+
+
+INSERT INTO recetas (nombre, descripcion) VALUES
+  ("Pizza Margherita", "Deliciosa pizza con tomate, mozzarella y albahaca."),
+  ("Spaghetti Carbonara", "Pasta con huevo, queso, panceta y pimienta negra."),
+  ("Ensalada César", "Lechuga romana, crutones y aderezo César."),
+  ("Tacos al Pastor", "Tortilla con cerdo marinado y piña."),
+  ("Sushi Roll", "Arroz, alga nori y pescado fresco en rollo."),
+  ("Hamburguesa Clásica", "Carne de res, lechuga, tomate y pan brioche."),
+  ("Lasagna Boloñesa", "Capas de pasta con salsa boloñesa y bechamel."),
+  ("Ceviche de Camarón", "Camarones marinados en limón con cebolla y cilantro."),
+  ("Ratatouille", "Guiso de verduras con berenjena, calabacín y tomate."),
+  ("Churrasco Argentino", "Carne asada con chimichurri.");
+

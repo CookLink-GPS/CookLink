@@ -6,7 +6,7 @@ const { saltRounds } = require("../config/config");
 const nombreTabla = "usuarios";
 
 const User = {
-	
+
 	/**
 	 * Obtiene todos los registros de la tabla de usuarios.
 	 *

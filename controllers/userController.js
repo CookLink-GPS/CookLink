@@ -72,12 +72,13 @@ exports.registroUser = async (req, res) => {
 		console.log(req.body);
 
 		await UserService.registroUser(req.body);
-		renderView(res, "registro", ok, { mensajeExito: "Usuario registrado correctamente." });
+		res.redirect("/inicio");
 
 	}
 	catch (err) {
 		console.error("Error al crear usuario:", err.message);
 
+		// eslint-disable-next-line no-warning-comments
 		// CHECK este if seguramente sobre
 		if (err.status === conflict) {
 			console.log("Error details2: ", JSON.stringify(errors.array(), null));
