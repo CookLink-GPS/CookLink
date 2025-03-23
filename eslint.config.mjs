@@ -79,7 +79,12 @@ export default [
 			"semi-spacing": "error",
 			"semi-style": "error",
 			"space-before-blocks": "error",
-			"space-before-function-paren": "error",
+			"space-before-function-paren": [
+				"error", {
+					"named": "never",
+					"asyncArrow": "always"
+				}
+			],
 			"spaced-comment": "error",
 			"arrow-body-style": "error",
 			"arrow-parens": [ "error", "as-needed" ],
