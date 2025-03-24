@@ -82,6 +82,23 @@
                 </div>
             </div>
         </div>
+
+        <!-- Formulario para iniciar sesion -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Agregar Nuevo Usuario</h5>
+                        <form action="/users/iniciar" method="POST">
+                            <div class="mb-3">
+                                <input type="text" name="name" class="form-control" placeholder="Nombre" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <a href="/">Volver a la Página Principal</a>
         <%- include("fragments/footer") %>
 </body>

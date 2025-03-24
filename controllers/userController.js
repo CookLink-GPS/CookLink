@@ -41,8 +41,8 @@ exports.createUser = async (req, res, next) => {
 
 exports.inciarSesion = async (req, res, next) => {
 	try {
-		const { name } = req.body;
-		await UserService.inciarSesion(name);
+		const { username, password } = req.body;
+		await UserService.inciarSesion({ username, password });
 		res.redirect("/users");
 	}
 	catch (err) {

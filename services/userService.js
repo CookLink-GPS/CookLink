@@ -1,6 +1,7 @@
-const { badRequest, conflict } = require("../config/httpcodes");
+const { badRequest, conflict, unauthorized } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
+const Session = require("express-session");
 
 const UserService = {
 	/**
@@ -42,8 +43,16 @@ const UserService = {
 	 * @returns {Promise<Object>} - Devuelve el resultado de la operación de eliminación.
 	 */
 	deleteUser: id => User.delete(id),
-	inciarSesion: async user =>{
-		return 1;
+
+	inciarSesion: async user => {
+		if (!user.username) throw new AppError("Falta el nombre de usuario", badRequest);
+		if (!user.password) throw new AppError("Falta la contraseña", badRequest);
+
+		const valido = await User.inicio(user);
+
+		if (!valido) throw new AppError("Usuario o contraseña incorrectos", unauthorized);
+
+
 	}
 };
 

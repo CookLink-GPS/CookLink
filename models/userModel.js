@@ -2,7 +2,6 @@
 const db = require("../config/database");
 const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
-const { inciarSesion } = require("../services/userService");
 
 const nombreTabla = "usuarios";
 
@@ -81,8 +80,17 @@ const User = {
 		}
 	},
 
-	inciarSesion: async({username, password}) => {
-		return 1;
+	inicio: async ({ username, password }) => {
+		try {
+			const [ usuarioDB ] = await db.query(`SELECT username,password from ${nombreTabla} where username = ?`, [ username ]);
+			return await bcrypt.compare(password, usuarioDB.password);
+		}
+		catch (error) {
+			console.log(error);
+			throw new Error("Error al iniciar sesion");
+		}
+
+
 	}
 };
 module.exports = User;
