@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
 const { userQueries } = require("../config/queries");
 
+const nombreTabla = "usuarios";
+
 /**
  *
  * @typedef User
@@ -81,6 +83,19 @@ const User = {
 		catch (error) {
 			throw new Error("Error al eliminar el usuario");
 		}
+	},
+
+	inicio: async ({ username, password }) => {
+		try {
+			const [ usuarioDB ] = await db.query(`SELECT username,password from ${nombreTabla} where username = ?`, [ username ]);
+			return await bcrypt.compare(password, usuarioDB.password);
+		}
+		catch (error) {
+			console.log(error);
+			throw new Error("Error al iniciar sesion");
+		}
+
+
 	}
 };
 
