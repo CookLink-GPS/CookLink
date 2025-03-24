@@ -1,7 +1,7 @@
 const { badRequest, conflict, unauthorized } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
-const Session = require("express-session");
+// Const Session = require("express-session");
 
 const UserService = {
 	/**
@@ -51,7 +51,6 @@ const UserService = {
 		const valido = await User.inicio(user);
 
 		if (!valido) throw new AppError("Usuario o contraseña incorrectos", unauthorized);
-
 
 	}
 };

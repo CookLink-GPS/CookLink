@@ -3,7 +3,6 @@ DROP TABLE ingredientes;
 DROP TABLE recetas;
 DROP TABLE despensa;
 DROP TABLE contiene;
-DROP TABLE sesiones;
 
 CREATE TABLE usuarios (
   id int AUTO_INCREMENT PRIMARY KEY,
@@ -41,13 +40,4 @@ CREATE table contiene (
   PRIMARY KEY (id_receta, id_ingrediente),
   CONSTRAINT fk_receta FOREIGN KEY (id_receta) REFERENCES recetas(id) ON DELETE CASCADE,
   CONSTRAINT fk_ingrediente FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
-);
-
-CREATE TABLE sesiones (
-  id VARCHAR(128) PRIMARY KEY,         
-  usuario_id INT NULL,              
-  datos TEXT NOT NULL,             
-  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  fecha_expiracion TIMESTAMP NOT NULL, 
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+)
