@@ -10,4 +10,6 @@ router.get("/", ingredientController.toIngredient);
 
 router.post("/add", ingredientController.addIngredient);
 
+router.post("/filter", ingredientController.filterIngredients);
+
 module.exports = router;
