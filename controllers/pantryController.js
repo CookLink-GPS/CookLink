@@ -9,8 +9,6 @@ const pantryService = require("../services/pantryService");
  * @param {HTTPResponse} res
  */
 exports.getDespensa = async (req, res) => {
-	// TODO pasar id del usuario actual
-	// eslint-disable-next-line no-magic-numbers
-	const ingredients = await pantryService.getIngredientsDetails(13);
+	const ingredients = await pantryService.getIngredientsDetails(req.session.user.id);
 	renderView(res, "despensa", ok, { ingredients });
 };
