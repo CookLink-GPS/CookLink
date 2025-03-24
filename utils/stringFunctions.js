@@ -19,6 +19,7 @@ const stringComparator = (a, b) => {
  * @param {String} text
  * @returns {String}
  */
-const removeAccents = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const removeAccents = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+	.trim();
 
 module.exports = { stringComparator, removeAccents };

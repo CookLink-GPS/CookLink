@@ -1,6 +1,7 @@
 const { badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
+const { removeAccents } = require("../utils/stringFunctions");
 
 const IngredientService = {
 
@@ -26,8 +27,18 @@ const IngredientService = {
 		// }
 
 		return Ingredient.add(ingredient);
-	}
+	},
 
+	filterIngredients: async filter => {
+		if (!filter) throw new AppError("Falta el nombre del ingrediente", badRequest);
+		const ingredients = await Ingredient.getAllIngredients();
+		const normalizedFilter = removeAccents(filter.toLowerCase());
+
+		return ingredients.filter(item => {
+			const text = removeAccents(item.name.toLowerCase());
+			return text.startsWith(normalizedFilter);
+		});
+	}
 
 };
 

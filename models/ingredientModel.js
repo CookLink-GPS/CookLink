@@ -14,9 +14,21 @@ const Ingredient = {
 			throw Error("Error al agregar ingrediente");
 		}
 
+	},
+
+	getAllIngredients: async () => {
+		try {
+			const sql = `SELECT * FROM ${nombreTabla}`;
+			return await db.query(sql);
+		}
+		catch (error) {
+			console.log(error);
+			throw Error("Error al obtener los ingredientes");
+		}
 	}
 
 };
+
 module.exports = Ingredient;
 
 // Tabla base datos
