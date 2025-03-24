@@ -52,8 +52,8 @@ const Ingredient = {
 			return ingredient;
 		}
 		catch (error) {
-			console.log("Error");
-			throw new Error(`Error obteniendo el ingrediente ${id}`);
+			console.log(error);
+			throw Error("Error al obtener los ingredientes");
 		}
 	}
 };
