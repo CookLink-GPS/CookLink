@@ -30,12 +30,14 @@ const IngredientService = {
 	},
 
 	filterIngredients: async filter => {
-		if (!filter) throw new AppError("Falta el nombre del ingrediente", badRequest);
+		if (!filter) filter = "";
+		console.log(filter);
 		const ingredients = await Ingredient.getAllIngredients();
 		const normalizedFilter = removeAccents(filter.toLowerCase());
+		console.log(ingredients);
 
 		return ingredients.filter(item => {
-			const text = removeAccents(item.name.toLowerCase());
+			const text = removeAccents(item.nombre.toLowerCase());
 			return text.startsWith(normalizedFilter);
 		});
 	}

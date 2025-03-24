@@ -34,10 +34,14 @@ exports.addIngredient = async (req, res) => {
 
 exports.filterIngredients = async (req, res) => {
 	try {
-		const ingredientes = await ingredientService.filterIngredients(req.body.filter);
+		console.log("A");
+		const ingredientes = await ingredientService.filterIngredients(req.params.filter);
+
+		console.log(ingredientes);
 		res.json({ ingredientes });
 	}
 	catch (err) {
+		console.log(err);
 		res.json({ mensajeError: "Error al filtrar los ingredientes" });
 	}
 };

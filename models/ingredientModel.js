@@ -19,7 +19,9 @@ const Ingredient = {
 	getAllIngredients: async () => {
 		try {
 			const sql = `SELECT * FROM ${nombreTabla}`;
-			return await db.query(sql);
+			const res = await db.query(sql);
+
+			return res.map(row => ({ ...row }));
 		}
 		catch (error) {
 			console.log(error);
