@@ -37,21 +37,6 @@ const Ingredient = {
 			console.log("Error");
 			throw new Error(`Error obteniendo el ingrediente ${id}`);
 		}
-	},
-
-	async getIngredient(id) {
-		try {
-			const sql = `SELECT * FROM ${nombreTabla} WHERE id = ?`;
-			const rows = await db.promise().query(sql, [ id ]);
-			let ingredient;
-			// eslint-disable-next-line no-magic-numbers
-			if (rows.length > 0) ingredient = rows[0];
-			return ingredient;
-		}
-		catch (error) {
-			console.log(error);
-			throw Error("Error al obtener los ingredientes");
-		}
 	}
 };
 
