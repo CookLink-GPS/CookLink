@@ -24,7 +24,7 @@ exports.inciarSesion = async (req, res, next) => {
 	try {
 		const { username, password } = req.body;
 		await UserService.inciarSesion({ username, password });
-		res.redirect("/users");
+		res.redirect("/inicio");
 	}
 	catch (err) {
 		next(err);

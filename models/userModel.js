@@ -95,7 +95,6 @@ const User = {
 			throw new Error("Error al iniciar sesion");
 		}
 
-
 	}
 };
 

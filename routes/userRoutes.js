@@ -24,5 +24,4 @@ router.post(
 	, userController.registroUser
 );
 
-
 module.exports = router;
