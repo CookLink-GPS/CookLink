@@ -19,30 +19,27 @@
             <div class="col-12 col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title   ">
+                        <h4 class="card-title   ">
                             <%= recipe.nombre %>
-                        </h5>
+                        </h4>
                         <p class="card-text">
                             Descripción:
                         </p>
                         <p class="card-text">
                             <%= recipe.descripcion %>
                         </p>
-                        <!-- <p class="card-text">
-                            <%= recipe.ingredients %>
-                        </p> -->
-                        <ul class="list-group">
-                            <li class="list-group-item">2 tazas de harina</li>
-                            <li class="list-group-item">1 taza de azúcar</li>
-                            <li class="list-group-item">3 huevos</li>
-                            <li class="list-group-item">1/2 taza de leche</li>
-                            <li class="list-group-item">1 cucharadita de vainilla</li>
-                            <li class="list-group-item">1 tomate</li>
-                            <li class="list-group-item">1 cucharadita de sal</li>
-                            <li class="list-group-item">1 mozzarella</li>
-                            <li class="list-group-item">1 albahaca</li>
+                        <p class="card-text">
+                        <h5>Ingredientes:</h5>
+                        <ul>
+                            <% recipe.ingredients.forEach(ingrediente=> { %>
+                                <li>
+                                    <%= ingrediente.ingrediente %>: <%= ingrediente.unidades %>
+                                            <%= ingrediente.tipoUnidad %>
+                                </li>
+                                <% }) %>
                         </ul>
-                        <!-- <a href="/recipe/cook/<%= recipe.id %>" class="btn btn-primary">Cocinar</a> algo así-->
+                        </p>
+                        <a href="#" class="btn btn-custom btn-primary">Cocinar</a>
                     </div>
                 </div>
             </div>

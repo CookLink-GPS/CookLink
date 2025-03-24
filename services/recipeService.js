@@ -4,6 +4,7 @@ const Pantry = require("../models/pantryModel");
 const Recipe = require("../models/recipeModel");
 const AppError = require("../utils/AppError");
 const { stringComparator } = require("../utils/stringFunctions");
+const CERO = 0;
 
 /**
  *
@@ -67,7 +68,44 @@ const RecipeService = {
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
 	},
-	getRecipeById: id => Recipe.getRecipeById(id)
+	/**
+     * Returns a recipe by its ID
+     *
+     * @param {Number} id
+     * @returns {Promise<Recipe>}
+     */
+	async getRecipeById(id) {
+		if (!id) throw new AppError("No hay id", badRequest);
+
+		try {
+			const recipe = await Recipe.getRecipeById(id);
+			if (!recipe) throw new AppError("Receta no encontrada", badRequest);
+			return recipe;
+		}
+		catch (error) {
+			console.error(error);
+			throw new AppError("Error al obtener la receta", error);
+		}
+	},
+
+	/**
+     * Returns all ingredients for a given recipe
+     *
+     * @param {Number} id
+     * @returns {Promise<Object[]>}
+     */
+	async getIngredients(id) {
+		if (!id) throw new AppError("No hay id", badRequest);
+		try {
+			const ingredients = await Recipe.getIngredients(id);
+			if (!ingredients || ingredients.length === CERO) throw new AppError("No hay ingredientes", badRequest);
+			return ingredients;
+		}
+		catch (error) {
+			console.error(error);
+			throw new AppError("Error al obtener los ingredientes", error);
+		}
+	}
 };
 
 module.exports = RecipeService;

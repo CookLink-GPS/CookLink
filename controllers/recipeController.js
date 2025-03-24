@@ -24,18 +24,10 @@ exports.getRecommendations = async (req, res) => {
 	renderView(res, "recommendations", ok, { recipes });
 };
 
-exports.getRecipeInfo = async (req, res, next) => {
-	try {
-		const { id } = req.params;
-		// ESTO EN EL MODEL
-		// If (!id) return renderView(res, "recipe-info", badRequest, { mensajeError: "ID receta no encontrado." });
-
-		const recipe = await RecipeService.getRecipeById(id);
-		// If (!recipe) return renderView(res, "recipe-info", notFound, { mensajeError: "Receta no encontrada." });
-		console.log(recipe);
-		renderView(res, "recipe-info", ok, { recipe });
-	}
-	catch (err) {
-		next(err);
-	}
+exports.getRecipeInfo = async (req, res) => {
+	const { id } = req.params;
+	const recipe = await recipeService.getRecipeById(id);
+	const listIngredients = await recipeService.getIngredients(id);
+	recipe.ingredients = listIngredients;
+	renderView(res, "recipe-info", ok, { recipe });
 };
