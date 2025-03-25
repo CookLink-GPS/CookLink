@@ -34,10 +34,8 @@ exports.addIngredient = async (req, res) => {
 
 exports.filterIngredients = async (req, res) => {
 	try {
-		console.log("A");
-		const ingredientes = await ingredientService.filterIngredients(req.params.filter);
+		const ingredientes = await ingredientService.filterIngredients(req.params.filter || "");
 
-		console.log(ingredientes);
 		res.json({ ingredientes });
 	}
 	catch (err) {
