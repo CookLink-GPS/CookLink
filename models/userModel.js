@@ -3,6 +3,7 @@ const db = require("../config/database");
 const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
 const { userQueries } = require("../config/queries");
+const AppError = require("../utils/AppError");
 
 const nombreTabla = "usuarios";
 
@@ -83,12 +84,13 @@ const User = {
 		catch (error) {
 			throw new Error("Error al eliminar el usuario");
 		}
-	}
-/* C
+	},
+
 	inicio: async ({ username, password }) => {
 		try {
-			const [ usuarioDB ] = await db.query(`SELECT username,password from ${nombreTabla} where username = ?`, [ username ]);
-			return await bcrypt.compare(password, usuarioDB.password);
+			const [ usuarioDB ] = await db.query(`SELECT username,password,id from ${nombreTabla} where username = ?`, [ username ]);
+			if (!await bcrypt.compare(password, usuarioDB.password)) throw new AppError("registro Error al crear el usuario");
+			return usuarioDB;
 		}
 		catch (error) {
 			console.log(error);
@@ -97,7 +99,7 @@ const User = {
 
 	}
 
-*/
+
 };
 
 module.exports = User;

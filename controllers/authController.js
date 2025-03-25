@@ -21,14 +21,19 @@ const loginUser = async (req, res) => {
 	const { username, password } = req.body;
 	try {
 		const user = await UserService.inciarSesion( { username, password });
-		console.log("llegue1");
-		if (!user || !await bcrypt.compare(password, user.password)) return res.status(unauthorized).json({ error: "Credenciales inválidas" });
-		console.log("llegue2");
+		const valido = await bcrypt.compare(password, user.password);
+
+		if (!valido) return res.status(unauthorized).json({ error: "Credenciales inválidas" });
+
 		req.session.userId = user.id; // Guarda el ID del usuario en la sesión
+		req.session.username = user.username;
+
+		console.log("Sesión guardada:", req.session); // Debugging
+
 		res.redirect("/inicio");
-		res.json({ message: "Inicio de sesión exitoso" });
 	}
 	catch (error) {
+		console.error(error);
 		res.status(internalServerError).json({ error: "Error al iniciar sesión" });
 	}
 };
