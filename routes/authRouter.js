@@ -5,7 +5,7 @@ const { registerUser, loginUser, logoutUser } = require("../controllers/authCont
 const { authMiddleware } = require("../middlewares/authMiddleware");
 
 // Registro de usuario
-router.post("/register", registerUser);
+router.post("/registro", registerUser);
 
 // Inicio de sesión
 router.post("/login", loginUser);
