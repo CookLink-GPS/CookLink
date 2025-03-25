@@ -49,8 +49,6 @@ const UserService = {
 
 		const userDB = await User.inicio(user);
 
-		// User.session = user.session || {};
-		// User.session.userid = userDB.id;
 		return userDB;
 	}
 };

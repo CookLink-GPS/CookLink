@@ -93,7 +93,8 @@ exports.registroUser = async (req, res) => {
 		console.log(req.body);
 
 		await UserService.registroUser(req.body);
-		res.redirect("/inicio");
+		// C res.redirect("/inicio");
+		res.redirect("/");
 
 	}
 	catch (err) {

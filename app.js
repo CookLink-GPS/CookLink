@@ -22,16 +22,12 @@ app.use(userSession);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(session({ secret: "keyboard cat", resave: true, cookie: { maxAge: 60000 } }));
-
-/* C
 app.use(session({
-	secret: process.env.SESSION_SECRET,
+	secret: config.secret,
 	resave: true,
 	saveUninitialized: true,
-	cookie: { secure: true }
+	cookie: { maxAge: 60000 }
 }));
-*/
 
 // Cargar rutas de forma modular
 loadRoutes(app);

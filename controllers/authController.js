@@ -1,15 +1,18 @@
 /* eslint-disable no-magic-numbers */
 const bcrypt = require("bcrypt");
 const UserService = require("../services/userService");
-const { created, internalServerError, unauthorized } = require("../config/httpcodes");
+const { internalServerError, unauthorized } = require("../config/httpcodes");
+const { renderView } = require("../middlewares/viewHelper");
 
 // Registro de usuario
 const registerUser = async (req, res) => {
 	const { username, password } = req.body;
 	try {
 		const hashedPassword = await bcrypt.hash(password, 10);
-		await UserService.createUser(username, hashedPassword);
-		res.status(created).json({ message: "Usuario registrado con éxito" });
+		await UserService.registroUser( { username, hashedPassword } );
+		console.log("Sesión guardada:", req.session); // Debugging
+
+		res.redirect("/inicio");
 	}
 	catch (error) {
 		res.status(internalServerError).json({ error: "Error al registrar el usuario" });
@@ -34,7 +37,8 @@ const loginUser = async (req, res) => {
 	}
 	catch (error) {
 		console.error(error);
-		res.status(internalServerError).json({ error: "Error al iniciar sesión" });
+		// Cres.status(internalServerError).json({ error: "Error al iniciar sesión" });
+		renderView(res, "inicio", error.status, { mensajeError: [ error.message ] });
 	}
 };
 
