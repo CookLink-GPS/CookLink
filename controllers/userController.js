@@ -20,15 +20,14 @@ exports.getAllUsers = async (req, res, next) => {
 	}
 };
 
-exports.inciarSesion = async (req, res, next) => {
+exports.inciarSesion = async (req, res) => {
 	try {
 		const { username, password } = req.body;
 		await UserService.inciarSesion({ username, password });
 		res.redirect("/inicio");
 	}
 	catch (err) {
-		next(err);
-
+		console.error("Error al crear usuario:", err.message);
 	}
 };
 
