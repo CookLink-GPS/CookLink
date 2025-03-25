@@ -2,6 +2,7 @@ const ingredientService = require("../services/ingredientService");
 // Const { usuarioAutenticado } = require("../middlewares/userSession");
 const { renderView } = require("../middlewares/viewHelper"); // Importamos la función centralizada
 const { ok, badRequest } = require("../config/httpcodes");
+const { normalizarUnidad } = require("../utils/normalizarUnidad");
 
 /**
  * Redirige a la página de registro de usuario.
@@ -45,8 +46,8 @@ exports.addIngredient = async (req, res) => {
 
 		// Mensaje según la acción realizada
 		const message = result.action === "updated"
-			? `Cantidad actualizada: ${result.cantidad} ${result.unidadNormalizada}`
-			: `"${nombre}" añadido a tu despensa: ${cantidad} ${tipoUnidad}`;
+			? `Cantidad actualizada: ${result.cantidad} ${normalizarUnidad(result.tipoUnidad)}`
+			: `"${nombre}" añadido a tu despensa: ${cantidad} ${normalizarUnidad(tipoUnidad)}`;
 
 		console.log(`[Controller] Enviando respuesta: ${message}`);
 
