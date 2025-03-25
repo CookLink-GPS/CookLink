@@ -83,8 +83,8 @@ const User = {
 		catch (error) {
 			throw new Error("Error al eliminar el usuario");
 		}
-	},
-
+	}
+/* C
 	inicio: async ({ username, password }) => {
 		try {
 			const [ usuarioDB ] = await db.query(`SELECT username,password from ${nombreTabla} where username = ?`, [ username ]);
@@ -96,6 +96,8 @@ const User = {
 		}
 
 	}
+
+*/
 };
 
 module.exports = User;

@@ -75,9 +75,11 @@ const UserService = {
 		if (!user.username) throw new AppError("Falta el nombre de usuario", badRequest);
 		if (!user.password) throw new AppError("Falta la contraseña", badRequest);
 
-		const valido = await User.inicio(user);
+		const userDB = await User.getByUsername(user.username);
 
-		if (!valido) throw new AppError("Usuario o contraseña incorrectos", unauthorized);
+		if (!userDB) throw new AppError("Usuario o contraseña incorrectos", unauthorized);
+
+		return userDB;
 	}
 };
 
