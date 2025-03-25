@@ -1,8 +1,8 @@
-const { badRequest } = require("../config/httpcodes");
+const { badRequest, conflict } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
 const Pantry = require("../models/pantryModel");
-const { normalizarUnidad } = require("../utils/normalizarUnidad");
+
 
 const IngredientService = {
 
@@ -19,14 +19,17 @@ const IngredientService = {
 		try {
 			console.log(`[Service] Procesando ingrediente:`, { nombre, tipoUnidad, cantidad, userId });
 
-			const unidadNormalizada = normalizarUnidad(tipoUnidad);
+			// Const unidadNormalizada = normalizarUnidad(tipoUnidad);
 			// 1. Buscar  el ingrediente
 			const ingredienteExistente = await Ingredient.findByName(nombre);
 			let ingredientId;
 			if (ingredienteExistente) {
 				console.log(`[Service] Lectura ingrediente:`, ingredienteExistente);
+				console.log(`Esperado: '${ingredienteExistente.tipoUnidad}'`);
+				// Console.log(`Recibido: '${unidadNormalizada}'`);
+				// If (ingredienteExistente.tipoUnidad !== unidadNormalizada) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`, conflict);
+				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`, conflict);
 
-				if (ingredienteExistente.tipoUnidad !== unidadNormalizada) throw new Error(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`);
 
 				ingredientId = ingredienteExistente.id;
 			}
@@ -43,7 +46,6 @@ const IngredientService = {
 			if (existsInPantry) {
 				console.log(`[Service] Ingrediente ya en la despensa, actualizando cantidad... ID:`, existsInPantry.id_ingrediente);
 				await Pantry.updateItem(userId, ingredientId, cantidad);
-
 			}
 			else {
 				console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
@@ -54,7 +56,7 @@ const IngredientService = {
 
 			return {
 				action: existsInPantry ? "updated" : "added",
-				unidadNormalizada,
+				tipoUnidad,
 				cantidad,
 				ingredienteExistente
 			};
