@@ -1,7 +1,6 @@
 const { badRequest, conflict, unauthorized } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
-// Const Session = require("express-session");
 
 const UserService = {
 	/**
