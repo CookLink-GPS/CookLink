@@ -64,7 +64,7 @@ const IngredientService = {
 		}
 		catch (error) {
 			console.error("[Service] Error:", error);
-			throw new AppError("Error al procesar el ingrediente", badRequest);
+			throw new AppError(error, badRequest);
 		}
 	}
 
