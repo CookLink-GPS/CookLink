@@ -8,6 +8,7 @@ const loadRoutes = require("./config/routes");
 const config = require("./config/config");
 const userSession = require("./middlewares/userSession"); // Importa el middleware
 const logRoutes = require("./middlewares/logRoutes"); // Importa el middleware
+const session = require("express-session");
 
 // Middleware para parsear JSON y datos de formularios
 app.use(express.json());
@@ -21,6 +22,16 @@ app.use(userSession);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(session({ secret: "keyboard cat", resave: true, cookie: { maxAge: 60000 } }));
+
+/* C
+app.use(session({
+	secret: process.env.SESSION_SECRET,
+	resave: true,
+	saveUninitialized: true,
+	cookie: { secure: true }
+}));
+*/
 
 // Cargar rutas de forma modular
 loadRoutes(app);
@@ -33,6 +44,7 @@ const server = app.listen(port, () => {
 	console.log(`Servidor en ejecución en http://${config.baseUrl}:${port}`);
 });
 
+
 module.exports = server;
 
 /* // middlewares/errorHandler.js
@@ -40,3 +52,4 @@ module.exports = (err, req, res, next) => {
     console.error(err.stack);
     res.status(err.status || 500).render('error', { error: err.message, status: err.status || 500 });
 };*/
+

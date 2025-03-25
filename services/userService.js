@@ -1,4 +1,4 @@
-const { badRequest, conflict, unauthorized } = require("../config/httpcodes");
+const { badRequest, conflict } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
 
@@ -47,10 +47,10 @@ const UserService = {
 		if (!user.username) throw new AppError("Falta el nombre de usuario", badRequest);
 		if (!user.password) throw new AppError("Falta la contraseña", badRequest);
 
-		const userDB = await User.getByUsername(user.username);
+		const userDB = await User.inicio(user);
 
-		if (!userDB) throw new AppError("Usuario o contraseña incorrectos", unauthorized);
-
+		// User.session = user.session || {};
+		// User.session.userid = userDB.id;
 		return userDB;
 	}
 };

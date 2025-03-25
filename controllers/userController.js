@@ -43,7 +43,7 @@ exports.inciarSesion = async (req, res) => {
 	try {
 		const { username, password } = req.body;
 		await UserService.inciarSesion({ username, password });
-		res.redirect("/auth/login");
+		res.redirect("/inicio");
 	}
 	catch (err) {
 		console.error("Error al iniciar sesion:", err.message);
