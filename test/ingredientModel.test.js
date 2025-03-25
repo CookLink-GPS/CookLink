@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 const assert = require("node:assert");
-const { deleteIngredients } = require("./testUtils");
-const db = require("../config/database");
+const { deleteIngredients, insertIngredients } = require("./testUtils");
 const Ingredient = require("../models/ingredientModel");
 
 describe("Modelo ingrediente", () => {
@@ -9,14 +8,15 @@ describe("Modelo ingrediente", () => {
 	after(deleteIngredients);
 
 	describe("Obtener todos los ingredientes", () => {
-		it("Debe devolver todos los ingredientes", async () => {
-			const ingredientes = [
-				[ "harina", "gramos" ],
-				[ "arroz", "gramos" ],
-				[ "leche", "litros" ]
-			];
+		const ingredientes = [
+			[ "harina", "gramos" ],
+			[ "arroz", "gramos" ],
+			[ "leche", "litros" ]
+		];
 
-			for (ingrediente of ingredientes) await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingrediente);
+		it("Debe devolver todos los ingredientes", async () => {
+
+			await insertIngredients(ingredientes);
 
 			const res = await Ingredient.getAllIngredients();
 

@@ -18,4 +18,19 @@ const deleteIngredients = async () => {
 	await db.query("DELETE FROM ingredientes");
 };
 
-module.exports = { deleteUsers, deleteIngredients };
+/**
+ * Inserta varios ingredientes
+ *
+ * @typedef Ingredient
+ * @property {String} nombre
+ * @property {String} tipoUnidad
+ *
+ * @async
+ * @param {Ingredient[]} ingredients
+ * @returns {void}
+ */
+const insertIngredients = async ingredients => {
+	for (const ingredient of ingredients) await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingredient);
+};
+
+module.exports = { deleteUsers, deleteIngredients, insertIngredients };

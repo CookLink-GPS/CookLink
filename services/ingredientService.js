@@ -35,10 +35,12 @@ const IngredientService = {
 		const ingredients = await Ingredient.getAllIngredients();
 		const normalizedFilter = removeAccents(filter.toLowerCase());
 
-		return ingredients.filter(item => {
+		const res = ingredients.filter(item => {
 			const text = removeAccents(item.nombre.toLowerCase());
 			return text.startsWith(normalizedFilter);
 		});
+
+		return res;
 	}
 
 };
