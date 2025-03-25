@@ -1,7 +1,7 @@
 const ingredientService = require("../services/ingredientService");
-
+// Const { usuarioAutenticado } = require("../middlewares/userSession");
 const { renderView } = require("../middlewares/viewHelper"); // Importamos la función centralizada
-const { ok } = require("../config/httpcodes");
+const { ok, badRequest } = require("../config/httpcodes");
 
 /**
  * Redirige a la página de registro de usuario.
@@ -20,14 +20,42 @@ exports.toIngredient = (req, res, next) => {
 };
 
 exports.addIngredient = async (req, res) => {
-	console.log(`Ingrediente controller${ req.body}`);
+	console.log("[Controller] Datos recibidos:", req.body);
 	try {
+		const { nombre, tipoUnidad, cantidad } = req.body;
+		// Const userId = usuarioAutenticado.id; // Asumiendo autenticación
+		const userId = 1;
+		console.log(`[Controller] Procesando para usuario ${userId}`);
 
-		await ingredientService.addIngredient(req.body);
-		renderView(res, "ingredientes", ok, { mensajeExito: "Ingrediente añadido correctamente." });
+		// Procesar el ingrediente
+		const result = await ingredientService.processIngredient({
+			nombre,
+			tipoUnidad,
+			cantidad: parseInt(cantidad, 10),
+			userId
+		});
+
+		console.log("[Controller] Resultado del servicio:", result);
+
+		// Mensaje según la acción realizada
+		// Const message = result.action === "updated"
+		// 	? `Cantidad actualizada: ${result.cantidad} ${result.ingrediente.tipoUnidad}`
+		// 	: `"${nombre}" añadido a tu despensa: ${cantidad} ${tipoUnidad}`;
+
+		// Console.log(`[Controller] Enviando respuesta: ${message}`);
+
+		renderView(res, "ingredientes", ok, {
+			// MensajeExito: message,
+			mensajeExito: result,
+			formData: {} // Limpiar formulario
+		});
+
 	}
 	catch (err) {
-		// Next(err);
-		renderView(res, "ingredientes", { mensajeError: "Error al añadir el ingrediente" });
+		console.error("[Controller] Error:", err);
+		renderView(res, "ingredientes", err.status || badRequest, {
+			mensajeError: err.message,
+			formData: req.body // Mantener datos del formulario
+		});
 	}
 };

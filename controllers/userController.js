@@ -69,7 +69,7 @@ exports.registroUser = async (req, res) => {
 	}
 
 	try {
-		console.log(req.body);
+		console.log(`datos ${req.body}`);
 
 		await UserService.registroUser(req.body);
 		renderView(res, "registro", ok, { mensajeExito: "Usuario registrado correctamente." });
