@@ -26,10 +26,21 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: npm install, build, and test
-        run: |
-          npm install
+      - name: npm install
+        run: npm install
 
+      - name: test
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          PORT: ${{ secrets.PORT }}
+          MODE: ${{ secrets.MODE }}
+          SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+        run: npm run test
+        
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
 
