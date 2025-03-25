@@ -24,13 +24,14 @@ CREATE TABLE recetas (
 
 
 CREATE TABLE despensa (
-  id_usuario INT ,
-  id_ingrediente INT,
+  id_despensa int AUTO_INCREMENT PRIMARY KEY,
+  id_usuario INT NOT NULL,
+  id_ingrediente INT NOT NULL,
   caducidad varchar(10) NOT NULL, 
   cantidad INT NOT NULL CHECK (cantidad > 0),
-  PRIMARY KEY (id_usuario, id_ingrediente),
   CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
-  CONSTRAINT fk_ingrediente FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
+  CONSTRAINT fk_ingrediente FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE,
+  CONSTRAINT uk_usuario_ingrediente_caducidad UNIQUE (id_usuario, id_ingrediente, caducidad)
 );
 
 CREATE table contiene (
@@ -39,5 +40,5 @@ CREATE table contiene (
   unidades INT CHECK (unidades > 0),
   PRIMARY KEY (id_receta, id_ingrediente),
   CONSTRAINT fk_receta FOREIGN KEY (id_receta) REFERENCES recetas(id) ON DELETE CASCADE,
-  CONSTRAINT fk_ingrediente FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
+  CONSTRAINT fk_ingrediente_contiene FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
 )

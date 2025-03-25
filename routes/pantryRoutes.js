@@ -4,6 +4,6 @@ const pantryController = require("../controllers/pantryController");
 
 router.get("/", pantryController.showPantry);
 
-router.post("/delete/:ingredientId", pantryController.deleteIngredient);
+router.post("/delete/:id_despensa", pantryController.deleteIngredient);
 
 module.exports = router;

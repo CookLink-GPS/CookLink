@@ -41,7 +41,7 @@
                                         class="btn btn-danger btn-sm" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#confirmDeleteModal"
-                                        data-ingredient-id="<%= ingredient.id_ingrediente %>"
+                                        data-despensa-id="<%= ingredient.id_despensa %>"
                                         data-ingredient-quantity="<%= ingredient.cantidad %>"
                                     >
                                         Eliminar
@@ -99,7 +99,7 @@
             
             deleteModal.addEventListener('show.bs.modal', function (event) {
                 const button = event.relatedTarget;
-                const ingredientId = button.getAttribute('data-ingredient-id');
+                const id_despensa = button.getAttribute('data-despensa-id');
                 const currentQuantity = button.getAttribute('data-ingredient-quantity');
                 
                 const quantityInput = document.getElementById('quantityToDelete');
@@ -107,7 +107,7 @@
                 const deleteForm = document.getElementById('deleteForm');
                 
                 // Configurar el formulario
-                deleteForm.action = `/pantry/delete/${ingredientId}`;
+                deleteForm.action = `/pantry/delete/${id_despensa}`;
                 quantityInput.max = currentQuantity;
                 quantityInput.value = 1;
                 maxQuantityHint.textContent = `Máximo: ${currentQuantity} unidades disponibles`;
