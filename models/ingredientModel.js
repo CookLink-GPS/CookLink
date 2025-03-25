@@ -2,6 +2,14 @@ const db = require("../config/database");
 
 const nombreTabla = "ingredientes";
 
+/**
+ *
+ * @typedef Ingredient
+ * @property {Number} Id
+ * @property {String} nombre
+ * @property {String} tipoUnidad
+ *
+ */
 const Ingredient = {
 
 	add: ingredient => {
@@ -16,7 +24,13 @@ const Ingredient = {
 
 	},
 
-	getAllIngredients: async () => {
+	/**
+	 * Description placeholder
+	 *
+	 * @async
+	 * @returns {Promise<Ingredient[]>}
+	 */
+	async getAllIngredients() {
 		try {
 			const sql = `SELECT * FROM ${nombreTabla}`;
 			const res = await db.query(sql);

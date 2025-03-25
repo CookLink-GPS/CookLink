@@ -9,4 +9,13 @@ const deleteUsers = async () => {
 	await db.query("DELETE FROM usuarios");
 };
 
-module.exports = { deleteUsers };
+/**
+ * Elimina todos los ingredientes de la base de datos.
+ *
+ * @returns {Promise<void>}
+ */
+const deleteIngredients = async () => {
+	await db.query("DELETE FROM ingredientes");
+};
+
+module.exports = { deleteUsers, deleteIngredients };
