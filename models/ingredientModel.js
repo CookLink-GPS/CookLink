@@ -15,11 +15,12 @@ const Ingredient = {
 
 			// Consulta optimizada para devolver id y nombre
 			const rows = await db.query(
-				`SELECT id, nombre FROM ${nombreTabla} WHERE nombre = ? LIMIT 1`,
+				`SELECT id, nombre, tipoUnidad FROM ${nombreTabla} WHERE nombre = ? LIMIT 1`,
 				[ nombre ]
 			);
 
 			console.log(`[Model] Resultado findByName:`, rows[0]);
+
 
 			// Si hay resultados, devuelve el objeto { id, nombre }, si no, null
 			const cero = 0;

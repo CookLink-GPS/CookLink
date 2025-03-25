@@ -23,6 +23,9 @@ const IngredientService = {
 			let ingredientId;
 			if (ingredienteExistente) {
 				console.log(`[Service] Lectura ingrediente:`, ingredienteExistente);
+
+				if (ingredienteExistente.tipoUnidad !== tipoUnidad) throw new Error(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`);
+
 				ingredientId = ingredienteExistente.id;
 			}
 			else {
@@ -38,17 +41,18 @@ const IngredientService = {
 			if (existsInPantry) {
 				console.log(`[Service] Ingrediente ya en la despensa, actualizando cantidad... ID:`, existsInPantry.id_ingrediente);
 				await Pantry.updateItem(userId, ingredientId, cantidad);
-			}
-			// Await Pantry.updateItem(userId, ingredientId, cantidad);
 
+			}
 			else {
 				console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
 				await Pantry.addItem(userId, ingredientId, cantidad);
+
 			}
 
+
 			return {
-				// Action: "added",
-				// Cantidad,
+				action: existsInPantry ? "updated" : "added",
+				cantidad,
 				ingredienteExistente
 			};
 

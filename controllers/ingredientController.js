@@ -38,15 +38,15 @@ exports.addIngredient = async (req, res) => {
 		console.log("[Controller] Resultado del servicio:", result);
 
 		// Mensaje según la acción realizada
-		// Const message = result.action === "updated"
-		// 	? `Cantidad actualizada: ${result.cantidad} ${result.ingrediente.tipoUnidad}`
-		// 	: `"${nombre}" añadido a tu despensa: ${cantidad} ${tipoUnidad}`;
+		const message = result.action === "updated"
+			? `Cantidad actualizada: ${result.cantidad} ${result.ingrediente.tipoUnidad}`
+			: `"${nombre}" añadido a tu despensa: ${cantidad} ${tipoUnidad}`;
 
-		// Console.log(`[Controller] Enviando respuesta: ${message}`);
+		console.log(`[Controller] Enviando respuesta: ${message}`);
 
 		renderView(res, "ingredientes", ok, {
-			// MensajeExito: message,
-			mensajeExito: result,
+			mensajeExito: message,
+			// MensajeExito: result,
 			formData: {} // Limpiar formulario
 		});
 
