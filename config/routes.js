@@ -4,7 +4,6 @@ const recipeRouter = require("../routes/recipeRoutes");
 const ingredientRouter = require("../routes/ingredientRoutes");
 const inicioRouter = require("../routes/inicioRoutes");
 const pantryRouter = require("../routes/pantryRoutes");
-
 const { notFound } = require("./httpcodes");
 
 /**

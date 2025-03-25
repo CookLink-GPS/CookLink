@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const inicioController = require("../controllers/inicioController");
+const pantryController = require("../controllers/pantryController");
 
-router.get("/", inicioController.getDespensa);
+router.get("/", pantryController.getDespensa);
 
 module.exports = router;

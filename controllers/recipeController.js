@@ -16,10 +16,10 @@ exports.getAllRecipes = async (req, res) => {
 /**
  * Renderiza una vista con las recetas recomendadas del usuario con sesion activa
  *
- * @param {HTTPRequest} req
- * @param {HTTPResponse} res
+ * @param {Request} req
+ * @param {Response} res
  */
 exports.getRecommendations = async (req, res) => {
-	const recipes = await recipeService.getAllRecipes();
+	const recipes = await recipeService.getRecommendations({ id: req.session.user.id });
 	renderView(res, "recommendations", ok, { recipes });
 };
