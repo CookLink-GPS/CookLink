@@ -33,7 +33,7 @@
                         <% ingredients.forEach(ingredient => { %>
                             <tr>
                                 <td><%= ingredient.nombre_ingrediente %></td>
-                                <td><%= ingredient.cantidad || "N/A" %> unidades</td>
+                                <td class="ingredient-quantity"><%= ingredient.cantidad || "N/A" %> unidades</td>
                                 <td><%= ingredient.caducidad || "No disponible" %></td>
                                 <td>
                                     <button 
@@ -42,6 +42,7 @@
                                         data-bs-toggle="modal" 
                                         data-bs-target="#confirmDeleteModal"
                                         data-ingredient-id="<%= ingredient.id_ingrediente %>"
+                                        data-ingredient-quantity="<%= ingredient.cantidad %>"
                                     >
                                         Eliminar
                                     </button>
@@ -70,12 +71,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar este ingrediente de tu despensa?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <form id="deleteForm" method="POST" action="">
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                        <div class="mb-3">
+                            <label for="quantityToDelete" class="form-label">Cantidad a eliminar:</label>
+                            <input type="number" class="form-control" id="quantityToDelete" name="quantity" min="1" required>
+                            <small class="text-muted" id="maxQuantityHint"></small>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -89,15 +94,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Configurar el modal para eliminar el ingrediente correcto
         document.addEventListener('DOMContentLoaded', function () {
             const deleteModal = document.getElementById('confirmDeleteModal');
-            const deleteForm = document.getElementById('deleteForm');
-
+            
             deleteModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget; // Botón que activó el modal
-                const ingredientId = button.getAttribute('data-ingredient-id'); // Obtener el ID del ingrediente
-                deleteForm.action = `/pantry/delete/${ingredientId}`; // Actualizar la acción del formulario
+                const button = event.relatedTarget;
+                const ingredientId = button.getAttribute('data-ingredient-id');
+                const currentQuantity = button.getAttribute('data-ingredient-quantity');
+                
+                const quantityInput = document.getElementById('quantityToDelete');
+                const maxQuantityHint = document.getElementById('maxQuantityHint');
+                const deleteForm = document.getElementById('deleteForm');
+                
+                // Configurar el formulario
+                deleteForm.action = `/pantry/delete/${ingredientId}`;
+                quantityInput.max = currentQuantity;
+                quantityInput.value = 1;
+                maxQuantityHint.textContent = `Máximo: ${currentQuantity} unidades disponibles`;
+                
+                // Validación
+                quantityInput.oninvalid = function() {
+                    this.setCustomValidity(`Por favor ingresa un valor entre 1 y ${currentQuantity}`);
+                };
+                quantityInput.oninput = function() {
+                    this.setCustomValidity('');
+                };
             });
         });
     </script>

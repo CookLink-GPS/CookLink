@@ -46,6 +46,19 @@ const Pantry = {
 			console.log("Error");
 			throw new Error(`Error deleting ingredient ${ingredientId} from user ${userId}'s pantry`);
 		}
+	},
+
+	async updateIngredientQuantity(userId, ingredientId, newQuantity) {
+		try {
+			await db.query(
+				"UPDATE despensa SET cantidad = ? WHERE id_usuario = ? AND id_ingrediente = ?",
+				[ newQuantity, userId, ingredientId ]
+			);
+		}
+		catch (error) {
+			console.log("Error");
+			throw new Error(`Error updating ingredient ${ingredientId} quantity for user ${userId}`);
+		}
 	}
 };
 

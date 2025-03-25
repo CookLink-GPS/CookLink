@@ -29,13 +29,14 @@ const pantryController = {
      */
 	async deleteIngredient(req, res) {
 		try {
-			const userId = /* Req.user.id*/ 1;
+			const userId = req.session.user.id;
 			const ingredientId = req.params.ingredientId;
+			const quantityToDelete = parseInt(req.body.quantity);
 
-			if (!userId || !ingredientId) throw new AppError("Missing required data", badRequest);
+			if (!userId || !ingredientId || isNaN(quantityToDelete)) throw new AppError("Missing required data", badRequest);
 
 
-			await PantryService.deleteIngredient(userId, ingredientId);
+			await PantryService.deleteIngredient(userId, ingredientId, quantityToDelete);
 			res.redirect("/pantry");
 		}
 		catch (error) {

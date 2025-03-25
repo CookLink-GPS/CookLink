@@ -34,12 +34,27 @@ const PantryService = {
      * @returns {Promise<void>}
      * @throws {AppError} - If the user ID or ingredient ID is missing.
      */
-	async deleteIngredient(userId, ingredientId) {
-		if (!userId || !ingredientId) throw new AppError("Missing required data", badRequest);
+	async deleteIngredient(userId, ingredientId, quantityToDelete) {
+		if (!userId || !ingredientId || !quantityToDelete) throw new AppError("Missing required data", badRequest);
 
 
 		try {
-			await Pantry.deleteIngredient(userId, ingredientId);
+			// Primero verifica la cantidad actual
+			const pantry = await Pantry.getPantryFromUser(userId);
+			const ingredient = pantry.find(i => i.id_ingrediente == ingredientId);
+
+			if (!ingredient) throw new AppError("Ingredient not found in pantry", badRequest);
+
+
+			if (quantityToDelete > ingredient.cantidad) throw new AppError("Cannot delete more than available quantity", badRequest);
+
+
+			// Si la cantidad a eliminar es igual a la cantidad disponible, elimina el registro
+			if (quantityToDelete === ingredient.cantidad) await Pantry.deleteIngredient(userId, ingredientId);
+			 else
+				// Si no, actualiza la cantidad
+				await Pantry.updateIngredientQuantity(userId, ingredientId, ingredient.cantidad - quantityToDelete);
+
 		}
 		catch (error) {
 			console.error(error);
