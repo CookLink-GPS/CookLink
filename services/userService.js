@@ -1,23 +1,41 @@
-const { badRequest, conflict } = require("../config/httpcodes");
+const { badRequest, conflict, internalServerError } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
 
+/**
+ *
+ * @typedef RegisterData
+ * @property {String} username
+ * @property {String} password
+ * @property {String} confirm_password
+ *
+ * @typedef User
+ * @property {Number} id
+ * @property {String} username
+ *
+ */
 const UserService = {
 	/**
-	 * Obtiene todos los usuarios a través del modelo `User`.
+	 * Obtiene todos los usuarios a de la aplicacion
 	 *
-	 * @returns {Promise<Array>} - Devuelve una lista de todos los usuarios de la base de datos.
+	 * @returns {Promise<User[]>}
+	 * @throws {AppError}
 	 */
-	getAllUsers: () => User.getAll(),
+	getAllUsers: () => {
+		try {
+			return User.getAll();
+		}
+		catch (error) {
+			console.error(error);
+			throw new AppError("Error interno del servidor", internalServerError);
+		}
+	},
 	/**
-	 * Registra un nuevo usuario después de validar los datos proporcionados.
+	 * Registra un nuevo usuario después de validar los datos proporcionados
 	 *
-	 * @param {Object} user - Datos del usuario a registrar.
-	 * @param {string} user.username - Nombre de usuario.
-	 * @param {string} user.password - Contraseña del usuario.
-	 * @param {string} user.confirm_password - Confirmación de la contraseña.
-	 * @returns {Promise<Object>} - Devuelve el resultado de la operación de registro.
-	 * @throws {AppError} - Lanza un error si los datos son inválidos o el usuario ya existe.
+	 * @param {RegisterData} user Datos del usuario a registrar
+	 * @returns {Promise<Boolean>} True si se ha registrado correctamente
+	 * @throws {AppError} - Lanza un error si los datos son inválidos o el usuario ya existe
 	 */
 	registroUser: async user => {
 		if (!user.username) throw new AppError("Falta el nombre de usuario", badRequest);
@@ -28,20 +46,33 @@ const UserService = {
 
 		// Comprobamos si el usuario ya existe
 		const usuarioExistente = await User.getByUsername(user.username);
-		if (usuarioExistente) {
-			console.log(`usuarioExistente: ${usuarioExistente.username}`);
-			throw new AppError("El usuario ya existe", conflict);
-		}
+		if (usuarioExistente) throw new AppError("El usuario ya existe", conflict);
 
-		return User.registro(user);
+		const res = await User.registro(user);
+
+		if (!res) throw new AppError("Error interno del servidor", internalServerError);
+
+		return true;
 	},
 	/**
-	 * Elimina un usuario por su ID a través del modelo `User`.
+	 * Elimina un usuario
 	 *
-	 * @param {number} id - ID del usuario a eliminar.
-	 * @returns {Promise<Object>} - Devuelve el resultado de la operación de eliminación.
+	 * @param {Number} id ID del usuario a eliminar
+	 * @returns {Promise<Boolean>} True si se ha eliminado correctamente
 	 */
-	deleteUser: id => User.delete(id)
+	deleteUser: async id => {
+		try {
+			const res = await User.delete(id);
+
+			if (!res) throw new AppError("Error interno del servidor", internalServerError);
+
+			return true;
+		}
+		catch (error) {
+			console.error(error);
+			throw new AppError("Error interno del servidor", internalServerError);
+		}
+	}
 };
 
 module.exports = UserService;

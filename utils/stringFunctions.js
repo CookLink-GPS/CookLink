@@ -13,4 +13,13 @@ const stringComparator = (a, b) => {
 	/* eslint-enable no-magic-numbers */
 };
 
-module.exports = { stringComparator };
+/**
+ * Removes accents from a given text
+ *
+ * @param {String} text
+ * @returns {String}
+ */
+const removeAccents = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+	.trim();
+
+module.exports = { stringComparator, removeAccents };

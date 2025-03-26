@@ -2,20 +2,27 @@
 const db = require("../config/database");
 const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
+const { userQueries } = require("../config/queries");
 
-const nombreTabla = "usuarios";
-
+/**
+ *
+ * @typedef User
+ * @property {Number} id
+ * @property {String} username
+ *
+ */
 const User = {
 
 	/**
 	 * Obtiene todos los registros de la tabla de usuarios.
 	 *
-	 * @returns {Promise<Array>} - Devuelve una lista de todos los usuarios en la base de datos.
-	 * @throws {Error} - Lanza un error si ocurre un problema en la consulta.
+	 * @returns {Promise<User[]>} Devuelve una lista de todos los usuarios en la base de datos.
+	 * @throws {Error} Lanza un error si ocurre un problema en la consulta.
 	 */
 	getAll: async () => {
 		try {
-			return await db.query(`SELECT * FROM ${nombreTabla}`);
+			const res = await db.query(userQueries.getAllUsers);
+			return res.map(row => ({ ...row }));
 		}
 		catch (error) {
 			console.log(error);
@@ -25,16 +32,15 @@ const User = {
 	/**
 	 * Busca un usuario por su nombre de usuario.
 	 *
-	 * @param {string} username - Nombre de usuario a buscar en la base de datos.
-	 * @returns {Promise<Object>} - Devuelve un objeto con la información del usuario encontrado.
-	 * @throws {Error} - Lanza un error si ocurre un problema en la consulta.
+	 * @param {string} username Nombre de usuario a buscar en la base de datos.
+	 * @returns {Promise<User | undefined>} Devuelve un objeto con la información del usuario encontrado.
+	 * @throws {Error} Lanza un error si ocurre un problema en la consulta.
 	 */
 	getByUsername: async username => {
 		try {
-			// Console.log("Datos recibidos en el modelo:", { username });
-			const sql = `SELECT username FROM ${nombreTabla} WHERE username = ?`;
-			const [ result ] = await db.query(sql, [ username ]); // Destructuring para obtener solo el resultado
-			return result;
+			const [ res ] = await db.query(userQueries.getByUsername, [ username ]);
+
+			return res && { ...res }; // Si no hay resultado, devuelve null
 		}
 		catch (error) {
 			console.log(error);
@@ -44,19 +50,19 @@ const User = {
 	/**
 	 * Registra un nuevo usuario en la base de datos con contraseña encriptada.
 	 *
-	 * @param {Object} userData - Datos del usuario a registrar.
-	 * @param {string} userData.username - Nombre de usuario.
-	 * @param {string} userData.password - Contraseña del usuario.
-	 * @returns {Promise<Object>} - Devuelve el resultado de la inserción en la base de datos.
-	 * @throws {Error} - Lanza un error si ocurre un problema en la inserción.
+	 * @param {User} userData Datos del usuario a registrar.
+	 * @returns {Promise<Boolean>} Devuelve el resultado de la inserción en la base de datos.
+	 * @throws {Error} Lanza un error si ocurre un problema en la inserción.
 	 */
 	registro: async ({ username, password }) => {
 		try {
 			if (username === "" || /[\s\t]/.test(username)) throw new Error();
 			if (password === "" || /[\s\t]/.test(password)) throw new Error();
-			const sql = `INSERT INTO ${nombreTabla} (username, password) VALUES (?, ?)`;
+
 			const hashedPassword = await bcrypt.hash(password, saltRounds);
-			return db.query(sql, [ username, hashedPassword ]);
+			const res = await db.query(userQueries.insertUser, [ username, hashedPassword ]);
+
+			return !!res.affectedRows; // Si es 0, devuelve false, true en otro caso
 		}
 		catch (error) {
 			console.log(error.message);
@@ -67,12 +73,13 @@ const User = {
 	 * Elimina un usuario de la base de datos por su ID.
 	 *
 	 * @param {number} id - ID del usuario a eliminar.
-	 * @returns {Promise<Object>} - Devuelve el resultado de la eliminación en la base de datos.
+	 * @returns {Promise<Boolean>} - Devuelve el resultado de la eliminación en la base de datos.
 	 * @throws {Error} - Lanza un error si ocurre un problema en la eliminación.
 	 */
 	delete: async id => {
 		try {
-			return await db.query(`DELETE FROM ${nombreTabla} WHERE id = ?`, [ id ]);
+			const res = await db.query(userQueries.deleteUser, [ id ]);
+			return !!res.affectedRows;
 		}
 		catch (error) {
 			console.log(error);
@@ -80,4 +87,5 @@ const User = {
 		}
 	}
 };
+
 module.exports = User;

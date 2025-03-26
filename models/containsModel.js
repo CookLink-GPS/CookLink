@@ -1,5 +1,5 @@
 const db = require("../config/database");
-const { containsQueries } = require("../config/querys");
+const { containsQueries } = require("../config/queries");
 
 /**
  *

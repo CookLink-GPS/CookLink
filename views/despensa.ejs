@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Despensa</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/despensa.css">
   <link rel="icon" href="/img/Logo.ico" type="image/x-icon">
   <style>
     /* Contenedor de fondo */
@@ -15,18 +17,39 @@
       border-radius: 5px;
       margin-bottom: 20px;
     }
+
     .ingredient-list {
+      display: flex;
+      flex-direction: column;
       list-style-type: none;
       padding: 0;
       margin: 0;
     }
+
     .ingredient-item {
+      display: flex;
+      justify-content: space-between;
       padding: 10px;
-      border-bottom: 1px solid #ccc;
+      margin-bottom: 5px;
       font-weight: 500;
+      background-color: #8c4a3dcc;
+    }
+
+    .ingrediente {
+      text-align: left;
+      flex-grow: 1;
+    }
+
+    .cantidad {
+      margin-right: 5px;
+    }
+
+    .unidad {
+      text-align: right;
     }
   </style>
 </head>
+
 <body class="bg-light">
   <!-- NavBar -->
   <div>
@@ -38,21 +61,42 @@
     <h1 class="mb-4 p-3 text-white rounded">Mi Despensa</h1>
     <!-- Contenedor para la búsqueda y botón -->
     <div class="light-red-container" style="width: 80%; margin: auto;">
-        <div class="mb-3 d-flex justify-content-center">
-            <div class="input-group" style="width: 80%;">
-                <input type="text" id="searchInput" class="form-control" placeholder="Buscar ingrediente...">
-                <button href="/inicio/despensa/ingrediente" class="btn btn-custom btn-lg m-2">Añadir ingrediente</button>
-            </div>
+      <div class="mb-3 d-flex justify-content-center">
+        <div class="input-group" style="width: 80%;">
+          <input type="text" id="searchInput" class="form-control" placeholder="Buscar ingrediente...">
+          <button href="/inicio/despensa/ingrediente" class="btn btn-custom btn-lg m-2">Añadir ingrediente</button>
         </div>
-        <!-- Contenedor para la lista de ingredientes -->
-        <div class="text-white p-3 rounded" style="width: 90%; margin: auto; background-color: #8c4a3dcc;">
-            <ul class="ingredient-list" id="ingredientList">
-                <% ingredientes.forEach(function(ingrediente) { %>
-                    <li class="ingredient-item text-white rounded"><%= ingrediente %></li>
+      </div>
+      <!-- Contenedor para la lista de ingredientes -->
+      <div class="text-white p-3 rounded" style="width: 90%; margin: auto;">
+        <ul class="ingredient-list" id="ingredientList">
+          <% if (ingredients.length===0) { %>
+            <p style="font-weight: bold; color:#8c4a3dcc">Tu despensa esta vacía</p>
+            <% } else { %>
+              <% ingredients.forEach(function(ingredient) { %>
+                <li class="ingredient-item text-white rounded">
+                  <span class="ingrediente">
+                    <%= ingredient.nombre %>
+                  </span>
+                  <span class="cantidad">
+                    <%= ingredient.cantidad %>
+                  </span>
+                  <span class="unidad">
+                    <%= ingredient.tipoUnidad %>
+                  </span>
+                </li>
                 <% }); %>
-            </ul>
-        </div>
+                  <% } %>
+        </ul>
+      </div>
     </div>
+    <!-- Contenedor para la lista de ingredientes -->
+    <div class="text-white p-3 rounded" style="width: 90%; margin: auto; background-color: #8c4a3dcc;">
+      <ul class="ingredient-list" id="ingredientList">
+        <!-- renderizar lista-->
+      </ul>
+    </div>
+  </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -61,11 +105,12 @@
     const ingredientList = document.getElementById('ingredientList');
     const ingredients = Array.from(ingredientList.getElementsByClassName('ingredient-item'));
 
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
       const filter = searchInput.value.toLowerCase();
-      ingredients.forEach(function(item) {
+      ingredients.forEach(function (item) {
         const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(filter) ? '' : 'none';
+        // Mostrar solo si el texto comienza con el filtro
+        item.style.display = text.startsWith(filter) ? '' : 'none';
       });
     });
   </script>
@@ -74,4 +119,5 @@
     <%- include("fragments/footer") %>
   </div>
 </body>
+
 </html>
