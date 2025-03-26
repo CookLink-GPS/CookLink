@@ -1,5 +1,5 @@
 const db = require("../config/database");
-const { pantryQueries } = require("../config/querys");
+const { pantryQueries } = require("../config/queries");
 
 /**
  *
