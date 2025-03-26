@@ -94,7 +94,8 @@ exports.registroUser = async (req, res) => {
 
 		await UserService.registroUser(req.body);
 		// C res.redirect("/inicio");
-		res.redirect("/");
+		// C res.redirect("/");
+		renderView(res, "login", ok, { mensajeExito: "Usuario registrado correctamente, puede logearse" });
 
 	}
 	catch (err) {
