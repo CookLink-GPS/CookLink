@@ -3,6 +3,7 @@ const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
 const { removeAccents } = require("../utils/stringFunctions");
 const Pantry = require("../models/pantryModel");
+const { normalizarUnidad } = require("../utils/normalizarUnidad");
 
 const IngredientService = {
 
@@ -19,13 +20,14 @@ const IngredientService = {
 		try {
 			console.log(`[Service] Procesando ingrediente:`, { nombre, tipoUnidad, cantidad, userId });
 
+			const unidadNormalizada = normalizarUnidad(tipoUnidad);
 			// 1. Buscar  el ingrediente
 			const ingredienteExistente = await Ingredient.findByName(nombre);
 			let ingredientId;
 			if (ingredienteExistente) {
 				console.log(`[Service] Lectura ingrediente:`, ingredienteExistente);
 
-				if (ingredienteExistente.tipoUnidad !== tipoUnidad) throw new Error(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`);
+				if (ingredienteExistente.tipoUnidad !== unidadNormalizada) throw new Error(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`);
 
 				ingredientId = ingredienteExistente.id;
 			}
@@ -53,6 +55,7 @@ const IngredientService = {
 
 			return {
 				action: existsInPantry ? "updated" : "added",
+				unidadNormalizada,
 				cantidad,
 				ingredienteExistente
 			};

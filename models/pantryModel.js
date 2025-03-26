@@ -98,7 +98,7 @@ const Pantry = {
 	findItem: async (userId, ingredientId) => {
 		try {
 			const rows = await db.query(
-				`SELECT id_ingrediente FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? LIMIT 1`,
+				`SELECT id_ingrediente, cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? LIMIT 1`,
 				[ userId, ingredientId ]
 			);
 

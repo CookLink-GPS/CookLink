@@ -45,7 +45,7 @@ exports.addIngredient = async (req, res) => {
 
 		// Mensaje según la acción realizada
 		const message = result.action === "updated"
-			? `Cantidad actualizada: ${result.cantidad} ${result.ingrediente.tipoUnidad}`
+			? `Cantidad actualizada: ${result.cantidad} ${result.unidadNormalizada}`
 			: `"${nombre}" añadido a tu despensa: ${cantidad} ${tipoUnidad}`;
 
 		console.log(`[Controller] Enviando respuesta: ${message}`);
