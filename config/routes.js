@@ -3,6 +3,7 @@ const userRouter = require("../routes/userRoutes");
 const recipeRouter = require("../routes/recipeRoutes");
 const ingredientRouter = require("../routes/ingredientRoutes");
 const inicioRouter = require("../routes/inicioRoutes");
+const ingredientesBD = require("../routes/ingredientesBDRoutes");
 const pantryRouter = require("../routes/pantryRoutes");
 const { notFound } = require("./httpcodes");
 
@@ -18,6 +19,7 @@ module.exports = app => {
 	app.use("/ingredients", ingredientRouter);
 	app.use("/inicio", inicioRouter);
 	app.use("/despensa", pantryRouter);
+	app.use("/ingredientesBD", ingredientesBD);
 
 	// Manejo de errores 404
 	app.use((req, res, next) => {
