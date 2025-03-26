@@ -41,6 +41,36 @@
     }
     .unidad {
       text-align: right;
+    }    .light-red-container {
+      background-color: #ffcccc;
+      padding: 20px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .ingredient-list {
+      display: flex;
+      flex-direction: column;
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .ingredient-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      margin-bottom: 5px;
+      font-weight: 500;
+      background-color: #8c4a3dcc; 
+    }
+    .ingrediente {
+      text-align: left;
+      flex-grow: 1;
+    }  
+    .cantidad {
+      margin-right: 5px;
+    }
+    .unidad {
+      text-align: right;
     }
   </style>
 </head>
@@ -63,9 +93,20 @@
         </div>
       </div>
       <!-- Contenedor para la lista de ingredientes -->
-      <div class="text-white p-3 rounded" style="width: 90%; margin: auto; background-color: #8c4a3dcc;">
+      <div class="text-white p-3 rounded" style="width: 90%; margin: auto;">
         <ul class="ingredient-list" id="ingredientList">
           <!-- renderizar lista-->
+          <% if (ingredients.length === 0) { %>
+            <p style= "font-weight: bold; color:#8c4a3dcc">Tu despensa esta vacía</p>
+          <% } else { %>
+            <% ingredients.forEach(function(ingredient) { %>
+              <li class="ingredient-item text-white rounded">
+                <span class="ingrediente"><%= ingredient.nombre %></span>
+                <span class="cantidad"><%= ingredient.cantidad %></span>
+                <span class="unidad"><%= ingredient.tipoUnidad %></span>
+              </li>
+            <% }); %>
+          <% } %>
         </ul>
       </div>
     </div>
