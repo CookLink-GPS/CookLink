@@ -41,10 +41,8 @@ describe("Servicio de recetas", () => {
 		let user, user2, user0;
 
 		before(async () => {
-			// Crear usuarios con diferentes niveles de ingredientes en la despensa
 			await db.query("INSERT INTO usuarios (id, username, password) VALUES ('Luis', '123456789')");
 			user = User.getByUsername("Luis");
-			console.log(user);
 
 			await db.query("INSERT INTO usuarios (id, username, password) VALUES ('Paula', '123456789')");
 			user2 = User.getByUsername("Paula");
@@ -52,7 +50,7 @@ describe("Servicio de recetas", () => {
 			await db.query("INSERT INTO usuarios (id, username, password) VALUES ('Alberto', '123456789')");
 			user0 = User.getByUsername("Alberto");
 
-			// Asignar ingredientes a cada usuario
+
 			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, UNO, QUINIENTOS ]);
 			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, DOS, QUINIENTOS ]);
 			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, TRES, QUINIENTOS ]);
