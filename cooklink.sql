@@ -20,7 +20,7 @@ CREATE TABLE recetas (
 CREATE TABLE despensa (
   id_usuario INT,
   id_ingrediente INT,
- cantidad INT NOT NULL CHECK (cantidad > 0),
+  cantidad FLOAT NOT NULL CHECK (cantidad > 0),
   PRIMARY KEY (id_usuario, id_ingrediente),
   CONSTRAINT fk_usuario_despensa FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
   CONSTRAINT fk_ingrediente_despensa FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
