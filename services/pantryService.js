@@ -14,9 +14,30 @@ const PantryService = {
 	async getPantryIngredients(userId) {
 		if (!userId) throw new AppError("User ID is required", badRequest);
 
-
 		try {
 			const ingredients = await Pantry.getPantryFromUser(userId);
+			return ingredients;
+		}
+		catch (error) {
+			console.error(error);
+			throw new AppError("Error fetching pantry", internalServerError);
+		}
+	},
+
+	/**
+     * Retrieves all ingredients with their name and unit type
+     * from a user's pantry.
+     *
+     * @async
+     * @param {Number} userId - User ID.
+     * @returns {Promise<Array>} - List of ingredients in the pantry.
+     * @throws {AppError} - If the user ID is missing.
+     */
+	async getIngredientsDetails(userId) {
+		if (!userId) throw new AppError("User ID is required", badRequest);
+
+		try {
+			const ingredients = await Pantry.getIngredientsDetails(userId);
 			return ingredients;
 		}
 		catch (error) {

@@ -1,6 +1,7 @@
 const { badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
+const { removeAccents } = require("../utils/stringFunctions");
 
 const IngredientService = {
 
@@ -26,8 +27,21 @@ const IngredientService = {
 		// }
 
 		return Ingredient.add(ingredient);
-	}
+	},
 
+	filterIngredients: async filter => {
+		if (filter === undefined || filter === null) filter = "";
+
+		const ingredients = await Ingredient.getAllIngredients();
+		const normalizedFilter = removeAccents(filter.toLowerCase());
+
+		const res = ingredients.filter(item => {
+			const text = removeAccents(item.nombre.toLowerCase());
+			return text.startsWith(normalizedFilter);
+		});
+
+		return res;
+	}
 
 };
 

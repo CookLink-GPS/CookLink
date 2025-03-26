@@ -1,6 +1,8 @@
 const PantryService = require("../services/pantryService");
 const { badRequest, internalServerError } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
+const { ok } = require("../config/httpcodes");
+const { renderView } = require("../middlewares/viewHelper");
 
 const pantryController = {
 	/**
@@ -45,6 +47,17 @@ const pantryController = {
 			res.status(error.status || ERROR).render("error", { message: error.message || "Error deleting ingredient" });
 		}
 	}
+};
+
+/**
+ * Renderiza una vista con todos los ingredientes de la despensa del usuario
+ *
+ * @param {HTTPRequest} req
+ * @param {HTTPResponse} res
+ */
+exports.getDespensa = async (req, res) => {
+	const ingredients = await PantryService.getIngredientsDetails(req.session.user.id);
+	renderView(res, "despensa", ok, { ingredients });
 };
 
 module.exports = pantryController;

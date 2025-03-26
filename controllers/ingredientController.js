@@ -31,3 +31,15 @@ exports.addIngredient = async (req, res) => {
 		renderView(res, "ingredientes", { mensajeError: "Error al añadir el ingrediente" });
 	}
 };
+
+exports.filterIngredients = async (req, res) => {
+	try {
+		const ingredientes = await ingredientService.filterIngredients(req.params.filter || "");
+
+		res.json({ ingredientes });
+	}
+	catch (err) {
+		console.log(err);
+		res.json({ mensajeError: "Error al filtrar los ingredientes" });
+	}
+};

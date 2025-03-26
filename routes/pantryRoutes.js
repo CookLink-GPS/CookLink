@@ -6,4 +6,5 @@ router.get("/", pantryController.showPantry);
 
 router.post("/delete/:id_despensa", pantryController.deleteIngredient);
 
+
 module.exports = router;

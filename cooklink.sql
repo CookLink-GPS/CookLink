@@ -24,7 +24,7 @@ CREATE TABLE recetas (
 
 
 CREATE TABLE despensa (
-  id_despensa int AUTO_INCREMENT PRIMARY KEY,
+id_despensa int AUTO_INCREMENT PRIMARY KEY,
   id_usuario INT NOT NULL,
   id_ingrediente INT NOT NULL,
   cantidad INT NOT NULL CHECK (cantidad > 0),
@@ -37,6 +37,7 @@ CREATE table contiene (
   id_ingrediente INT,
   unidades INT CHECK (unidades > 0),
   PRIMARY KEY (id_receta, id_ingrediente),
-  CONSTRAINT fk_receta FOREIGN KEY (id_receta) REFERENCES recetas(id) ON DELETE CASCADE,
+  CONSTRAINT fk_receta_contiene FOREIGN KEY (id_receta) REFERENCES recetas(id) ON DELETE CASCADE,
   CONSTRAINT fk_ingrediente_contiene FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
-)
+
+);
