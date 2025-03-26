@@ -2,8 +2,7 @@ module.exports.recipeQueries = { getAllRecipes: "SELECT id, nombre, descripcion 
 
 module.exports.pantryQueries = {
 	getPantryFromUser: `
-        SELECT d.id_despensa, d.id_ingrediente, i.nombre AS nombre_ingrediente, 
-               d.caducidad, d.cantidad
+        SELECT d.id_despensa, d.id_ingrediente, i.nombre AS nombre_ingrediente, d.cantidad
         FROM despensa d
         JOIN ingredientes i ON d.id_ingrediente = i.id
         WHERE d.id_usuario = ?

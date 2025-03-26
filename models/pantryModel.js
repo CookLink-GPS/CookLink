@@ -6,7 +6,6 @@ const { pantryQueries } = require("../config/querys");
  * @typedef PantryIngredient
  * @property {Number} id_ingrediente
  * @property {Number} cantidad
- * @property {String} caducidad
  *
  */
 const Pantry = {

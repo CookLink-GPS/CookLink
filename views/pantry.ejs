@@ -24,7 +24,6 @@
                     <tr>
                         <th>Nombre Ingrediente</th>
                         <th>Cantidad</th>
-                        <th>Fecha de Caducidad</th>
                         <th>Remover</th>
                     </tr>
                 </thead>
@@ -34,7 +33,6 @@
                             <tr>
                                 <td><%= ingredient.nombre_ingrediente %></td>
                                 <td class="ingredient-quantity"><%= ingredient.cantidad || "N/A" %> unidades</td>
-                                <td><%= ingredient.caducidad || "No disponible" %></td>
                                 <td>
                                     <button 
                                         type="button" 
