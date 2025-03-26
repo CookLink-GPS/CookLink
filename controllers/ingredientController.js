@@ -38,7 +38,7 @@ exports.addIngredient = async (req, res) => {
 		const result = await ingredientService.processIngredient({
 			nombre,
 			tipoUnidad,
-			cantidad: parseInt(cantidad, 10),
+			cantidad: parseFloat(cantidad),
 			userId
 		});
 
