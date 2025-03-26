@@ -94,6 +94,8 @@ const Pantry = {
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	}
+
+
 };
 
 module.exports = Pantry;

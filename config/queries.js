@@ -1,3 +1,5 @@
+module.exports.recipeQueries = { getAllRecipes: "SELECT id, nombre, descripcion FROM recetas" };
+
 module.exports.pantryQueries = {
 	getPantryFromUser: `
         SELECT d.id_despensa, d.id_ingrediente, i.nombre AS nombre_ingrediente, d.cantidad
