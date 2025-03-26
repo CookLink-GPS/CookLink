@@ -73,6 +73,8 @@ const Pantry = {
 		catch (error) {
 			console.error("Error getting pantry item:", error);
 			throw new Error(`Error getting pantry item ${id_despensa}`);
+		}
+	},
 	/**
      * Retrieves all ingredients with their name and unit type
      * from a user's pantry.
@@ -90,10 +92,6 @@ const Pantry = {
 		catch (error) {
 			console.log("Error");
 			throw new Error(`Error fetching pantry for user ${userId}`);
-		}
-	},
-
-
 		}
 	}
 };
