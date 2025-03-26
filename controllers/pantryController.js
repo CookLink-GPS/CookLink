@@ -19,7 +19,7 @@ const pantryController = {
 		}
 		catch (error) {
 			console.error(error);
-			res.status(internalServerError).render("error", { message: "Error fetching pantry" });
+			renderView(res, "error", internalServerError, { error: "Error fetching pantry", status: internalServerError });
 		}
 	},
 
