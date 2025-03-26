@@ -24,6 +24,7 @@ const IngredientService = {
 			// 1. Buscar  el ingrediente
 			const ingredienteExistente = await Ingredient.findByName(nombre);
 			let ingredientId;
+			let existsInPantry;
 			if (ingredienteExistente) {
 				console.log(`[Service] Lectura ingrediente:`, ingredienteExistente);
 				console.log(`Esperado: '${ingredienteExistente.tipoUnidad}'`);
@@ -33,25 +34,27 @@ const IngredientService = {
 
 
 				ingredientId = ingredienteExistente.id;
+
+				// 3. Verificar si ya está en la despensa
+				existsInPantry = await Pantry.findItem(userId, ingredientId);
+
+				if (existsInPantry) {
+					console.log(`[Service] Ingrediente ya en la despensa, actualizando cantidad... ID:`, existsInPantry.id_ingrediente);
+					await Pantry.updateItem(userId, ingredientId, cantidad);
+				}
+				else {
+					console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
+					await Pantry.addItem(userId, ingredientId, cantidad);
+
+				}
 			}
 			else {
 				// 2. Si no existe, crearlo
 				console.log(`[Service] Ingrediente no encontrado`);
 				ingredientId = await Ingredient.create(nombre, tipoUnidad);
 				console.log(`[Service] Ingrediente creado con ID:`, ingredientId);
-			}
-
-			// 3. Verificar si ya está en la despensa
-			const existsInPantry = await Pantry.findItem(userId, ingredientId);
-
-			if (existsInPantry) {
-				console.log(`[Service] Ingrediente ya en la despensa, actualizando cantidad... ID:`, existsInPantry.id_ingrediente);
-				await Pantry.updateItem(userId, ingredientId, cantidad);
-			}
-			else {
 				console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
 				await Pantry.addItem(userId, ingredientId, cantidad);
-
 			}
 
 
