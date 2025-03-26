@@ -1,4 +1,3 @@
-
 module.exports.recipeQueries = { getAllRecipes: "SELECT id, nombre, descripcion FROM recetas" };
 
 module.exports.pantryQueries = {
