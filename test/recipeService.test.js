@@ -6,10 +6,6 @@ const { deleteIngredients, insertIngredients, insertPantry, deletePantry, delete
 const User = require("../models/userModel");
 const db = require("../config/database");
 const CERO = 0;
-const UNO =1;
-const DOS = 2;
-const TRES = 3;
-const CUATRO = 4;
 const QUINIENTOS = 500;
 
 // Const RecipeModel = require("../models/recipeModel");
@@ -76,12 +72,12 @@ describe("Servicio de recetas", () => {
 
 			// Receta, ingrediente, cantidad
 			const contienen = [
+				[ idrs[0], ids[0], QUINIENTOS ],
+				[ idrs[0], ids[1], QUINIENTOS ],
+				[ idrs[0], ids[2], QUINIENTOS ],
+				[ idrs[0], ids[3], QUINIENTOS ],
 				[ idrs[1], ids[0], QUINIENTOS ],
-				[ idrs[1], ids[1], QUINIENTOS ],
-				[ idrs[1], ids[2], QUINIENTOS ],
-				[ idrs[1], ids[3], QUINIENTOS ],
-				[ idrs[2], ids[0], QUINIENTOS ],
-				[ idrs[2], ids[1], QUINIENTOS ]
+				[ idrs[1], ids[1], QUINIENTOS ]
 			];
 			await insertContains(contienen);
 
@@ -102,6 +98,7 @@ describe("Servicio de recetas", () => {
 
 		it("Debe devolver una lista de recetas recomendadas para un usuario con el 50% de los ingredientes", async () => {
 			const recommendations = await Recipe.getRecommendations({ id: user2.id });
+			console.log(recommendations);
 			assert.ok(Array.isArray(recommendations));
 			assert.ok(recommendations.length > CERO);
 		});
