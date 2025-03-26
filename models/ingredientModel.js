@@ -40,8 +40,8 @@ const Ingredient = {
 			console.log(error);
 			throw Error("Error al obtener los ingredientes");
 		}
-	}
-  
+	},
+
 	async getIngredient(id) {
 		try {
 			const sql = `SELECT * FROM ${nombreTabla} WHERE id = ?`;
