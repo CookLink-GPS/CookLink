@@ -19,4 +19,9 @@ module.exports.userQueries = {
 
 module.exports.recipeQueries = { getAllRecipes: "SELECT id, nombre, descripcion FROM recetas" };
 
-module.exports.containsQueries = { getFromRecipe: "SELECT id_ingrediente, unidades FROM contiene WHERE id_receta = ?" };
+module.exports.containsQueries = {
+	getFromRecipe: `
+	SELECT i.id, i.nombre, c.unidades, i.tipoUnidad FROM contiene c 
+	JOIN ingredientes i ON i.id = id_ingrediente WHERE c.id_receta = ?;
+	`
+};
