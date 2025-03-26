@@ -1,7 +1,8 @@
 const UserService = require("../services/userService");
 const { validationResult } = require("express-validator");
 const { renderView } = require("../middlewares/viewHelper"); // Importamos la función centralizada
-const { ok, badRequest } = require("../config/httpcodes");
+const { ok, badRequest, unauthorized } = require("../config/httpcodes");
+const bcrypt = require("bcrypt");
 
 /**
  * Obtiene todos los usuarios y los renderiza en la vista "users"
@@ -20,14 +21,25 @@ exports.getAllUsers = async (req, res, next) => {
 	}
 };
 
-exports.inciarSesion = async (req, res) => {
+exports.login = async (req, res) => {
+	const { username, password } = req.body;
 	try {
-		const { username, password } = req.body;
-		await UserService.inciarSesion({ username, password });
-		res.redirect("/inicio");
+		const user = await UserService.inciarSesion( { username, password });
+		const valido = await bcrypt.compare(password, user.password);
+
+		if (!valido) return res.status(unauthorized).json({ error: "Credenciales inválidas" });
+
+		req.session.userId = user.id; // Guarda el ID del usuario en la sesión
+		req.session.username = user.username;
+
+		console.log("Sesión guardada:", req.session); // Debugging
+
+		renderView(res, "inicio", ok, { usuario: req.session.username });
 	}
-	catch (err) {
-		console.error("Error al iniciar sesion:", err.message);
+	catch (error) {
+		console.error(error);
+		// Cres.status(internalServerError).json({ error: "Error al iniciar sesión" });
+		renderView(res, "login", error.status, { mensajeError: "Error al iniciar sesión" });
 	}
 };
 

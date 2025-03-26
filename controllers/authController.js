@@ -1,8 +1,7 @@
 /* eslint-disable no-magic-numbers */
 const bcrypt = require("bcrypt");
 const UserService = require("../services/userService");
-const { internalServerError, unauthorized, ok } = require("../config/httpcodes");
-const { renderView } = require("../middlewares/viewHelper");
+const { internalServerError } = require("../config/httpcodes");
 
 // Registro de usuario
 const registerUser = async (req, res) => {
@@ -19,31 +18,6 @@ const registerUser = async (req, res) => {
 	}
 };
 
-// Inicio de sesión
-const loginUser = async (req, res) => {
-	const { username, password } = req.body;
-	try {
-		const user = await UserService.inciarSesion( { username, password });
-		const valido = await bcrypt.compare(password, user.password);
-
-		if (!valido) return res.status(unauthorized).json({ error: "Credenciales inválidas" });
-
-		req.session.userId = user.id; // Guarda el ID del usuario en la sesión
-		req.session.username = user.username;
-
-		console.log("Sesión guardada:", req.session); // Debugging
-
-		// C res.redirect("/inicio");
-		//renderView(res, "inicio", ok);
-		renderView(res, "inicio", ok, { usuario: req.session.username });
-	}
-	catch (error) {
-		console.error(error);
-		// Cres.status(internalServerError).json({ error: "Error al iniciar sesión" });
-		renderView(res, "login", error.status, { mensajeError: "Error al iniciar sesión" });
-	}
-};
-
 // Cierre de sesión
 const logoutUser = (req, res) => {
 	req.session.destroy(err => {
@@ -52,4 +26,4 @@ const logoutUser = (req, res) => {
 	});
 };
 
-module.exports = { registerUser, loginUser, logoutUser };
+module.exports = { registerUser, logoutUser };
