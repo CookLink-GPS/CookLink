@@ -2,7 +2,7 @@
 const db = require("../config/database");
 const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
-const { userQuerys } = require("../config/queries");
+const { userQuerys } = require("../config/querys");
 
 /**
  *
