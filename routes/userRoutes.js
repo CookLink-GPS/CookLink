@@ -37,7 +37,7 @@ router.post(
 
 // /users/create
 router.post("/create", userController.createUser);
-router.post("/login", userController.inciarSesion);
+router.post("/login", userController.login);
 router.delete("/delete/:id", userController.deleteUser);
 
 

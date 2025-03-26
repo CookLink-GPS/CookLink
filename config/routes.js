@@ -3,7 +3,6 @@ const userRouter = require("../routes/userRoutes");
 const recipeRouter = require("../routes/recipeRoutes");
 const ingredientRouter = require("../routes/ingredientRoutes");
 const inicioRouter = require("../routes/inicioRoutes");
-const authRouter = require("../routes/authRouter");
 const { notFound } = require("./httpcodes");
 
 /**
@@ -17,7 +16,6 @@ module.exports = app => {
 	app.use("/recipes", recipeRouter);
 	app.use("/ingredients", ingredientRouter);
 	app.use("/inicio", inicioRouter);
-	app.use("/auth", authRouter);
 
 	// Manejo de errores 404
 	app.use((req, res, next) => {
