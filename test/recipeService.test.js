@@ -2,7 +2,7 @@
 
 const assert = require("assert");
 const Recipe = require("../services/recipeService");
-const { deleteUsers } = require("./testUtils");
+const { deleteIngredients, insertIngredients, insertPantry, deletePantry, deleteUsers, insertRecetas, deleteRecipes, insertContains, deleteContains } = require("./testUtils");
 const User = require("../models/userModel");
 const db = require("../config/database");
 const CERO = 0;
@@ -10,10 +10,6 @@ const UNO =1;
 const DOS = 2;
 const TRES = 3;
 const CUATRO = 4;
-const CINCO = 5;
-const SEIS = 6;
-const SIETE = 7;
-const OCHO = 8;
 const QUINIENTOS = 500;
 
 // Const RecipeModel = require("../models/recipeModel");
@@ -41,31 +37,62 @@ describe("Servicio de recetas", () => {
 		let user, user2, user0;
 
 		before(async () => {
-			await db.query("INSERT INTO usuarios (id, username, password) VALUES ('Luis', '123456789')");
-			user = User.getByUsername("Luis");
+			await db.query("INSERT INTO usuarios (username, password) VALUES ('Luis', '123456789')");
+			user = await User.getByUsername("Luis");
 
-			await db.query("INSERT INTO usuarios (id, username, password) VALUES ('Paula', '123456789')");
-			user2 = User.getByUsername("Paula");
+			await db.query("INSERT INTO usuarios (username, password) VALUES ('Paula', '123456789')");
+			user2 = await User.getByUsername("Paula");
 
-			await db.query("INSERT INTO usuarios (id, username, password) VALUES ('Alberto', '123456789')");
-			user0 = User.getByUsername("Alberto");
+			await db.query("INSERT INTO usuarios (username, password) VALUES ('Alberto', '123456789')");
+			user0 = await User.getByUsername("Alberto");
 
+			const ingredientes = [
+				[ "harina", "gramos" ],
+				[ "arroz", "gramos" ],
+				[ "leche", "litros" ],
+				[ "harina de avena", "gramos" ]
+			];
+			const ings = await insertIngredients(ingredientes);
+			console.log(ings);
+			const ids = ings.map(ing => ing.id);
 
-			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, UNO, QUINIENTOS ]);
-			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, DOS, QUINIENTOS ]);
-			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, TRES, QUINIENTOS ]);
-			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, CUATRO, QUINIENTOS ]);
-			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, CINCO, QUINIENTOS ]);
+			const pantrys = [
+				[ user.id, ids[0], QUINIENTOS ],
+				[ user.id, ids[1], QUINIENTOS ],
+				[ user.id, ids[2], QUINIENTOS ],
+				[ user.id, ids[3], QUINIENTOS ],
+				[ user2.id, ids[0], QUINIENTOS ],
+				[ user2.id, ids[1], QUINIENTOS ]
+			];
+			await insertPantry(pantrys);
 
-			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, SEIS, QUINIENTOS ]);
-			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, SIETE, QUINIENTOS ]);
-			await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)", [ user.id, OCHO, QUINIENTOS ]);
+			const recetas = [
+				[ "receta1", "descripcion1" ],
+				[ "receta2", "descripcion2" ]
+			];
+			const rects = await insertRecetas(recetas);
+
+			const idrs = rects.map(rec => rec.id);
+
+			// Receta, ingrediente, cantidad
+			const contienen = [
+				[ idrs[1], ids[0], QUINIENTOS ],
+				[ idrs[1], ids[1], QUINIENTOS ],
+				[ idrs[1], ids[2], QUINIENTOS ],
+				[ idrs[1], ids[3], QUINIENTOS ],
+				[ idrs[2], ids[0], QUINIENTOS ],
+				[ idrs[2], ids[1], QUINIENTOS ]
+			];
+			await insertContains(contienen);
 
 		});
 
 		after(async () => {
-			await db.query("DELETE FROM despensa WHERE id_usuario IN (?, ?, ?)", [ user.id, user2.id, user0.id ]);
-			await db.query("DELETE FROM usuarios WHERE id IN (?, ?, ?)", [ user.id, user2.id, user0.id ]);
+			await deleteUsers();
+			await deleteIngredients();
+			await deletePantry();
+			await deleteRecipes();
+			await deleteContains();
 		});
 
 		it("Debe devolver una lista vacía para un usuario con el 0% de los ingredientes", async () => {

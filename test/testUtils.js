@@ -31,6 +31,32 @@ const deleteIngredients = async () => {
  */
 const insertIngredients = async ingredients => {
 	for (const ingredient of ingredients) await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingredient);
+	return await db.query("SELECT id, nombre FROM ingredientes");
 };
 
-module.exports = { deleteUsers, deleteIngredients, insertIngredients };
+const deletePantry = async () => {
+	await db.query("DELETE FROM despensa");
+};
+
+const insertPantry = async pantrys => {
+	for (const pantry of pantrys) await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)", pantry);
+};
+
+const deleteRecipes = async () => {
+	await db.query("DELETE FROM recetas");
+};
+
+const insertRecetas = async recetas => {
+	for (const receta of recetas) await db.query("INSERT INTO recetas (nombre, descripcion) VALUES (?, ?)", receta);
+	return await db.query("SELECT id, nombre FROM recetas");
+};
+
+const deleteContains = async () => {
+	await db.query("DELETE FROM contiene");
+};
+
+const insertContains = async contains => {
+	for (const contain of contains) await db.query("INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES (?, ?, ?)", contain);
+};
+
+module.exports = { deleteUsers, deleteIngredients, insertIngredients, deletePantry, insertPantry, deleteRecipes, insertRecetas, deleteContains, insertContains };
