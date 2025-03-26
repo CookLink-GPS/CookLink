@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 const bcrypt = require("bcrypt");
 const UserService = require("../services/userService");
-const { internalServerError, unauthorized } = require("../config/httpcodes");
+const { internalServerError, unauthorized, ok } = require("../config/httpcodes");
 const { renderView } = require("../middlewares/viewHelper");
 
 // Registro de usuario
@@ -33,12 +33,14 @@ const loginUser = async (req, res) => {
 
 		console.log("Sesión guardada:", req.session); // Debugging
 
-		res.redirect("/inicio");
+		// C res.redirect("/inicio");
+		//renderView(res, "inicio", ok);
+		renderView(res, "inicio", ok, { usuario: req.session.username });
 	}
 	catch (error) {
 		console.error(error);
 		// Cres.status(internalServerError).json({ error: "Error al iniciar sesión" });
-		renderView(res, "inicio", error.status, { mensajeError: [ error.message ] });
+		renderView(res, "login", error.status, { mensajeError: "Error al iniciar sesión" });
 	}
 };
 
