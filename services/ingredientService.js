@@ -62,7 +62,7 @@ const IngredientService = {
 				action: existsInPantry ? "updated" : "added",
 				tipoUnidad,
 				cantidad,
-				ingredienteExistente
+				nombre
 			};
 
 		}
