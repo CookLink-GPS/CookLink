@@ -24,20 +24,12 @@ CREATE TABLE recetas (
 
 
 CREATE TABLE despensa (
-<<<<<<< HEAD
-id_despensa int AUTO_INCREMENT PRIMARY KEY,
-=======
   id_despensa int AUTO_INCREMENT PRIMARY KEY,
->>>>>>> 142c896 (MAL)
   id_usuario INT NOT NULL,
   id_ingrediente INT NOT NULL,
   cantidad INT NOT NULL CHECK (cantidad > 0),
   CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
   CONSTRAINT fk_ingrediente FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE,
-<<<<<<< HEAD
-=======
-  CONSTRAINT fk_usuario_ingrediente_caducidad UNIQUE (id_usuario, id_ingrediente, caducidad)
->>>>>>> 142c896 (MAL)
 );
 
 CREATE table contiene (
@@ -47,9 +39,4 @@ CREATE table contiene (
   PRIMARY KEY (id_receta, id_ingrediente),
   CONSTRAINT fk_receta FOREIGN KEY (id_receta) REFERENCES recetas(id) ON DELETE CASCADE,
   CONSTRAINT fk_ingrediente_contiene FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
-<<<<<<< HEAD
-
 );
-=======
-)
->>>>>>> 142c896 (MAL)
