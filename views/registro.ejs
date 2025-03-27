@@ -16,7 +16,7 @@
     
     <div class="container content py-5">
         <% if (mensajeError && mensajeError.length > 0) { %>
-            <div class="alert alert-danger row justify-content-center">
+            <div class="alert alert-danger">
                 <ul>
                     <% mensajeError.forEach(function(error) { %>
                         <li><%= error.msg %></li>
