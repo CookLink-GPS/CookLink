@@ -2,7 +2,7 @@
 const db = require("../config/database");
 const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
-const { userQuerys } = require("../config/queries");
+const { userQueries } = require("../config/queries");
 
 /**
  *
@@ -21,7 +21,7 @@ const User = {
 	 */
 	getAll: async () => {
 		try {
-			const res = await db.query(userQuerys.getAllUsers);
+			const res = await db.query(userQueries.getAllUsers);
 			return res.map(row => ({ ...row }));
 		}
 		catch (error) {
@@ -38,7 +38,7 @@ const User = {
 	 */
 	getByUsername: async username => {
 		try {
-			const [ res ] = await db.query(userQuerys.getByUsername, [ username ]);
+			const [ res ] = await db.query(userQueries.getByUsername, [ username ]);
 
 			return res && { ...res }; // Si no hay resultado, devuelve null
 		}
@@ -60,7 +60,7 @@ const User = {
 			if (password === "" || /[\s\t]/.test(password)) throw new Error();
 
 			const hashedPassword = await bcrypt.hash(password, saltRounds);
-			const res = await db.query(userQuerys.insertUser, [ username, hashedPassword ]);
+			const res = await db.query(userQueries.insertUser, [ username, hashedPassword ]);
 
 			return !!res.affectedRows; // Si es 0, devuelve false, true en otro caso
 		}
@@ -78,7 +78,7 @@ const User = {
 	 */
 	delete: async id => {
 		try {
-			const res = await db.query(userQuerys.deleteUser, [ id ]);
+			const res = await db.query(userQueries.deleteUser, [ id ]);
 			return !!res.affectedRows;
 		}
 		catch (error) {

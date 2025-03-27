@@ -5,6 +5,8 @@ const Recipe = require("../models/recipeModel");
 const AppError = require("../utils/AppError");
 const { stringComparator } = require("../utils/stringFunctions");
 
+const MIN_INGREDIENTS_RATIO = 0.5;
+
 /**
  *
  * @typedef Recipe
@@ -50,16 +52,16 @@ const RecipeService = {
 			}));
 
 			return recipesWithIngredients.filter(({ ingredients }) => {
-				let ok = true;
-
+				let quantity = 0;
 				// Comprobar para cada ingrediente:
 				ingredients.forEach(({ id_ingrediente: ingredientId, unidades }) => {
-					// Que esta en la despensa Y que hay suficiente cantidad
-					ok = ok &&
-                              (pantryMap.has(ingredientId) && pantryMap.get(ingredientId).cantidad > unidades);
+					// Si esta en la despensa Y hay suficiente cantidad
+					// Entonces añadimos 1 al total de ingredientes coincidentes
+					if (pantryMap.has(ingredientId) && pantryMap.get(ingredientId).cantidad >= unidades) quantity++;
+
 				});
 
-				return ok;
+				return quantity/ingredients.length >= MIN_INGREDIENTS_RATIO; // Si hay al menos la mitad de ingredientes
 			}).toSorted(({ nombre: nameA }, { nombre: nameB }) => stringComparator(nameA, nameB));
 		}
 		catch (error) {
