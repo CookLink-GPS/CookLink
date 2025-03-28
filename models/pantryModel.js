@@ -14,7 +14,7 @@ const Pantry = {
      *
      * @async
      * @param {Number} userId - User ID.
-     * @returns {Promise<PantryIngredient[]>} - Array containing the id, amount, and expiration date
+     * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
      *                                           of each ingredient in the pantry.
      */
 
@@ -24,8 +24,7 @@ const Pantry = {
 			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.error("Error fetching pantry:", error);
-
+			console.error(error.message);
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	},
@@ -81,7 +80,7 @@ const Pantry = {
      *
      * @async
      * @param {Number} userId - User ID.
-     * @returns {Promise<PantryIngredient[]>} - Array containing the id, amount, expiration date,
+     * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
 	 *                                          name and unit type of each ingredient in the pantry.
      */
 	async getIngredientsDetails(userId) {
