@@ -5,6 +5,15 @@
                 <h5 class="card-title text-center user-select-none">
                     <%= recipe.nombre %>
                 </h5>
+                <ul>
+                    <% recipe.ingredientes.forEach(({ nombre, unidades, tipoUnidad })=> { %>
+                        <li>
+                            <%= nombre %> - <%= unidades %>
+                                    <%= tipoUnidad %>
+                        </li>
+
+                        <% }); %>
+                </ul>
             </div>
         </div>
     </div>

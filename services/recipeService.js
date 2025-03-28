@@ -14,6 +14,18 @@ const MIN_INGREDIENTS_RATIO = 0.5;
  * @property {String} nombre
  * @property {String} descripcion
  *
+ * @typedef RecipeIngredient
+ * @property {Number} id
+ * @property {String} nombre
+ * @property {Number} unidades
+ * @property {String} tipoUnidad
+ *
+ * @typedef RecipeWithIngredients
+ * @property {Number} id
+ * @property {String} nombre
+ * @property {String} descripcion
+ * @property {RecipeIngredient[]} ingredientes
+ *
  */
 const RecipeService = {
 
@@ -48,20 +60,20 @@ const RecipeService = {
 
 			const recipesWithIngredients = await Promise.all(allRecipes.map(async ({ id: recipeId, nombre, descripcion }) => {
 				const ingredients = await Contains.getFromRecipe(recipeId);
-				return { id: recipeId, nombre, descripcion, ingredients };
+				return { id: recipeId, nombre, descripcion, ingredientes: ingredients };
 			}));
 
-			return recipesWithIngredients.filter(({ ingredients }) => {
+			return recipesWithIngredients.filter(({ ingredientes }) => {
 				let quantity = 0;
 				// Comprobar para cada ingrediente:
-				ingredients.forEach(({ id_ingrediente: ingredientId, unidades }) => {
+				ingredientes.forEach(({ id: ingredientId, unidades }) => {
 					// Si esta en la despensa Y hay suficiente cantidad
 					// Entonces añadimos 1 al total de ingredientes coincidentes
 					if (pantryMap.has(ingredientId) && pantryMap.get(ingredientId).cantidad >= unidades) quantity++;
 
 				});
 
-				return quantity/ingredients.length >= MIN_INGREDIENTS_RATIO; // Si hay al menos la mitad de ingredientes
+				return quantity/ingredientes.length >= MIN_INGREDIENTS_RATIO; // Si hay al menos la mitad de ingredientes
 			}).toSorted(({ nombre: nameA }, { nombre: nameB }) => stringComparator(nameA, nameB));
 		}
 		catch (error) {

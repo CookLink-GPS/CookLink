@@ -4,9 +4,10 @@ const { containsQueries } = require("../config/queries");
 /**
  *
  * @typedef RecipeIngredient
- * @property {Number} id_ingrediente
+ * @property {Number} id
+ * @property {String} nombre
  * @property {Number} unidades
- *
+ * @property {Number} tipoUnidad
  */
 const Contains = {
 	/**
