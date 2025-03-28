@@ -5,8 +5,8 @@ const ingredientList = document.getElementById("ingredientList");
 let prevSearch = "";
 const MIN_FILTER_LENGTH = 2;
 
-const filterIngredients = async filter => {
-	const { ingredientes } = await fetch(`/ingredients/filter/${filter}`, { method: "GET" }).then(res => res.json());
+const searchIngredients = async search => {
+	const { ingredientes } = await fetch(`/despensa/search/${search}`, { method: "GET" }).then(res => res.json());
 
 	ingredientes.forEach(({ nombre }) => {
 		const li = document.createElement("li");
@@ -18,7 +18,7 @@ const filterIngredients = async filter => {
 	});
 };
 
-filterIngredients("");
+searchIngredients("");
 
 searchInput.addEventListener("input", async () => {
 	let search = searchInput.value;
@@ -29,6 +29,6 @@ searchInput.addEventListener("input", async () => {
 
 	ingredientList.innerHTML = "";
 
-	await filterIngredients(search);
+	await searchIngredients(search);
 });
 
