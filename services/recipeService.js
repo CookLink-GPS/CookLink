@@ -69,7 +69,8 @@ const RecipeService = {
 				ingredientes.forEach(({ id: ingredientId, unidades }) => {
 					// Si esta en la despensa Y hay suficiente cantidad
 					// Entonces añadimos 1 al total de ingredientes coincidentes
-					quantity += pantryMap.has(ingredientId) && pantryMap.get(ingredientId).cantidad > unidades;
+					if (pantryMap.has(ingredientId) && pantryMap.get(ingredientId).cantidad >= unidades) quantity++;
+
 				});
 
 				return quantity/ingredientes.length >= MIN_INGREDIENTS_RATIO; // Si hay al menos la mitad de ingredientes
