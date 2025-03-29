@@ -1,12 +1,13 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-magic-numbers */
 const assert = require("node:assert");
-const { deleteIngredients, deletePantryItems, insertIngredients } = require("./testUtils");
+const { deleteIngredients, createuser, deletePantry, insertIngredients } = require("./testUtils");
 const Ingredient = require("../models/ingredientModel");
 
 describe("Modelo ingrediente", () => {
 	beforeEach(deleteIngredients);
-	beforeEach(deletePantryItems);
+	beforeEach(deletePantry);
+	beforeEach(createuser);
 	after(deleteIngredients);
 
 	describe("Obtener todos los ingredientes", () => {

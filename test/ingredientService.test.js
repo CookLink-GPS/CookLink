@@ -1,13 +1,14 @@
 /* eslint-disable no-undef */
 const assert = require("node:assert");
 const IngredientService = require("../services/ingredientService");
-const { deleteIngredients, insertIngredients } = require("./testUtils");
+const { deleteIngredients, insertIngredients, createuser, deletePantry } = require("./testUtils");
 
 
 describe("Servicio Ingrediente", () => {
 	beforeEach(async () => {
+		await createuser();
 		await deleteIngredients();
-		await deletePantryItems();
+		await deletePantry();
 	});
 	after(deleteIngredients);
 

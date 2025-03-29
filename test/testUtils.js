@@ -9,6 +9,10 @@ const deleteUsers = async () => {
 	await db.query("DELETE FROM usuarios");
 };
 
+const createuser = async () => {
+	await db.query("INSERT INTO usuarios (username, password) VALUES ('Luis', '12345678Aa:')");
+};
+
 /**
  * Elimina todos los ingredientes de la base de datos.
  *
@@ -62,4 +66,4 @@ const insertContains = async contains => {
 	for (const contain of contains) await db.query("INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES (?, ?, ?)", contain);
 };
 
-module.exports = { deleteUsers, deleteIngredients, insertIngredients, deletePantry, insertPantry, deleteRecipes, insertRecetas, deleteContains, insertContains };
+module.exports = { createuser, deleteUsers, deleteIngredients, insertIngredients, deletePantry, insertPantry, deleteRecipes, insertRecetas, deleteContains, insertContains };
