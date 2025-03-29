@@ -104,6 +104,8 @@ const RecipeService = {
 			return ingredients;
 		}
 		catch (error) {
+			if (error.message === "No hay ingredientes") throw error;
+
 			console.error(error);
 			throw new AppError("Error al obtener los ingredientes", error);
 		}

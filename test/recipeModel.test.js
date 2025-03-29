@@ -6,13 +6,17 @@ const Recipe = require("../models/recipeModel");
 
 describe("Modelo Receta", () => {
 
-	beforeEach(deleteIngredients);
-	beforeEach(deleteRecipe);
-	beforeEach(deleteContains);
+	beforeEach(async () => {
+		await deleteIngredients();
+		await deleteRecipe();
+		await deleteContains();
+	  });
 
-	after(deleteIngredients);
-	after(deleteRecipe);
-	after(deleteContains);
+	  after(async () => {
+		await deleteIngredients();
+		await deleteRecipe();
+		await deleteContains();
+	  });
 
 	describe("Obtener recetas", () => {
 
@@ -35,34 +39,36 @@ describe("Modelo Receta", () => {
 
 	});
 
-	describe("Obtener los ingredientes de una receta por su id", async () => {
+	describe("Obtener los ingredientes de una receta por su id", () => {
 
-		it("Debe de devolver los ingredientes correctos de una receta por su id"){
+		it("Debe de devolver los ingredientes correctos de una receta por su id", async () => {
 			const recipe = [ [ "Nombre", "Descripcion" ] ];
 			const recipeIds = await insertRecipes(recipe);
-	
+
 			const ingredients = [
 				[ "Ingrediente1", "TipoUnidad1" ],
 				[ "Ingrediente2", "TipoUnidad2" ]
 			];
 			const ingredientsIds = await insertIngredients(ingredients);
-	
+
 			const contains = [
 				// eslint-disable-next-line no-magic-numbers
 				[ recipeIds[0].id, ingredientsIds[0].id, 100 ],
 				// eslint-disable-next-line no-magic-numbers
 				[ recipeIds[0].id, ingredientsIds[1].id, 200 ]
 			];
-			const containsIds = await insertContains(contains);
-	
+			await insertContains(contains);
+
 			const result = await Recipe.getIngredients(recipeIds[0].id);
-	
+
 			assert.deepEqual(
 				result,
-				[ [ ingredientsIds[0].nombre, ingredientsIds[0].tipoUnidad, containsIds[0].unidades ] ],
-				[ [ ingredientsIds[1].nombre, ingredientsIds[1].tipoUnidad, containsIds[1].unidades ] ]
+				[
+					{ ingrediente: ingredientsIds[0].nombre, tipoUnidad: ingredientsIds[0].tipoUnidad, unidades: contains[0][2] },
+					{ ingrediente: ingredientsIds[1].nombre, tipoUnidad: ingredientsIds[1].tipoUnidad, unidades: contains[1][2] }
+				]
 			);
-		}
-		
+		});
+
 	});
 });
