@@ -83,6 +83,8 @@ const RecipeService = {
 			return recipe;
 		}
 		catch (error) {
+			if (error.message === "Receta no encontrada") throw error;
+
 			console.error(error);
 			throw new AppError("Error al obtener la receta", error);
 		}
