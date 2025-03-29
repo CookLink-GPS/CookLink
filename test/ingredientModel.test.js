@@ -2,12 +2,14 @@
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const { deleteIngredients } = require("./testUtils");
+const { deleteIngredients, deletePantryItems } = require("./testUtils");
 const Ingredient = require("../models/ingredientModel");
 
 describe("Modelo Ingrediente", () => {
 	before(deleteIngredients);
+	before(deletePantryItems);
 	beforeEach(deleteIngredients);
+	beforeEach(deletePantryItems);
 
 	describe("Añadir ingrediente", () => {
 		it("Debe crear correctamente un ingrediente nuevo con datos válidos", async () => {
