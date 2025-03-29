@@ -9,6 +9,10 @@ const deleteUsers = async () => {
 	await db.query("DELETE FROM usuarios");
 };
 
+const createuser = async () => {
+	await db.query("INSERT INTO usuarios (username, password) VALUES ('Luis', '12345678Aa:')");
+};
+
 /**
  * Elimina todos los registros de la tabla de ingredientes.
  */
@@ -32,4 +36,4 @@ async function deletePantryItems () {
 		console.error("Error al borrar elementos de despensa:", error);
 	}
 }
-module.exports = { deleteUsers, deletePantryItems, deleteIngredients };
+module.exports = { deleteUsers, createuser, deletePantryItems, deleteIngredients };

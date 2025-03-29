@@ -1,13 +1,15 @@
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const { deleteIngredients, deletePantryItems } = require("./testUtils");
+const { createuser, deleteIngredients, deletePantryItems } = require("./testUtils");
 const { baseUrl, port } = require("../config/config");
 const { badRequest, ok, conflict } = require("../config/httpcodes");
 
 describe("Rutas de ingredientes", () => {
+	before(createuser);
 	before(deleteIngredients);
 	before(deletePantryItems);
+	beforeEach(createuser);
 	afterEach(deleteIngredients);
 	afterEach(deletePantryItems);
 
