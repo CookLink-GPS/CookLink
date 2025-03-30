@@ -74,17 +74,29 @@ const Pantry = {
      * @async
      * @param {Number} userId - User ID.
      * @param {Number} ingredientId - Ingredient ID to add.
-     * @param {Number} caducidad - Caducidad ID to add.
      * @param {Number} cantidad - Cantidad ID to add.
      * @returns {Promise<void>}
      * @throws {Error} - If an error occurs while adding the ingredient.
      */
-	async addIngrediente(userId, ingredientId, caducidad, cantidad) {
+	async addIngrediente(userId, ingredientId, cantidad) {
 		try {
-			await db.query(pantryQueries.addIngrediente, [ userId, ingredientId, caducidad, cantidad ]);
+			const exists = await db.query(
+				"SELECT * FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
+				[ userId, ingredientId ]
+			);
+
+			if (exists.length > 0) await db.query(
+				"UPDATE despensa SET cantidad = cantidad + ? WHERE id_usuario = ? AND id_ingrediente = ?",
+				[ cantidad, userId, ingredientId ]
+			);
+			 else await db.query(
+				pantryQueries.addIngrediente,
+				[ userId, ingredientId, cantidad ]
+			);
+
 		}
 		catch (error) {
-			throw new Error(`Error adding ingredient ${ingredientId}, caducidad ${caducidad}, cantidad ${cantidad} into user ${userId}'s pantry`);
+			throw new Error(`Error adding ingredient ${ingredientId}, cantidad ${cantidad} into user ${userId}'s pantry`);
 		}
 	},
 

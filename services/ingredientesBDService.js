@@ -4,12 +4,13 @@ const PantryModel = require("../models/pantryModel");
 const ingredientesBDService = {
 	getAllIngredientsFromDatabase: async () => {
 		const ingredients = await Ingredient.getAllIngredients();
+
 		return ingredients;
 	},
 
-	addIngredientIntoPantry: async (userId, ingredientId, caducidad, cantidad) => {
+	addIngredientIntoPantry: async (userId, ingredientId, cantidad) => {
 		try {
-			await PantryModel.addIngrediente(userId, ingredientId, caducidad, cantidad);
+			await PantryModel.addIngrediente(userId, ingredientId, cantidad);
 		}
 		catch (error) {
 			console.error("Error al añadir ingrediente en la despensa:", error);
