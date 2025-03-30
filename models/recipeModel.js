@@ -22,7 +22,6 @@ const Recipe = {
 			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.log(error);
 			throw new Error("Error al obtener todas las recetas");
 		}
 	},
@@ -38,7 +37,6 @@ const Recipe = {
 			return recipe[0];
 		}
 		catch (error) {
-			console.error(error);
 			throw new Error("Error al obtener el id ", error);
 		}
 	},
@@ -54,7 +52,6 @@ const Recipe = {
 			return ingredients;
 		}
 		catch (error) {
-			console.error(error);
 			throw new Error("Error al conseguir los ingredientes de esa receta", error);
 		}
 	}

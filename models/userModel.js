@@ -25,7 +25,6 @@ const User = {
 			return res.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.log(error);
 			throw Error("Error al obtener todos los usuarios");
 		}
 	},
@@ -43,7 +42,6 @@ const User = {
 			return res && { ...res }; // Si no hay resultado, devuelve null
 		}
 		catch (error) {
-			console.log(error);
 			throw new Error("Error al buscar usuario");
 		}
 	},
@@ -65,7 +63,6 @@ const User = {
 			return !!res.affectedRows; // Si es 0, devuelve false, true en otro caso
 		}
 		catch (error) {
-			console.log(error.message);
 			throw new Error("registro Error al crear el usuario");
 		}
 	},
@@ -82,7 +79,6 @@ const User = {
 			return !!res.affectedRows;
 		}
 		catch (error) {
-			console.log(error);
 			throw new Error("Error al eliminar el usuario");
 		}
 	}

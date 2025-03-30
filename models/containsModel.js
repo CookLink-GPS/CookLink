@@ -24,7 +24,6 @@ const Contains = {
 			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.log(error);
 			throw new Error(`Error obteniendo los ingredientes de la receta ${recipeId}`);
 		}
 	}

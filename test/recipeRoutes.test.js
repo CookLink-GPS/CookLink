@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const { deleteIngredients, insertIngredients, deleteRecipe, insertRecipes, deleteContains, insertContains } = require("./testUtils");
+const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, deleteContains, insertContains } = require("./testUtils");
 const { baseUrl, port } = require("../config/config");
 const { ok } = require("../config/httpcodes");
 
@@ -11,13 +11,13 @@ describe("Rutas de recetas", () => {
 	beforeEach(async () => {
 		await deleteContains();
 		await deleteIngredients();
-		await deleteRecipe();
+		await deleteRecipes();
 	  });
 
 	  after(async () => {
 		await deleteContains();
 		await deleteIngredients();
-		await deleteRecipe();
+		await deleteRecipes();
 	  });
 
 	const baseRoute = `http://${baseUrl}:${port}/recipes/`;
@@ -41,7 +41,7 @@ describe("Rutas de recetas", () => {
 		];
 
 		it("Redirige correctamente", async () => {
-			const recipeIds = await insertRecipes(recipe);
+			const recipeIds = await insertRecetas(recipe);
 			const ingredientsIds = await insertIngredients(ingredients);
 			const contains = [
 				[ recipeIds[0].id, ingredientsIds[0].id, 100 ],

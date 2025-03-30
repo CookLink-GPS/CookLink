@@ -1,6 +1,5 @@
 const ingredientService = require("../services/ingredientService");
-
-const { renderView } = require("../middlewares/viewHelper"); // Importamos la función centralizada
+const { renderView } = require("../middlewares/viewHelper");
 const { ok } = require("../config/httpcodes");
 
 /**
@@ -19,6 +18,12 @@ exports.toIngredient = (req, res, next) => {
 	}
 };
 
+/**
+ * Adds an ingredient.
+ *
+ * @param {Object} req - HTTP request object.
+ * @param {Object} res - HTTP response object.
+ */
 exports.addIngredient = async (req, res) => {
 	console.log(`Ingrediente controller${ req.body}`);
 	try {
@@ -27,11 +32,16 @@ exports.addIngredient = async (req, res) => {
 		renderView(res, "ingredientes", ok, { mensajeExito: "Ingrediente añadido correctamente." });
 	}
 	catch (err) {
-		// Next(err);
 		renderView(res, "ingredientes", { mensajeError: "Error al añadir el ingrediente" });
 	}
 };
 
+/**
+ *
+ *
+ * @param {Object} req - HTTP request object.
+ * @param {Object} res - HTTP response object.
+ */
 exports.filterIngredients = async (req, res) => {
 	try {
 		const ingredientes = await ingredientService.filterIngredients(req.params.filter || "");
@@ -39,7 +49,6 @@ exports.filterIngredients = async (req, res) => {
 		res.json({ ingredientes });
 	}
 	catch (err) {
-		console.log(err);
 		res.json({ mensajeError: "Error al filtrar los ingredientes" });
 	}
 };

@@ -35,12 +35,8 @@ CREATE TABLE despensa (
   id_despensa int PRIMARY KEY AUTO_INCREMENT,
   id_usuario int NOT NULL,
   id_ingrediente int NOT NULL,
-  cantidad float NOT NULL,
+  cantidad float NOT NULL CHECK (cantidad >= 0),
   CONSTRAINT fk_ingrediente_despensa FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE,
   CONSTRAINT fk_usuario_despensa FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-);
-=======
-)
->>>>>>> 142c896 (MAL)

@@ -19,7 +19,6 @@ const PantryService = {
 			return ingredients;
 		}
 		catch (error) {
-			console.error(error);
 			throw new AppError("Error fetching pantry", internalServerError);
 		}
 	},
@@ -41,7 +40,6 @@ const PantryService = {
 			return ingredients;
 		}
 		catch (error) {
-			console.error(error);
 			throw new AppError("Error fetching pantry", internalServerError);
 		}
 	},
@@ -55,13 +53,13 @@ const PantryService = {
      * @returns {Promise<void>}
      * @throws {AppError} - If the user ID or ingredient ID is missing.
      */
-	async deleteIngredient(userId, id_despensa, quantityToDelete) {
-		if (!userId || !id_despensa || !quantityToDelete) throw new AppError("Missing required data", badRequest);
+	async deleteIngredient(userId, idDespensa, quantityToDelete) {
+		if (!userId || !idDespensa || !quantityToDelete) throw new AppError("Missing required data", badRequest);
 
 		const ERROR = 403;
 		try {
 			// Primero obtenemos el item de la despensa
-			const pantryItem = await Pantry.getPantryItemById(id_despensa);
+			const pantryItem = await Pantry.getPantryItemById(idDespensa);
 
 			if (!pantryItem) throw new AppError("Item not found in pantry", badRequest);
 
@@ -73,11 +71,10 @@ const PantryService = {
 
 
 			if (quantityToDelete === pantryItem.cantidad) await Pantry.deleteIngredient(userId, pantryItem.id_ingrediente);
-			 else await Pantry.updateIngredientQuantity(id_despensa, pantryItem.cantidad - quantityToDelete);
+			 else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
 
 		}
 		catch (error) {
-			console.error(error);
 			throw new AppError("Error deleting ingredient", internalServerError);
 		}
 	}

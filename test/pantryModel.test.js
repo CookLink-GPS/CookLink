@@ -1,8 +1,6 @@
 /* eslint-env mocha */
 /* eslint-disable no-undef */
 /* eslint-disable no-magic-numbers */
-/* eslint-env mocha */
-/* eslint-env mocha */
 const assert = require("assert");
 const Pantry = require("../models/pantryModel");
 const db = require("../config/database");
@@ -36,7 +34,7 @@ describe("Modelo despensa", () => {
 		await db.query("DELETE FROM usuarios");
 	});
 
-	describe("#getPantryFromUser()", () => {
+	describe("Obtener despensa de un usuario", () => {
 		it("debe devolver 2 ingredientes para el usuario", async () => {
 			const result = await Pantry.getPantryFromUser(1);
 			assert.strictEqual(result.length, 2);

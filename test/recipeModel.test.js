@@ -1,8 +1,8 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable no-undef */
 
-const assert = require("node:assert");
-const { deleteIngredients, insertIngredients, deleteRecipe, insertRecipes, deleteContains, insertContains } = require("./testUtils");
+const assert = require("assert");
+const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, deleteContains, insertContains } = require("./testUtils");
 const Recipe = require("../models/recipeModel");
 
 describe("Modelo Receta", () => {
@@ -10,13 +10,13 @@ describe("Modelo Receta", () => {
 	beforeEach(async () => {
 		await deleteContains();
 		await deleteIngredients();
-		await deleteRecipe();
+		await deleteRecipes();
 	  });
 
 	  after(async () => {
 		await deleteContains();
 		await deleteIngredients();
-		await deleteRecipe();
+		await deleteRecipes();
 	  });
 
 	describe("Obtener recetas", () => {
@@ -32,9 +32,8 @@ describe("Modelo Receta", () => {
 		it("Debe de devolver la receta correcta segun su id", async () => {
 			const recipe = [ [ "Nombre", "Descripcion" ] ];
 
-			const ids = await insertRecipes(recipe);
+			const ids = await insertRecetas(recipe);
 			const result = await Recipe.getRecipeById(ids[0].id);
-
 			assert.deepEqual([ result.nombre, result.descripcion ], recipe[0]);
 		});
 
@@ -44,7 +43,7 @@ describe("Modelo Receta", () => {
 
 		it("Debe de devolver los ingredientes correctos de una receta por su id", async () => {
 			const recipe = [ [ "Nombre", "Descripcion" ] ];
-			const recipeIds = await insertRecipes(recipe);
+			const recipeIds = await insertRecetas(recipe);
 
 			const ingredients = [
 				[ "Ingrediente1", "TipoUnidad1" ],

@@ -78,7 +78,6 @@ const RecipeService = {
 			}).toSorted(({ nombre: nameA }, { nombre: nameB }) => stringComparator(nameA, nameB));
 		}
 		catch (error) {
-			console.log(error);
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
 	},
@@ -99,7 +98,6 @@ const RecipeService = {
 		catch (error) {
 			if (error.message === "Receta no encontrada") throw error;
 
-			console.error(error);
 			throw new AppError("Error al obtener la receta", error);
 		}
 	},
@@ -119,8 +117,6 @@ const RecipeService = {
 		}
 		catch (error) {
 			if (error.message === "No hay ingredientes") throw error;
-
-			console.error(error);
 			throw new AppError("Error al obtener los ingredientes", error);
 		}
 	}

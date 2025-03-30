@@ -8,9 +8,6 @@ const db = require("../config/database");
 const CERO = 0;
 const QUINIENTOS = 500;
 
-// Const RecipeModel = require("../models/recipeModel");
-// Const { badRequest, ok, conflict } = require("../config/httpcodes");
-
 describe("Servicio de recetas", () => {
 	let user, user2, user0;
 
@@ -88,7 +85,6 @@ describe("Servicio de recetas", () => {
 
 		it("Debe devolver una lista de recetas recomendadas para un usuario con el 50% de los ingredientes", async () => {
 			const recommendations = await Recipe.getRecommendations({ id: user2.id });
-			console.log(recommendations);
 			assert.ok(Array.isArray(recommendations));
 			assert.ok(recommendations.length > CERO);
 
@@ -96,7 +92,6 @@ describe("Servicio de recetas", () => {
 
 		it("Debe devolver una lista de recetas recomendadas para un usuario con el 100% de los ingredientes", async () => {
 			const recommendations = await Recipe.getRecommendations({ id: user.id });
-			console.log(recommendations);
 			assert.ok(Array.isArray(recommendations));
 			assert.ok(recommendations.length > CERO);
 		});
@@ -111,20 +106,19 @@ describe("Servicio de recetas", () => {
 		beforeEach(async () => {
 			await deleteContains();
 			await deleteIngredients();
-			await deleteRecipe();
+			await deleteRecipes();
 		  });
 
 		  after(async () => {
 			await deleteContains();
 			await deleteIngredients();
-			await deleteRecipe();
+			await deleteRecipes();
 		  });
 
-		const recipe = [ [ "Nombre", "Descripcion" ] ];
+	  	const recipe = [ [ "Nombre", "Descripcion" ] ];
 
 		it("Debe devolver la receta correcta segun su id", async () => {
-
-			const ids = await insertRecipes(recipe);
+			const ids = await insertRecetas(recipe);
 			const result = await Recipe.getRecipeById(ids[0].id);
 
 			assert.deepEqual([ [ result.nombre, result.descripcion ] ], recipe);
@@ -145,7 +139,7 @@ describe("Servicio de recetas", () => {
 			try {
 				const errorId = -1;
 
-			    await insertRecipes(recipe);
+			    await insertRecetas(recipe);
 			    await Recipe.getRecipeById(errorId);
 
 				assert.fail("Se esperaba un error");
@@ -160,13 +154,13 @@ describe("Servicio de recetas", () => {
 		beforeEach(async () => {
 			await deleteContains();
 			await deleteIngredients();
-			await deleteRecipe();
+			await deleteRecipes();
 		  });
 
 		  after(async () => {
 			await deleteContains();
 			await deleteIngredients();
-			await deleteRecipe();
+			await deleteRecipes();
 		  });
 
 		const recipe = [ [ "Nombre", "Descripcion" ] ];
@@ -175,9 +169,9 @@ describe("Servicio de recetas", () => {
 			[ "Ingrediente2", "TipoUnidad2" ]
 		];
 
-		it("Debe devolver los ingredientes correctos de una receta por su id", async () => {
+		it("Debe devolver los ingredientes correctos de una receta por su id", async () => { // Falla este
 
-			const recipeIds = await insertRecipes(recipe);
+			const recipeIds = await insertRecetas(recipe);
 			const ingredientsIds = await insertIngredients(ingredients);
 
 			const contains = [
@@ -211,7 +205,7 @@ describe("Servicio de recetas", () => {
 			try {
 				const errorId = -1;
 
-				const recipeIds = await insertRecipes(recipe);
+				const recipeIds = await insertRecetas(recipe);
 				const ingredientsIds = await insertIngredients(ingredients);
 
 				const contains = [

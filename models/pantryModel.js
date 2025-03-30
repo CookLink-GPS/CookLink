@@ -24,8 +24,6 @@ const Pantry = {
 			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.error("Error fetching pantry:", error);
-
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	},
@@ -44,35 +42,32 @@ const Pantry = {
 			await db.query(pantryQueries.deleteIngredient, [ userId, ingredientId ]);
 		}
 		catch (error) {
-			console.error("Error deleting ingredient:", error);
 			throw new Error(`Error deleting ingredient ${ingredientId} from user ${userId}'s pantry`);
 		}
 	},
 
-	async updateIngredientQuantity(id_despensa, newQuantity) {
+	async updateIngredientQuantity(idDespensa, newQuantity) {
 		try {
 			await db.query(
 				"UPDATE despensa SET cantidad = ? WHERE id_despensa = ?",
-				[ newQuantity, id_despensa ]
+				[ newQuantity, idDespensa ]
 			);
 		}
 		catch (error) {
-			console.error("Error updating quantity:", error);
-			throw new Error(`Error updating quantity for pantry item ${id_despensa}`);
+			throw new Error(`Error updating quantity for pantry item ${idDespensa}`);
 		}
 	},
 
-	async getPantryItemById(id_despensa) {
+	async getPantryItemById(idDespensa) {
 		try {
 			const [ result ] = await db.query(
 				"SELECT * FROM despensa WHERE id_despensa = ?",
-				[ id_despensa ]
+				[ idDespensa ]
 			);
 			return result;
 		}
 		catch (error) {
-			console.error("Error getting pantry item:", error);
-			throw new Error(`Error getting pantry item ${id_despensa}`);
+			throw new Error(`Error getting pantry item ${idDespensa}`);
 		}
 	},
 	/**
@@ -90,7 +85,6 @@ const Pantry = {
 			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.log("Error");
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	}

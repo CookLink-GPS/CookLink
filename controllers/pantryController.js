@@ -18,7 +18,7 @@ const pantryController = {
 			res.render("pantry", { ingredients });
 		}
 		catch (error) {
-			console.error(error);
+			console.error(error.message);
 			renderView(res, "error", internalServerError, { error: "Error fetching pantry", status: internalServerError });
 		}
 	},
@@ -33,17 +33,17 @@ const pantryController = {
 		const ERROR = 500;
 		try {
 			const userId = req.session.user.id;
-			const id_despensa = req.params.id_despensa;
+			const idDespensa = req.params.id_despensa;
 			const quantityToDelete = parseInt(req.body.quantity);
 
-			if (!userId || !id_despensa || isNaN(quantityToDelete)) throw new AppError("Missing required data", badRequest);
+			if (!userId || !idDespensa || isNaN(quantityToDelete)) throw new AppError("Missing required data", badRequest);
 
 
-			await PantryService.deleteIngredient(userId, id_despensa, quantityToDelete);
+			await PantryService.deleteIngredient(userId, idDespensa, quantityToDelete);
 			res.redirect("/pantry");
 		}
 		catch (error) {
-			console.error(error);
+			console.error(error.message);
 			res.status(error.status || ERROR).render("error", { message: error.message || "Error deleting ingredient" });
 		}
 	}

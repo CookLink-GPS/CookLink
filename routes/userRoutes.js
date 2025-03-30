@@ -1,4 +1,3 @@
-// Routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
@@ -6,7 +5,6 @@ const { check } = require("express-validator");
 const AppError = require("../utils/AppError");
 const { badRequest } = require("../config/httpcodes");
 
-// /users
 router.get("/", userController.getAllUsers);
 router.get("/registro", userController.toRegistro);
 router.delete("/delete/:id", userController.deleteUser);

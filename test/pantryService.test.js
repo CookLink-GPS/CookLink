@@ -32,8 +32,6 @@ describe("Servicio de Despensa", () => {
       ORDER BY i.nombre ASC
     `);
 
-		console.log(despensa);
-
 		const nombres = despensa.map(item => item.nombre);
 		const nombresOrdenados = [ ...nombres ].sort();
 		if (JSON.stringify(nombres) !== JSON.stringify(nombresOrdenados)) throw new Error("Los ingredientes no están ordenados alfabéticamente");

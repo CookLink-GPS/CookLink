@@ -26,7 +26,6 @@ const UserService = {
 			return User.getAll();
 		}
 		catch (error) {
-			console.error(error);
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
 	},
@@ -69,7 +68,6 @@ const UserService = {
 			return true;
 		}
 		catch (error) {
-			console.error(error);
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
 	}

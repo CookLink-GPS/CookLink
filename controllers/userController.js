@@ -16,7 +16,7 @@ exports.getAllUsers = async (req, res, next) => {
 		res.render("users", { users });
 	}
 	catch (err) {
-		next(err);
+		next(err.mensajeError);
 	}
 };
 
@@ -32,7 +32,7 @@ exports.toRegistro = (req, res, next) => {
 		renderView(res, "registro", ok);
 	}
 	catch (err) {
-		next(err);
+		next(err.mensajeError);
 	}
 };
 
@@ -73,6 +73,6 @@ exports.deleteUser = async (req, res, next) => {
 		res.status(ok).json({ message: "Usuario eliminado correctamente" });
 	}
 	catch (err) {
-		next(err);
+		next(err.mensajeError);
 	}
 };

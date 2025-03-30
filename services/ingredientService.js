@@ -19,13 +19,6 @@ const IngredientService = {
 		if (!ingredient.name) throw new AppError("Falta el nombre del ingrediente", badRequest);
 		if (/[\s\t]/.test(ingredient.name)) throw new AppError("El nombre del ingrediente tiene espacios", badRequest);
 
-		// Comprobamos si el ingrediente ya existe
-		// Const ingredientExistente = await Ingredient.getByName(ingredient.name);
-		// If (ingredientExistente) {
-		// 	Console.log(`ingredientExistente: ${ingredientExistente.name}`);
-		// 	Throw new AppError("El ingrediente ya existe", conflict);
-		// }
-
 		return Ingredient.add(ingredient);
 	},
 
