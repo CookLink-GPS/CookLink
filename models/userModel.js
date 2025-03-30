@@ -3,7 +3,6 @@ const db = require("../config/database");
 const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
 const { userQueries } = require("../config/queries");
-const AppError = require("../utils/AppError");
 
 const nombreTabla = "usuarios";
 
@@ -89,7 +88,7 @@ const User = {
 	inicio: async ({ username, password }) => {
 		try {
 			const [ usuarioDB ] = await db.query(`SELECT username,password,id from ${nombreTabla} where username = ?`, [ username ]);
-			if (!await bcrypt.compare(password, usuarioDB.password)) throw new AppError("registro Error al crear el usuario");
+			await bcrypt.compare(password, usuarioDB.password);
 			return usuarioDB;
 		}
 		catch (error) {
