@@ -25,6 +25,38 @@ const Recipe = {
 			console.log(error);
 			throw new Error("Error al obtener todas las recetas");
 		}
+	},
+	/**
+	 * Returns a recipe by its id
+	 * @async
+	 * @param {Number} id
+	 * @returns {Promise<Recipe>}
+	 */
+	async getRecipeById(id) {
+		try {
+			const recipe = await db.query(recipeQueries.getRecipeById, [ id ]);
+			return recipe[0];
+		}
+		catch (error) {
+			console.error(error);
+			throw new Error("Error al obtener el id ", error);
+		}
+	},
+	/**
+	 * Returns the ingredients of a recipe by its id
+	 * @async
+	 * @param {Number} id
+	 * @returns {Promise<Ingredient[]>}
+	 */
+	async getIngredients(id) {
+		try {
+			const ingredients = await db.query(recipeQueries.getIngredients, [ id ]);
+			return ingredients;
+		}
+		catch (error) {
+			console.error(error);
+			throw new Error("Error al conseguir los ingredientes de esa receta", error);
+		}
 	}
 };
 
