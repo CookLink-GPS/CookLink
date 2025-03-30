@@ -1,14 +1,22 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-magic-numbers */
 const assert = require("node:assert");
-const { deleteIngredients, createuser, deletePantry, insertIngredients } = require("./testUtils");
+const { deleteIngredients, createuser, deletePantry, insertIngredients, deleteUsers } = require("./testUtils");
 const Ingredient = require("../models/ingredientModel");
 
 describe("Modelo ingrediente", () => {
-	beforeEach(deleteIngredients);
-	beforeEach(deletePantry);
-	beforeEach(createuser);
-	after(deleteIngredients);
+	beforeEach(async () => {
+		await deletePantry();
+		await deleteIngredients();
+		await createuser();
+	  });
+
+	  after(async () => {
+		await deleteIngredients();
+	  });
+	afterEach(async () => {
+		await deleteUsers();
+	});
 
 	describe("Obtener todos los ingredientes", () => {
 		const ingredientes = [

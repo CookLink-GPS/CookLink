@@ -9,9 +9,9 @@ describe("Rutas ingrediente", () => {
 	const baseRoute = `http://${baseUrl}:${port}/ingredients`;
 
 	beforeEach(async () => {
-		await createuser();
+		// Await createuser();
 		await deleteIngredients();
-		await deletePantry();
+		// Await deletePantry();
 	});
 
 	after(async () => {
@@ -43,11 +43,9 @@ describe("Rutas ingrediente", () => {
 
 		it("Debe devolver todos los ingredientes coincidentes", async () => {
 			await insertIngredients(ingredientesBD);
-
 			const { ingredientes } = await fetch(`${filterRoute}/harina`).then(res => res.json());
 
 			const harinas = ingredientesBD.filter(([ nombre ]) => nombre.startsWith("harina"));
-
 			harinas.forEach(ingrediente => {
 				assert.ok(ingredientes.find(({ nombre, tipoUnidad }) => ingrediente[0] === nombre && ingrediente[1] === tipoUnidad));
 			});
