@@ -46,7 +46,7 @@ const Recipe = {
 	 * Returns the ingredients of a recipe by its id
 	 * @async
 	 * @param {Number} id
-	 * @returns {Promise<Ingredient[]>
+	 * @returns {Promise<Ingredient[]>}
 	 */
 	async getIngredients(id) {
 		try {

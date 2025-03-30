@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable no-undef */
 
 const assert = require("assert");
@@ -8,15 +9,15 @@ const { ok } = require("../config/httpcodes");
 describe("Rutas de recetas", () => {
 
 	beforeEach(async () => {
+		await deleteContains();
 		await deleteIngredients();
 		await deleteRecipe();
-		await deleteContains();
 	  });
 
 	  after(async () => {
+		await deleteContains();
 		await deleteIngredients();
 		await deleteRecipe();
-		await deleteContains();
 	  });
 
 	const baseRoute = `http://${baseUrl}:${port}/recipes/`;
@@ -33,9 +34,7 @@ describe("Rutas de recetas", () => {
 			const recipeIds = await insertRecipes(recipe);
 			const ingredientsIds = await insertIngredients(ingredients);
 			const contains = [
-				// eslint-disable-next-line no-magic-numbers
 				[ recipeIds[0].id, ingredientsIds[0].id, 100 ],
-				// eslint-disable-next-line no-magic-numbers
 				[ recipeIds[0].id, ingredientsIds[1].id, 200 ]
 			];
 			await insertContains(contains);

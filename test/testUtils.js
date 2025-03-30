@@ -31,7 +31,7 @@ const deleteIngredients = async () => {
  */
 const insertIngredients = async ingredients => {
 	for (const ingredient of ingredients) await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingredient);
-	return await db.query("SELECT id, nombre, tipoUnidad FROM ingredientes");
+	return db.query("SELECT id, nombre, tipoUnidad FROM ingredientes");
 };
 
 const deleteRecipe = async () => {
@@ -40,7 +40,7 @@ const deleteRecipe = async () => {
 
 const insertRecipes = async recipes => {
 	for (const recipe of recipes) await db.query("INSERT INTO recetas (nombre, descripcion) VALUES (?, ?)", recipe);
-	return await db.query("SELECT id, nombre FROM recetas");
+	return db.query("SELECT id, nombre FROM recetas");
 };
 
 const deleteContains = async () => {

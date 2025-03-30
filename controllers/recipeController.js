@@ -24,6 +24,12 @@ exports.getRecommendations = async (req, res) => {
 	renderView(res, "recommendations", ok, { recipes });
 };
 
+/**
+ * Renderiza una vista con la informacion basica de una receta
+ *
+ * @param {Request} req
+ * @param {Response} res
+ */
 exports.getRecipeInfo = async (req, res) => {
 	const { id } = req.params;
 	const recipe = await recipeService.getRecipeById(id);

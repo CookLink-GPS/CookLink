@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable no-undef */
 const assert = require("node:assert");
 const { deleteIngredients, insertIngredients, deleteRecipe, insertRecipes, deleteContains, insertContains } = require("./testUtils");
@@ -7,22 +8,22 @@ const Recipe = require("../services/recipeService");
 describe("Servicio de recetas", () => {
 
 	beforeEach(async () => {
+		await deleteContains();
 		await deleteIngredients();
 		await deleteRecipe();
-		await deleteContains();
 	  });
 
 	  after(async () => {
+		await deleteContains();
 		await deleteIngredients();
 		await deleteRecipe();
-		await deleteContains();
 	  });
 
 	describe("Obtener los datos de una receta por su id", () => {
 
 		const recipe = [ [ "Nombre", "Descripcion" ] ];
 
-		it("Debe de devolver la receta correcta segun su id", async () => {
+		it("Debe devolver la receta correcta segun su id", async () => {
 
 			const ids = await insertRecipes(recipe);
 			const result = await Recipe.getRecipeById(ids[0].id);
@@ -30,7 +31,7 @@ describe("Servicio de recetas", () => {
 			assert.deepEqual([ [ result.nombre, result.descripcion ] ], recipe);
 		});
 
-		it("No debe de devolver una receta por falta de id", async () => {
+		it("No debe devolver una receta por falta de id", async () => {
 			try {
 				await Recipe.getRecipeById();
 
@@ -41,7 +42,7 @@ describe("Servicio de recetas", () => {
 			}
 		});
 
-		it("No debe de devolver una receta que no econtrada", async () => {
+		it("No debe devolver una receta que no econtrada", async () => {
 			try {
 				const errorId = -1;
 
@@ -64,15 +65,13 @@ describe("Servicio de recetas", () => {
 			[ "Ingrediente2", "TipoUnidad2" ]
 		];
 
-		it("Debe de devolver los ingredientes correctos de una receta por su id", async () => {
+		it("Debe devolver los ingredientes correctos de una receta por su id", async () => {
 
 			const recipeIds = await insertRecipes(recipe);
 			const ingredientsIds = await insertIngredients(ingredients);
 
 			const contains = [
-				// eslint-disable-next-line no-magic-numbers
 				[ recipeIds[0].id, ingredientsIds[0].id, 100 ],
-				// eslint-disable-next-line no-magic-numbers
 				[ recipeIds[0].id, ingredientsIds[1].id, 200 ]
 			];
 			await insertContains(contains);
@@ -88,7 +87,7 @@ describe("Servicio de recetas", () => {
 			);
 		});
 
-		it("No debe de devolver ingredientes por falta de id", async () => {
+		it("No debe devolver ingredientes por falta de id", async () => {
 			try {
 				await Recipe.getIngredients();
 				assert.fail("Se esperaba un error");
@@ -98,7 +97,7 @@ describe("Servicio de recetas", () => {
 			}
 		});
 
-		it("No debe de devolver ingredientes por receta no encontrada", async () => {
+		it("No debe devolver ingredientes por receta no encontrada", async () => {
 			try {
 				const errorId = -1;
 
@@ -106,9 +105,7 @@ describe("Servicio de recetas", () => {
 				const ingredientsIds = await insertIngredients(ingredients);
 
 				const contains = [
-				// eslint-disable-next-line no-magic-numbers
 					[ recipeIds[0].id, ingredientsIds[0].id, 100 ],
-					// eslint-disable-next-line no-magic-numbers
 					[ recipeIds[0].id, ingredientsIds[1].id, 200 ]
 				];
 				await insertContains(contains);

@@ -54,14 +54,14 @@ const RecipeService = {
 				let ok = true;
 
 				// Comprobar para cada ingrediente:
-				ingredients.forEach(({ id_ingrediente: ingredientId, unidades }) => {
+				ingredients.every(({ id_ingrediente: ingredientId, unidades }) => {
 					// Que esta en la despensa Y que hay suficiente cantidad
 					ok = ok &&
                               (pantryMap.has(ingredientId) && pantryMap.get(ingredientId).cantidad > unidades);
 				});
 
 				return ok;
-			}).toSorted(({ nombre: nameA }, { nombre: nameB }) => stringComparator(nameA, nameB));
+			}).sort(({ nombre: nameA }, { nombre: nameB }) => stringComparator(nameA, nameB));
 		}
 		catch (error) {
 			console.log(error);
