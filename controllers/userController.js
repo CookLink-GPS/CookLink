@@ -57,8 +57,7 @@ exports.login = async (req, res) => {
 	}
 	catch (error) {
 		console.error(error);
-		// Cres.status(internalServerError).json({ error: "Error al iniciar sesión" });
-		renderView(res, "login", error.status, { mensajeError: "Error al iniciar sesión" });
+		renderView(res, "login", badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
 	}
 };
 
