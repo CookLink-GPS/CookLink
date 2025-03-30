@@ -1,6 +1,7 @@
 const { badRequest, conflict } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
+const { removeAccents } = require("../utils/stringFunctions");
 const Pantry = require("../models/pantryModel");
 
 
@@ -69,8 +70,21 @@ const IngredientService = {
 			console.error("[Service] Error:", error);
 			throw new AppError(error, badRequest);
 		}
-	}
+	},
 
+	filterIngredients: async filter => {
+		if (filter === undefined || filter === null) filter = "";
+
+		const ingredients = await Ingredient.getAllIngredients();
+		const normalizedFilter = removeAccents(filter.toLowerCase());
+
+		const res = ingredients.filter(item => {
+			const text = removeAccents(item.nombre.toLowerCase());
+			return text.startsWith(normalizedFilter);
+		});
+
+		return res;
+	}
 
 };
 

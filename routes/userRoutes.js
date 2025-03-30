@@ -1,4 +1,3 @@
-// Routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
@@ -6,19 +5,9 @@ const { check } = require("express-validator");
 const AppError = require("../utils/AppError");
 const { badRequest } = require("../config/httpcodes");
 
-// /users
 router.get("/", userController.getAllUsers);
-
 router.get("/registro", userController.toRegistro);
-
-/**
- * Ruta para el registro de un usuario con validación de datos de contraseña.
- *
- * @param {Object} req - Objeto de solicitud HTTP que contiene los datos del formulario.
- * @param {Object} res - Objeto de respuesta HTTP.
- * @param {Function} next - Función para pasar al siguiente middleware.
- * @returns {void} - Valida y registra al usuario si los datos son correctos.
- */
+router.delete("/delete/:id", userController.deleteUser);
 router.post(
 	"/registro",
 	// Check("password", "La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial")
@@ -33,12 +22,6 @@ router.post(
 		})
 	, userController.registroUser
 );
-
-
-// /users/create
-router.post("/create", userController.createUser);
-
-router.delete("/delete/:id", userController.deleteUser);
 
 
 module.exports = router;

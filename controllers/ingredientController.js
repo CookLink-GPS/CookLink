@@ -21,6 +21,12 @@ exports.toIngredient = (req, res, next) => {
 	}
 };
 
+/**
+ * Adds an ingredient.
+ *
+ * @param {Object} req - HTTP request object.
+ * @param {Object} res - HTTP response object.
+ */
 exports.addIngredient = async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
@@ -59,10 +65,23 @@ exports.addIngredient = async (req, res) => {
 
 	}
 	catch (err) {
-		console.error("[Controller] Error:", err);
-		renderView(res, "ingredientes", err.status || badRequest, {
-			mensajeError: err.message,
-			formData: req.body // Mantener datos del formulario
-		});
+		renderView(res, "ingredientes", { mensajeError: "Error al añadir el ingrediente" });
+	}
+};
+
+/**
+ *
+ *
+ * @param {Object} req - HTTP request object.
+ * @param {Object} res - HTTP response object.
+ */
+exports.filterIngredients = async (req, res) => {
+	try {
+		const ingredientes = await ingredientService.filterIngredients(req.params.filter || "");
+
+		res.json({ ingredientes });
+	}
+	catch (err) {
+		res.json({ mensajeError: "Error al filtrar los ingredientes" });
 	}
 };

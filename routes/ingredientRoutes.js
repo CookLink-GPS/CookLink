@@ -14,4 +14,7 @@ router.post(
 	ingredientController.addIngredient
 );
 
+router.get("/filter/", ingredientController.filterIngredients);
+router.get("/filter/:filter", ingredientController.filterIngredients);
+
 module.exports = router;

@@ -1,17 +1,41 @@
-/* eslint-disable no-magic-numbers */
 /* eslint-disable no-undef */
-
-const assert = require("assert");
-const { createuser, deleteIngredients, deletePantryItems } = require("./testUtils");
+/* eslint-disable no-magic-numbers */
+const assert = require("node:assert");
+const { deleteIngredients, createuser, deletePantry, insertIngredients, deleteUsers } = require("./testUtils");
 const Ingredient = require("../models/ingredientModel");
 
-describe("Modelo Ingrediente", () => {
-	before(createuser);
-	before(deleteIngredients);
-	before(deletePantryItems);
-	beforeEach(deleteIngredients);
-	beforeEach(deletePantryItems);
-	beforeEach(createuser);
+describe("Modelo ingrediente", () => {
+	beforeEach(async () => {
+		await deletePantry();
+		await deleteIngredients();
+		await createuser();
+	  });
+
+	  after(async () => {
+		await deleteIngredients();
+	  });
+	afterEach(async () => {
+		await deleteUsers();
+	});
+
+	describe("Obtener todos los ingredientes", () => {
+		const ingredientes = [
+			[ "harina", "gramos" ],
+			[ "arroz", "gramos" ],
+			[ "leche", "litros" ]
+		];
+
+		it("Debe devolver todos los ingredientes", async () => {
+
+			await insertIngredients(ingredientes);
+
+			const res = await Ingredient.getAllIngredients();
+
+			ingredientes.forEach(ingrediente => {
+				assert.ok(res.find(({ nombre, tipoUnidad }) => ingrediente[0] === nombre && ingrediente[1] === tipoUnidad));
+			});
+		});
+	});
 
 	describe("Añadir ingrediente", () => {
 		it("Debe crear correctamente un ingrediente nuevo con datos válidos", async () => {

@@ -15,7 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware para mostrar las rutas por consola
 app.use(logRoutes);
-
 app.use(userSession);
 
 // Configurar Express y motor de vistas

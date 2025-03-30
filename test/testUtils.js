@@ -14,26 +14,56 @@ const createuser = async () => {
 };
 
 /**
- * Elimina todos los registros de la tabla de ingredientes.
+ * Elimina todos los ingredientes de la base de datos.
+ *
+ * @returns {Promise<void>}
  */
-async function deleteIngredients () {
-	try {
-		await db.query("DELETE FROM ingredientes");
-	}
-	catch (error) {
-		console.error("Error al borrar ingredientes:", error);
-	}
-}
+const deleteIngredients = async () => {
+	await db.query("DELETE FROM contiene"); // Si existe esta tabla
+	await db.query("DELETE FROM despensa");
+	await db.query("DELETE FROM ingredientes");
+};
 
 /**
-   * Elimina todos los registros de la tabla de despensa.
-   */
-async function deletePantryItems () {
-	try {
-		await db.query("DELETE FROM despensa");
-	}
-	catch (error) {
-		console.error("Error al borrar elementos de despensa:", error);
-	}
-}
-module.exports = { deleteUsers, createuser, deletePantryItems, deleteIngredients };
+ * Inserta varios ingredientes
+ *
+ * @typedef Ingredient
+ * @property {String} nombre
+ * @property {String} tipoUnidad
+ *
+ * @async
+ * @param {Ingredient[]} ingredients
+ * @returns {void}
+ */
+const insertIngredients = async ingredients => {
+	for (const ingredient of ingredients) await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingredient);
+	return db.query("SELECT id, nombre, tipoUnidad FROM ingredientes");
+};
+
+const deletePantry = async () => {
+	await db.query("DELETE FROM contiene"); // Si existe
+	await db.query("DELETE FROM despensa");
+};
+
+const insertPantry = async pantrys => {
+	for (const pantry of pantrys) await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)", pantry);
+};
+
+const deleteRecipes = async () => {
+	await db.query("DELETE FROM recetas");
+};
+
+const insertRecetas = async recetas => {
+	for (const receta of recetas) await db.query("INSERT INTO recetas (nombre, descripcion) VALUES (?, ?)", receta);
+	return db.query("SELECT id, nombre FROM recetas");
+};
+
+const deleteContains = async () => {
+	await db.query("DELETE FROM contiene");
+};
+
+const insertContains = async contains => {
+	for (const contain of contains) await db.query("INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES (?, ?, ?)", contain);
+};
+
+module.exports = { createuser, deleteUsers, deleteIngredients, insertIngredients, deletePantry, insertPantry, deleteRecipes, insertRecetas, deleteContains, insertContains };
