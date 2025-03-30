@@ -173,7 +173,6 @@ describe("Servicio de recetas", () => {
 
 			const recipeIds = await insertRecetas(recipe);
 			const ingredientsIds = await insertIngredients(ingredients);
-
 			const contains = [
 				[ recipeIds[0].id, ingredientsIds[0].id, 100 ],
 				[ recipeIds[0].id, ingredientsIds[1].id, 200 ]
@@ -181,7 +180,6 @@ describe("Servicio de recetas", () => {
 			await insertContains(contains);
 
 			const result = await Recipe.getIngredients(recipeIds[0].id);
-
 			assert.deepEqual(
 				result,
 				[

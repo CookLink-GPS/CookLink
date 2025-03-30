@@ -113,7 +113,12 @@ const RecipeService = {
 		try {
 			const ingredients = await Recipe.getIngredients(id);
 			if (!ingredients || ingredients.length === CERO) throw new AppError("No hay ingredientes", badRequest);
-			return ingredients;
+
+			return ingredients.map(row => ({
+				ingrediente: row.ingrediente,
+				tipoUnidad: row.tipoUnidad ?? undefined,
+				unidades: row.unidades
+			}));
 		}
 		catch (error) {
 			if (error.message === "No hay ingredientes") throw error;
