@@ -63,7 +63,7 @@ exports.toLogin = (req, res, next) => {
 		renderView(res, "login", ok);
 	}
 	catch (err) {
-		next(err);
+		next(err.mensajeError);
 	}
 };
 
