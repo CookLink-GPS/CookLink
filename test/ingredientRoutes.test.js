@@ -1,10 +1,19 @@
 /* eslint-disable no-undef */
+/* eslint-disable no-magic-numbers */
 const assert = require("node:assert");
 const { baseUrl, port } = require("../config/config");
-const { insertIngredients } = require("./testUtils");
+const { insertIngredients, deleteIngredients } = require("./testUtils");
 
 describe("Rutas ingrediente", () => {
 	const baseRoute = `http://${baseUrl}:${port}/ingredients`;
+
+	beforeEach(async () => {
+		await deleteIngredients();
+	});
+
+	after(async () => {
+		await deleteIngredients();
+	});
 
 	describe("Filtrar ingredientes", () => {
 	    const filterRoute = `${baseRoute}/filter`;
@@ -25,7 +34,7 @@ describe("Rutas ingrediente", () => {
 				assert.ok(ingredientes.find(({ nombre, tipoUnidad }) => ingrediente[0] === nombre && ingrediente[1] === tipoUnidad));
 			});
 
-			assert.ok(!ingredientes.length);
+			assert.ok(ingredientes.length > 0);
 		});
 
 		it("Debe devolver todos los ingredientes coincidentes", async () => {
@@ -33,13 +42,13 @@ describe("Rutas ingrediente", () => {
 
 			const { ingredientes } = await fetch(`${filterRoute}/harina`).then(res => res.json());
 
-			harinas = ingredientesBD.filter(([ nombre ]) => nombre.startsWith("harina"));
+			const harinas = ingredientesBD.filter(([ nombre ]) => nombre.startsWith("harina"));
 
 			harinas.forEach(ingrediente => {
 				assert.ok(ingredientes.find(({ nombre, tipoUnidad }) => ingrediente[0] === nombre && ingrediente[1] === tipoUnidad));
 			});
 
-			assert.equal(ingredientes.length, harinas.length);
+			assert.strictEqual(ingredientes.length, harinas.length);
 		});
 
 	});

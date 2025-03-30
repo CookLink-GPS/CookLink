@@ -169,7 +169,7 @@ describe("Servicio de recetas", () => {
 			[ "Ingrediente2", "TipoUnidad2" ]
 		];
 
-		it("Debe devolver los ingredientes correctos de una receta por su id", async () => { // Falla este
+		it("Debe devolver los ingredientes correctos de una receta por su id", async () => {
 
 			const recipeIds = await insertRecetas(recipe);
 			const ingredientsIds = await insertIngredients(ingredients);
