@@ -27,13 +27,24 @@ exports.getIngredientsFromDatabase = async (req, res) => {
 exports.postIngredienteIntoPantry = async (req, res) => {
 	try {
 		// Const userId = req.session?.user?.id;
+		const { ingredientes, cantidad } = req.body;
 
-		const { ingredientes, dia, mes, anio, cantidad } = req.body;
+		const renderWithError = async mensajeError => {
+			const ingredients = await ingredientesBDService.getAllIngredientsFromDatabase();
+			const pantryIngredients = await ingredientesBDService.getIngredientsFromUserPantry(userId);
 
-		const partes = [ dia, mes, anio ].filter(Boolean);
-		const caducidad = partes.join("/");
+			return renderView(res, "ingredientesBD", ok, {
+				ingredients,
+				pantryIngredients,
+				mensajeError
+			});
+		};
 
-		await ingredientesBDService.addIngredientIntoPantry(userId, ingredientes, caducidad, cantidad);
+		if (!ingredientes || isNaN(ingredientes)) return await renderWithError("¡Seleccione un ingrediente válido!");
+
+		if (!cantidad || isNaN(cantidad) || Number(cantidad) <= 0) return await renderWithError("¡Seleccione una cantidad válida!");
+
+		await ingredientesBDService.addIngredientIntoPantry(userId, ingredientes, cantidad);
 
 		const ingredients = await ingredientesBDService.getAllIngredientsFromDatabase();
 		const pantryIngredients = await ingredientesBDService.getIngredientsFromUserPantry(userId);
@@ -46,10 +57,13 @@ exports.postIngredienteIntoPantry = async (req, res) => {
 	}
 	catch (error) {
 		const ingredients = await ingredientesBDService.getAllIngredientsFromDatabase();
+		const pantryIngredients = await ingredientesBDService.getIngredientsFromUserPantry(userId);
 
 		renderView(res, "ingredientesBD", ok, {
 			ingredients,
-			mensajeError: [ { msg: "Erro al añadir ingrediente a la despensa." } ]
+			pantryIngredients,
+			mensajeError: "Erro al añadir ingrediente a la despensa."
 		});
 	}
 };
+
