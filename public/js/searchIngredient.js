@@ -6,7 +6,7 @@ let prevSearch = "";
 const MIN_FILTER_LENGTH = 2;
 
 const searchIngredients = async search => {
-	const { ingredientes } = await fetch(`/despensa/search/${search}`, { method: "GET" }).then(res => res.json());
+	const { ingredientes } = await fetch(`/pantry/search/${search}`, { method: "GET" }).then(res => res.json());
 
 	ingredientes.forEach(({ nombre }) => {
 		const li = document.createElement("li");
