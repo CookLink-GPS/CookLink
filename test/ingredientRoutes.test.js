@@ -2,21 +2,22 @@
 /* eslint-disable no-magic-numbers */
 const assert = require("node:assert");
 const { baseUrl, port } = require("../config/config");
-const { insertIngredients, deleteIngredients, createuser, deletePantry } = require("./testUtils");
+const { insertIngredients, deleteIngredients, createuser, deletePantry, deleteUsers } = require("./testUtils");
 const { badRequest, ok, conflict } = require("../config/httpcodes");
 
 describe("Rutas ingrediente", () => {
 	const baseRoute = `http://${baseUrl}:${port}/ingredients`;
 
 	beforeEach(async () => {
-		// Await createuser();
+		await createuser();
 		await deleteIngredients();
-		// Await deletePantry();
+		await deletePantry();
 	});
 
 	after(async () => {
 		await deleteIngredients();
 		await deletePantry();
+		await deleteUsers();
 	});
 
 	describe("Filtrar ingredientes", () => {
