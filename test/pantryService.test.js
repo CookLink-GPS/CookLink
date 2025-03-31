@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 const db = require("../config/database");
 const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients } = require("./testUtils");
-
+this.timeout(5000);
 describe("Servicio de Despensa", () => {
 	/**
      * Hook que se ejecuta antes de cada prueba

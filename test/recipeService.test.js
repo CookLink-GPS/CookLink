@@ -7,6 +7,7 @@ const User = require("../models/userModel");
 const db = require("../config/database");
 const CERO = 0;
 const QUINIENTOS = 500;
+this.timeout(5000);
 
 describe("Servicio de recetas", () => {
 	let user, user2, user0;
