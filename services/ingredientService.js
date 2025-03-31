@@ -29,11 +29,12 @@ const IngredientService = {
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
 			let ingredientId;
 			let existsInPantry;
+			let action = "";
 			if (ingredienteExistente) {
 				console.log(`[Service] Lectura ingrediente:`, ingredienteExistente);
 				console.log(`Esperado: '${ingredienteExistente.tipoUnidad}'`);
 				// If (ingredienteExistente.tipoUnidad !== unidadNormalizada) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`, conflict);
-				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`, conflict);
+				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${ingrediente.tipoUnidad}`, conflict);
 
 				ingredientId = ingredienteExistente.id;
 
@@ -42,22 +43,22 @@ const IngredientService = {
 
 				if (existsInPantry) {
 					console.log(`[Service] Ingrediente ya en la despensa, actualizando cantidad... ID:`, existsInPantry.id_ingrediente);
-					await Pantry.updateIngredientQuantity(userId, ingredientId, cantidad);
+					await Pantry.updateItem(userId, ingredientId, cantidad);
+					action = "updated";
 					return {
-						action: "updated",
+						action,
 						ingrediente,
-						cantidad,
-						userId
+						cantidad
 					};
 				}
 
 				console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
-				await Pantry.addItem(Pantry.getPantryFromUser(userId), userId, ingredientId, cantidad);
+				await Pantry.addItem(userId, ingredientId, cantidad);
+				action = "added";
 				return {
-					action: "added",
+					action,
 					ingrediente,
-					cantidad,
-					userId
+					cantidad
 				};
 			}
 
@@ -67,11 +68,11 @@ const IngredientService = {
 			console.log(`[Service] Ingrediente creado con ID:`, ingredientId);
 			console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
 			await Pantry.addItem(userId, ingredientId, cantidad);
+			action = "added";
 			return {
-				action: "added",
+				action,
 				ingrediente,
-				cantidad,
-				userId
+				cantidad
 			};
 
 		}

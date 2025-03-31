@@ -121,14 +121,14 @@ const Pantry = {
 	 * @param {number} cantidad - Cantidad a añadir
 	 * @returns {Promise<Object>} - Resultado de la inserción
 	 */
-	addItem: async (idDespensa, userId, ingredientId, cantidad) => {
+	addItem: async (userId, ingredientId, cantidad) => {
 		try {
-			console.log(`[Model pantry] Añadiendo a despensa ${idDespensa} - Usuario: ${userId}, Ingrediente: ${ingredientId}, Cantidad: ${cantidad}`);
+			console.log(`[Model pantry] Añadiendo a despensa - Usuario: ${userId}, Ingrediente: ${ingredientId}, Cantidad: ${cantidad}`);
 
 			// Insertar directamente en la tabla "despensa"
 			const result = await db.query(
-				`INSERT INTO despensa (id_despensa, id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)`,
-				[ idDespensa, userId, ingredientId, cantidad ]
+				`INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)`,
+				[ userId, ingredientId, cantidad ]
 			);
 
 			console.log(`[Model pantry] Ingrediente añadido.`);

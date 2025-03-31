@@ -10,7 +10,7 @@ const deleteUsers = async () => {
 };
 
 const createuser = async () => {
-	await db.query("INSERT INTO usuarios (username, password) VALUES ('Luis', '12345678Aa:')");
+	await db.query("INSERT INTO usuarios (id, username, password) VALUES (1, 'Luis', '12345678Aa:')");
 };
 
 /**
