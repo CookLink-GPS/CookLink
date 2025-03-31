@@ -7,7 +7,13 @@ module.exports.pantryQueries = {
     `,
 	deleteIngredient: "DELETE FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
 	updateIngredientQuantity: "UPDATE despensa SET cantidad = ? WHERE id_despensa = ?",
-	getPantryItemById: "SELECT * FROM despensa WHERE id_despensa = ?"
+	getPantryItemById: "SELECT * FROM despensa WHERE id_despensa = ?",
+	getIngredientsDetails: `
+		SELECT d.id_despensa, d.id_ingrediente, i.nombre AS nombre_ingrediente, d.cantidad, i.tipoUnidad
+		FROM despensa d
+		JOIN ingredientes i ON d.id_ingrediente = i.id
+		WHERE d.id_usuario = ?
+	`
 };
 
 module.exports.userQueries = {

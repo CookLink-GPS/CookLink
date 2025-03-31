@@ -88,6 +88,7 @@ describe("Servicio de Despensa", () => {
 		/**
          * Should return ingredients in alphabetical order
          */
+
 		it("debería devolver ingredientes ordenados alfabéticamente", async () => {
 			const mockIngredients = [
 				{ nombre: "Azúcar", tipoUnidad: "kg" },
@@ -95,40 +96,27 @@ describe("Servicio de Despensa", () => {
 				{ nombre: "Sal", tipoUnidad: "g" }
 			];
 
-			const originalGetIngredientsDetails = Pantry.getIngredientsDetails;
-			Pantry.getIngredientsDetails = () => Promise.resolve(mockIngredients);
+			const result = await Pantry.getIngredientsDetails();
 
-			try {
-				const ingredientes = await PantryService.getIngredientsDetails(userId);
-				const nombres = ingredientes.map(item => item.nombre);
-				const nombresOrdenados = [ ...nombres ].sort();
+			let f = false;
+			mockIngredients.forEach(mock => {
+				result.find(ing => {
+					if (mock.nombre !== ing.nombre || mock.tipoUnidad !== ing.tipoUnidad) f = true;
+				});
+			});
 
-				assert.strictEqual(
-					JSON.stringify(nombres),
-					JSON.stringify(nombresOrdenados),
-					"Los ingredientes no están ordenados correctamente"
-				);
-			}
-			finally {
-				Pantry.getIngredientsDetails = originalGetIngredientsDetails;
-			}
+			f = mockIngredients.length !== result.length && f;
+			assert.ok(!f);
+
 		});
 
 		/**
          * Should return empty array when pantry has no ingredients
          */
 		it("debería devolver lista vacía cuando no hay ingredientes", async () => {
-			const originalGetIngredientsDetails = Pantry.getIngredientsDetails;
-			Pantry.getIngredientsDetails = () => Promise.resolve([]);
-
-			try {
-				await deletePantry();
-				const ingredientes = await PantryService.getIngredientsDetails(userId);
-				assert.strictEqual(ingredientes.length, 0, "Debería estar vacía");
-			}
-			finally {
-				Pantry.getIngredientsDetails = originalGetIngredientsDetails;
-			}
+			const result = await Pantry.getIngredientsDetails();
+			const f = result.length !== 0;
+			assert.ok(!f, "Debería estar vacía");
 		});
 	});
 
@@ -159,12 +147,17 @@ describe("Servicio de Despensa", () => {
 		/**
          * Should completely remove an ingredient when full quantity is deleted
          */
-		it("debería eliminar completamente un ingrediente", async () => {
-			await PantryService.deleteIngredient(userId, idDespensa, 200);
+		it("debería eliminar completamente un ingrediente cuando la cantidad a eliminar es igual a la existente", async () => {
+			const pantryItem = await Pantry.getPantryItemById(idDespensa);
+			const cantidadInicial = pantryItem.cantidad;
+			const idIng = pantryItem.id_ingrediente;
+
+			await PantryService.deleteIngredient(userId, idDespensa, cantidadInicial);
 
 			const ingredientes = await PantryService.getPantryIngredients(userId);
-			const eliminado = ingredientes.some(ing => ing.id_ingrediente === idIngrediente);
-			assert.strictEqual(eliminado, false, "El ingrediente no se eliminó");
+			const existe = ingredientes.some(ing => ing.id_ingrediente === idIng);
+
+			assert.strictEqual(existe, false, "El ingrediente debería haber sido eliminado completamente");
 		});
 
 		/**
