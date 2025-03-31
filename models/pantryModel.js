@@ -18,7 +18,6 @@ const Pantry = {
      * @returns {Promise<PantryIngredient[]>} - Array containing the id, amount, and expiration date
      *                                           of each ingredient in the pantry.
      */
-
 	async getPantryFromUser(userId) {
 		try {
 			const result = await db.query(pantryQueries.getPantryFromUser, [ userId ]);
@@ -29,7 +28,7 @@ const Pantry = {
 		}
 	},
 
-  	/**
+	/**
      * Deletes an ingredient from a user's pantry.
      *
      * @async
@@ -47,6 +46,15 @@ const Pantry = {
 		}
 	},
 
+	/**
+	 * Updates the quantity of an ingredient in the pantry.
+	 *
+	 * @async
+	 * @param {Number} idDespensa - Pantry item ID.
+	 * @param {Number} newQuantity - New quantity to set.
+	 * @returns {Promise<void>}
+	 * @throws {Error} - If an error occurs while updating the quantity.
+	 */
 	async updateIngredientQuantity(idDespensa, newQuantity) {
 		try {
 			await db.query(
@@ -58,7 +66,13 @@ const Pantry = {
 			throw new Error(`Error updating quantity for pantry item ${idDespensa}`);
 		}
 	},
-
+	/**
+	 * Adds or updates an ingredient in the pantry.
+	 *
+	 * @param {Number} idDespensa - Pantry item ID.
+	 * @returns {Promise<void>} - Result of the operation.
+	 * @throws {Error} - If an error occurs while getting the pantry item.
+	 */
 	async getPantryItemById(idDespensa) {
 		try {
 			const [ result ] = await db.query(
@@ -93,6 +107,7 @@ const Pantry = {
 
 	/**
 	 * Verifica si un ingrediente ya está en la despensa
+	 *
 	 * @param {number} userId - ID del usuario
 	 * @param {number} ingredientId - ID del ingrediente
 	 * @returns {Promise<boolean>} - true si existe, false si no
@@ -116,6 +131,7 @@ const Pantry = {
 
 	/**
 	 * Añade un nuevo ingrediente a la despensa (sin verificar duplicados).
+	 *
 	 * @param {number} userId - ID del usuario
 	 * @param {number} ingredientId - ID del ingrediente
 	 * @param {number} cantidad - Cantidad a añadir
@@ -125,7 +141,6 @@ const Pantry = {
 		try {
 			console.log(`[Model pantry] Añadiendo a despensa - Usuario: ${userId}, Ingrediente: ${ingredientId}, Cantidad: ${cantidad}`);
 
-			// Insertar directamente en la tabla "despensa"
 			const result = await db.query(
 				`INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)`,
 				[ userId, ingredientId, cantidad ]
@@ -143,6 +158,7 @@ const Pantry = {
 
 	/**
 	 * Actualiza la cantidad de un ingrediente en la despensa
+	 *
 	 * @param {number} userId - ID del usuario
 	 * @param {number} ingredientId - ID del ingrediente
 	 * @param {number} cantidad - Cantidad a sumar

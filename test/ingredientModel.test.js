@@ -48,7 +48,7 @@ describe("Modelo ingrediente", () => {
 			assert.ok(good);
 			assert.ok(id > 0);
 		});
-		// No lo comprueba en Model, si no que se comprueba en service
+
 		it("No debe crear un ingrediente sin nombre", async () => {
 			let good = false;
 			try {

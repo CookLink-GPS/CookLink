@@ -50,7 +50,6 @@ describe("Servicio Ingrediente", () => {
 		});
 	});
 
-
 	describe("processIngredient", () => {
 		it("Debe sumar la cantidad si el ingrediente ya existe y las unidades coinciden", async () => {
 			const ingrediente = { nombre: "Tomate", tipoUnidad: "kg" };

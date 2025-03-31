@@ -15,19 +15,9 @@
         
     
     <div class="container content py-5">
-        <!-- <% if (mensajeError) { %>
+        <% if (mensajeError) { %>
             <div class="alert alert-danger">
                 <%= mensajeError %>
-            </div>
-        <% } %> -->
-
-        <% if (mensajeError && mensajeError.length > 0) { %>
-            <div class="alert alert-danger">
-                <ul>
-                    <% mensajeError.forEach(function(error) { %>
-                        <li><%= error.msg %></li>
-                    <% }); %>
-                </ul>
             </div>
         <% } %>
         
@@ -74,7 +64,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="cantidad" class="form-label">Cantidad</label>
-                                <input type="number" name="cantidad" id="cantidad" class="form-control" min="0.1" step="0.1" required>
+                                <input type="number" name="cantidad" id="cantidad" class="form-control" min="0.01" step="0.01" required>
                                 <div class="invalid-feedback">La cantidad debe ser mayor que cero</div>
                             </div>
                             <div class="d-grid gap-2">

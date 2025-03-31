@@ -1,5 +1,5 @@
 /* eslint-disable no-magic-numbers */
-const { badRequest, conflict } = require("../config/httpcodes");
+const { badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
 const { removeAccents } = require("../utils/stringFunctions");
@@ -17,15 +17,19 @@ const IngredientService = {
      * @param {number} data.userId - ID del usuario
      * @returns {Promise<Object>} - Resultado de la operación
      */
-	processIngredient: async ({ ingrediente, cantidad, userId }) => {
+	async processIngredient({ ingrediente, cantidad, userId }) {
 		try {
 			console.log(`[Service] Procesando ingrediente:`, { ingrediente, cantidad, userId });
 
-			// Comprobaciones de entrada
+			// La cantidad es obligatoria y debe ser mayor que 0
 			if (cantidad === undefined || cantidad === null || cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
+			// Validar que el nombre del ingrediente solo contenga letras
+			const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+			if (!soloLetras.test(ingrediente.nombre)) throw new AppError("El nombre del ingrediente solo puede contener letras y espacios", badRequest);
 
 			// 1. Buscar el ingrediente en la tabla ingrediente
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
+			console.log(`[Service] Ingrediente encontrado:`, ingredienteExistente);
 			let ingredientId;
 			let existsInPantry;
 			let action = "";
@@ -49,7 +53,7 @@ const IngredientService = {
 						cantidad
 					};
 				}
-
+				// 4. Si no está en la despensa, añadirlo
 				console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
 				await Pantry.addItem(userId, ingredientId, cantidad);
 				action = "added";
@@ -60,7 +64,7 @@ const IngredientService = {
 				};
 			}
 
-			// 2. Si no existe, crearlo
+			// 2. Si no existe en la tabla ingrediente, crearlo
 			console.log(`[Service] Ingrediente no encontrado`);
 			ingredientId = await Ingredient.create(ingrediente.nombre, ingrediente.tipoUnidad);
 			console.log(`[Service] Ingrediente creado con ID:`, ingredientId);
@@ -79,7 +83,7 @@ const IngredientService = {
 		}
 	},
 
-	filterIngredients: async filter => {
+	async filterIngredients(filter) {
 		if (filter === undefined || filter === null) filter = "";
 
 		const ingredients = await Ingredient.getAllIngredients();
