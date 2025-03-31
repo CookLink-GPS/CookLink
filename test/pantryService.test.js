@@ -7,17 +7,8 @@ const Pantry = require("../models/pantryModel");
 const AppError = require("../utils/AppError");
 const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients } = require("./testUtils");
 
-/**
- * Test suite for Pantry Service functionality
- * @describe Pantry Service
- */
 describe("Servicio de Despensa", () => {
 	let userId;
-
-	/**
-     * Initial setup before each test case
-     * Clears and seeds the database with test data
-     */
 	beforeEach(async () => {
 		await deletePantry();
 		await deleteIngredients();
