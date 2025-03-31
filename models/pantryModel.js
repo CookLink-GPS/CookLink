@@ -46,6 +46,15 @@ const Pantry = {
 		}
 	},
 
+	/**
+     * Updates the quantity of an ingredient in the pantry.
+     *
+     * @async
+     * @param {Number} idDespensa - Pantry item ID.
+     * @param {Number} newQuantity - New quantity to set.
+     * @returns {Promise<void>}
+     * @throws {Error} - If an error occurs while updating the quantity.
+     */
 	async updateIngredientQuantity(idDespensa, newQuantity) {
 		try {
 			await db.query(
@@ -58,6 +67,14 @@ const Pantry = {
 		}
 	},
 
+	/**
+     * Retrieves a pantry item by its ID.
+     *
+     * @async
+     * @param {Number} idDespensa - Pantry item ID.
+     * @returns {Promise<Object>} - Pantry item details.
+     * @throws {Error} - If an error occurs while retrieving the item.
+     */
 	async getPantryItemById(idDespensa) {
 		try {
 			const [ result ] = await db.query(
@@ -70,6 +87,7 @@ const Pantry = {
 			throw new Error(`Error getting pantry item ${idDespensa}`);
 		}
 	},
+
 	/**
      * Retrieves all ingredients with their name and unit type
      * from a user's pantry.

@@ -58,21 +58,16 @@ const PantryService = {
 
 		const ERROR = 403;
 		try {
-			// Primero obtenemos el item de la despensa
 			const pantryItem = await Pantry.getPantryItemById(idDespensa);
 
 			if (!pantryItem) throw new AppError("Item not found in pantry", badRequest);
 
-
 			if (pantryItem.id_usuario !== userId) throw new AppError("Unauthorized operation", ERROR);
-
 
 			if (quantityToDelete > pantryItem.cantidad) throw new AppError("Cannot delete more than available quantity", badRequest);
 
-
 			if (quantityToDelete === pantryItem.cantidad) await Pantry.deleteIngredient(userId, pantryItem.id_ingrediente);
 			 else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
-
 		}
 		catch (error) {
 			throw new AppError("Error deleting ingredient", internalServerError);

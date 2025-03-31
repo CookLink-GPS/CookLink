@@ -4,14 +4,20 @@ const db = require("../config/database");
 const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients } = require("./testUtils");
 
 describe("Servicio de Despensa", () => {
+	/**
+     * Hook que se ejecuta antes de cada prueba
+     * Limpia la base de datos y la rellena con datos de prueba
+     */
 	beforeEach(async () => {
 		await deletePantry();
 		await deleteIngredients();
 		await deleteUsers();
 
+		// Inserta un usuario de prueba en la base de dato
 		await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [ "test_user", "password123" ]);
 		const [ { id: userId } ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
 
+		// Inserta ingredientes de prueba
 		const ingredients = [
 			[ "Harina", "kg" ],
 			[ "Azúcar", "kg" ],
@@ -20,10 +26,15 @@ describe("Servicio de Despensa", () => {
 		await insertIngredients(ingredients);
 		const ingredientes = await db.query("SELECT id, nombre FROM ingredientes");
 
+		 // Inserta ingredientes en la despensa del usuario de prueba con una cantidad aleatoria
 		const pantryItems = ingredientes.map(ing => [ userId, ing.id, Math.random() * 10 ]);
 		await insertPantry(pantryItems);
 	});
 
+	/**
+     * Prueba que verifica si los ingredientes en la despensa
+     * se devuelven ordenados alfabéticamente
+     */
 	it("Debe devolver todos los ingredientes de la despensa ordenados alfabéticamente", async () => {
 		const despensa = await db.query(`
       SELECT i.nombre, d.cantidad
@@ -38,6 +49,10 @@ describe("Servicio de Despensa", () => {
 
 	});
 
+	 /**
+     * Prueba que verifica si se devuelve una lista vacía
+     * cuando la despensa no tiene ingredientes
+     */
 	it("Debe devolver una lista vacía si no hay ingredientes en la despensa", async () => {
 		await deletePantry();
 
@@ -52,6 +67,10 @@ describe("Servicio de Despensa", () => {
 
 	});
 
+	/**
+     * Prueba que verifica si se puede agregar un ingrediente
+     * a la despensa y recuperarlo correctamente
+     */
 	it("Debe permitir agregar un ingrediente a la despensa y recuperarlo correctamente", async () => {
 		const [ { id: userId } ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
 
@@ -71,6 +90,9 @@ describe("Servicio de Despensa", () => {
 
 	});
 
+	/**
+     * Prueba que verifica si se puede eliminar un ingrediente de la despensa
+     */
 	it("Debe permitir eliminar un ingrediente de la despensa", async () => {
 		const [ { id: userId } ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
 
@@ -90,6 +112,10 @@ describe("Servicio de Despensa", () => {
 
 	});
 
+	/**
+     * Prueba que verifica si el sistema bloquea correctamente
+     * la inserción de ingredientes con cantidades negativas
+     */
 	it("No debe permitir insertar ingredientes con cantidad negativa", async () => {
 		const [ { id: userId } ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
 
