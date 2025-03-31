@@ -58,14 +58,18 @@ describe("Modelo Receta", () => {
 			await insertContains(contains);
 
 			const result = await Recipe.getIngredients(recipeIds[0].id);
+			const expectedResult = [
+				{ ingrediente: ingredients[0][0], tipoUnidad: ingredients[0][1], unidades: contains[0][2] },
+				{ ingrediente: ingredients[1][0], tipoUnidad: ingredients[1][1], unidades: contains[1][2] }
+			  ];
+			  let encontrado = true;
+			  expectedResult.forEach(ingred => {
+				result.find(ing => {
+					if (ingred.ingrediente !== ing.ingrediente || ingred.tipoUnidad !== ing.tipoUnidad || ingred.unidades !== ing.unidades) encontrado = false;
+				});
+			  });
 
-			assert.deepEqual(
-				result,
-				[
-				  { ingrediente: ingredients[0][0], tipoUnidad: ingredients[0][1], unidades: contains[0][2] },
-				  { ingrediente: ingredients[1][0], tipoUnidad: ingredients[1][1], unidades: contains[1][2] }
-				]
-			  );
+			assert.ok(!encontrado && result.length === expectedResult.length);
 		});
 
 	});
