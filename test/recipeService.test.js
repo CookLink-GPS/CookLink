@@ -11,9 +11,6 @@ const QUINIENTOS = 500;
 
 describe("Servicio de recetas", () => {
 	let user, user2, user0;
-	beforeEach(function () {
-		this.timeout(5000); // Establece el timeout para cada test individual
-	  });
 
 	before(async () => {
 		await db.query("INSERT INTO usuarios (username, password) VALUES ('Luis', '123456789')");

@@ -8,10 +8,6 @@ describe("Servicio de Despensa", () => {
      * Hook que se ejecuta antes de cada prueba
      * Limpia la base de datos y la rellena con datos de prueba
      */
-	beforeEach(function () {
-		this.timeout(5000); // Establece el timeout para cada test individual
-	  });
-
 	beforeEach(async () => {
 		await deletePantry();
 		await deleteIngredients();

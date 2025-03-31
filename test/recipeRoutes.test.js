@@ -9,10 +9,6 @@ const { ok } = require("../config/httpcodes");
 
 describe("Rutas de recetas", () => {
 
-	beforeEach(function () {
-		this.timeout(5000); // Establece el timeout para cada test individual
-	  });
-
 	beforeEach(async () => {
 		await deleteContains();
 		await deleteIngredients();
