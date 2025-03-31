@@ -28,11 +28,6 @@ exports.toIngredient = (req, res, next) => {
  * @param {Object} res - HTTP response object.
  */
 exports.addIngredient = async (req, res) => {
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		console.log("Error details: ", JSON.stringify(errors.array(), null));
-		return renderView(res, "ingredientes", badRequest, { mensajeError: errors.array() });
-	}
 	console.log("[Controller] Datos recibidos:", req.body);
 	try {
 		const { nombre, tipoUnidad, cantidad } = req.body;

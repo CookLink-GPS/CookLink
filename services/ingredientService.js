@@ -21,6 +21,9 @@ const IngredientService = {
 			console.log(`[Service] Procesando ingrediente:`, { nombre, tipoUnidad, cantidad, userId });
 
 			// Const unidadNormalizada = normalizarUnidad(tipoUnidad);
+			if (nombre === undefined || nombre === null || nombre.trim() === "") throw new AppError("El nombre del ingrediente no puede estar vacío", badRequest);
+			if (tipoUnidad === undefined || tipoUnidad === null || tipoUnidad.trim() === "") throw new AppError("El tipo de unidad no puede estar vacío", badRequest);
+
 			// 1. Buscar  el ingrediente
 			const ingredienteExistente = await Ingredient.findByName(nombre);
 			let ingredientId;

@@ -62,9 +62,7 @@ describe("Rutas ingrediente", () => {
 		it("Debe agregar un nuevo ingrediente correctamente a la despena cuando se introduce un nombre, unidad y cantidad válidos", async () => {
 			const ingrediente = {
 				nombre: "Tomate",
-				tipoUnidad: "kg",
-				cantidad: 2,
-				userId: 1
+				tipoUnidad: "kg"
 			};
 
 			const res = await fetch(route, {
@@ -73,7 +71,7 @@ describe("Rutas ingrediente", () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			assert.equal(res.status, ok);
+			assert.equal(res.status, 200);
 		});
 
 		// CL_003_02: Error si falta algún campo
