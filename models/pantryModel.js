@@ -105,9 +105,53 @@ const Pantry = {
 		catch (error) {
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
+	},
+
+	/**
+     * Finds a pantry item by user and ingredient IDs
+     * @async
+     * @function getPantryItemByIngredient
+     * @memberof PantryModel
+     * @param {Number} userId - ID of the user
+     * @param {Number} ingredientId - ID of the ingredient
+     * @returns {Promise<Object|null>} Pantry item or null if not found
+     * @throws {Error} When database query fails
+     */
+	async getPantryItemByIngredient(userId, ingredientId) {
+		try {
+			const [ result ] = await db.query(
+				"SELECT * FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
+				[ userId, ingredientId ]
+			);
+			return result;
+		}
+		catch (error) {
+			throw new Error(`Error getting pantry item for user ${userId} and ingredient ${ingredientId}`);
+		}
+	},
+
+	/**
+     * Adds a new ingredient to user's pantry
+     * @async
+     * @function addIngredient
+     * @memberof PantryModel
+     * @param {Number} userId - ID of the user
+     * @param {Number} ingredientId - ID of the ingredient to add
+     * @param {Number} quantity - Initial quantity
+     * @returns {Promise<void>}
+     * @throws {Error} When database query fails
+     */
+	async addIngredient(userId, ingredientId, quantity) {
+		try {
+			await db.query(
+				"INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)",
+				[ userId, ingredientId, quantity ]
+			);
+		}
+		catch (error) {
+			throw new Error(`Error adding ingredient ${ingredientId} to user ${userId}'s pantry`);
+		}
 	}
-
-
 };
 
 module.exports = Pantry;
