@@ -5,9 +5,9 @@ const assert = require("assert");
 const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, deleteContains, insertContains } = require("./testUtils");
 const { baseUrl, port } = require("../config/config");
 const { ok } = require("../config/httpcodes");
-this.timeout(5000);
 
 describe("Rutas de recetas", () => {
+	this.timeout(5000);
 
 	beforeEach(async () => {
 		await deleteContains();
