@@ -40,7 +40,7 @@
                                 <td class="ingredient-quantity">
                                     <%= ingredient.cantidad || "N/A" %>
                                 </td>
-                                <td>
+                                <td class="tipo-unidad" data-tipo="<%= ingredient.tipoUnidad %>">
                                     <%= ingredient.tipoUnidad %>
                                 </td>
                                 <td>
@@ -80,8 +80,8 @@
                     <form id="deleteForm" method="POST" action="">
                         <div class="mb-3">
                             <label for="quantityToDelete" class="form-label">Cantidad a eliminar:</label>
-                            <input type="number" class="form-control" id="quantityToDelete" name="quantity" min="1"
-                                required>
+                            <input type="number" class="form-control" id="quantityToDelete" name="quantity" min="0.01"
+                                step="0.01" required>
                             <small class="text-muted" id="maxQuantityHint"></small>
                         </div>
                         <div class="modal-footer">
@@ -102,6 +102,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            const unidadMap = {
+                "gramos": "Gramos (g)",
+                "kilogramos": "Kilogramos (kg)",
+                "mililitros": "Mililitros (ml)",
+                "litros": "Litros (l)",
+                "unidades": "Unidades (ud)",
+                "cucharadas": "Cucharadas (cda)",
+                "cucharaditas": "Cucharaditas (cdta)",
+                "tazas": "Tazas (tz)"
+            };
+
+            document.querySelectorAll("td.tipo-unidad").forEach(td => {
+                const tipo = td.textContent.trim(); // Obtener el contenido de la celda y eliminar espacios en blanco
+                if (unidadMap[tipo]) {
+                    td.textContent = unidadMap[tipo]; // Reemplazar por el formato correcto
+                }
+            });
+
             const deleteModal = document.getElementById('confirmDeleteModal');
 
             deleteModal.addEventListener('show.bs.modal', function (event) {
@@ -115,17 +134,28 @@
 
                 // Configurar el formulario
                 deleteForm.action = `/pantry/delete/${id_despensa}`;
-                quantityInput.max = currentQuantity;
+                quantityInput.min = 0.01;
+                quantityInput.step = 0.01; // Permitir decimales
+                quantityInput.max = parseFloat(currentQuantity);
                 quantityInput.value = 1;
                 maxQuantityHint.textContent = `Máximo: ${currentQuantity} unidades disponibles`;
 
                 // Validación
                 quantityInput.oninvalid = function () {
-                    this.setCustomValidity(`Por favor ingresa un valor entre 1 y ${currentQuantity}`);
+                    this.setCustomValidity(`Por favor ingresa un valor entre 0,1 y ${currentQuantity}`);
                 };
                 quantityInput.oninput = function () {
                     this.setCustomValidity('');
                 };
+            });
+
+            // JavaScript para cambiar el paso en la cantidad
+            const quantityInput = document.getElementById('quantityToDelete');
+            quantityInput.addEventListener('input', function () {
+                const currentQuantity = parseFloat(quantityInput.max);
+                if (parseFloat(quantityInput.value) > currentQuantity) {
+                    quantityInput.value = currentQuantity; // No puede superar la cantidad disponible
+                }
             });
         });
     </script>

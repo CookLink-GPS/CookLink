@@ -34,7 +34,7 @@ const pantryController = {
 		try {
 			const userId = req.session.user.id;
 			const idDespensa = req.params.id_despensa;
-			const quantityToDelete = parseInt(req.body.quantity);
+			const quantityToDelete = parseFloat(req.body.quantity);
 
 			if (!userId || !idDespensa || isNaN(quantityToDelete)) throw new AppError("Missing required data", badRequest);
 
