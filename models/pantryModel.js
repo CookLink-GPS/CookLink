@@ -27,27 +27,6 @@ const Pantry = {
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	},
-
-	/**
-     * Retrieves all ingredients with their name and unit type
-     * from a user's pantry.
-     *
-     * @async
-     * @param {Number} userId - User ID.
-     * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
-	 *                                          name and unit type of each ingredient in the pantry.
-     */
-	async getIngredientsDetails(userId) {
-		try {
-			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
-			return result.map(row => ({ ...row }));
-		}
-		catch (error) {
-			console.log("Error");
-			throw new Error(`Error fetching pantry for user ${userId}`);
-		}
-	},
-
 	/**
      * Updates the quantity of an ingredient in the pantry.
      *
