@@ -111,6 +111,20 @@ const insertDummy = async () => {
 	await db.query(`INSERT INTO usuarios VALUES (1, "dummy", "dummy")`);
 };
 
+/**
+ * Crea usuarios de prueba en la base de datos.
+ */
+const createTestUsers = async () => {
+	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
+		"user1",
+		"12345678"
+	]);
+	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
+		"user2",
+		"12345678"
+	]);
+};
+
 module.exports = {
 	deleteUsers,
 	deleteIngredients,
@@ -122,5 +136,7 @@ module.exports = {
 	deleteContains,
 	insertContains,
 	insertDummy,
-	createuser
+	createuser,
+	createTestUsers
 };
+
