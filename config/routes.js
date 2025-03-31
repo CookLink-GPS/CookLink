@@ -17,7 +17,7 @@ module.exports = app => {
 	app.use("/recipes", recipeRouter);
 	app.use("/ingredients", ingredientRouter);
 	app.use("/inicio", inicioRouter);
-  app.use("/pantry", pantryRouter);
+	app.use("/pantry", pantryRouter);
 
 	// Manejo de errores 404
 	app.use((req, res, next) => {
