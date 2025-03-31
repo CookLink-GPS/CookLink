@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/img/Logo.ico" type="image/x-icon">
 </head>
+
 <body class="bg-light">
     <!-- NavBar -->
     <div>
@@ -24,34 +26,39 @@
                     <tr>
                         <th>Nombre Ingrediente</th>
                         <th>Cantidad</th>
+                        <th>Tipo Unidad</th>
                         <th>Remover</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% if (ingredients.length > 0) { %>
-                        <% ingredients.forEach(ingredient => { %>
+                    <% if (ingredients.length> 0) { %>
+                        <% ingredients.forEach(ingredient=> { %>
                             <tr>
-                                <td><%= ingredient.nombre_ingrediente %></td>
-                                <td class="ingredient-quantity"><%= ingredient.cantidad || "N/A" %> unidades</td>
                                 <td>
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-danger btn-sm" 
-                                        data-bs-toggle="modal" 
+                                    <%= ingredient.nombre_ingrediente %>
+                                </td>
+                                <td class="ingredient-quantity">
+                                    <%= ingredient.cantidad || "N/A" %>
+                                </td>
+                                <td class="tipo-unidad" data-tipo="<%= ingredient.tipoUnidad %>">
+                                    <%= ingredient.tipoUnidad %>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#confirmDeleteModal"
                                         data-despensa-id="<%= ingredient.id_despensa %>"
-                                        data-ingredient-quantity="<%= ingredient.cantidad %>"
-                                    >
+                                        data-ingredient-quantity="<%= ingredient.cantidad %>">
                                         Eliminar
                                     </button>
                                 </td>
                             </tr>
-                        <% }) %>
-                    <% } else { %>
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">No tienes ingredientes en la despensa.</td>
-                        </tr>
-                    <% } %>
+                            <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No tienes ingredientes en la
+                                            despensa.</td>
+                                    </tr>
+                                    <% } %>
                 </tbody>
             </table>
         </div>
@@ -61,7 +68,8 @@
     </div>
 
     <!-- Modal de Confirmación -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -72,7 +80,8 @@
                     <form id="deleteForm" method="POST" action="">
                         <div class="mb-3">
                             <label for="quantityToDelete" class="form-label">Cantidad a eliminar:</label>
-                            <input type="number" class="form-control" id="quantityToDelete" name="quantity" min="1" required>
+                            <input type="number" class="form-control" id="quantityToDelete" name="quantity" min="0.01"
+                                step="0.01" required>
                             <small class="text-muted" id="maxQuantityHint"></small>
                         </div>
                         <div class="modal-footer">
@@ -93,32 +102,63 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            const unidadMap = {
+                "gramos": "Gramos (g)",
+                "kilogramos": "Kilogramos (kg)",
+                "mililitros": "Mililitros (ml)",
+                "litros": "Litros (l)",
+                "unidades": "Unidades (ud)",
+                "cucharadas": "Cucharadas (cda)",
+                "cucharaditas": "Cucharaditas (cdta)",
+                "tazas": "Tazas (tz)"
+            };
+
+            document.querySelectorAll("td.tipo-unidad").forEach(td => {
+                const tipo = td.textContent.trim(); // Obtener el contenido de la celda y eliminar espacios en blanco
+                if (unidadMap[tipo]) {
+                    td.textContent = unidadMap[tipo]; // Reemplazar por el formato correcto
+                }
+            });
+
             const deleteModal = document.getElementById('confirmDeleteModal');
-            
+
             deleteModal.addEventListener('show.bs.modal', function (event) {
                 const button = event.relatedTarget;
                 const id_despensa = button.getAttribute('data-despensa-id');
                 const currentQuantity = button.getAttribute('data-ingredient-quantity');
-                
+
                 const quantityInput = document.getElementById('quantityToDelete');
                 const maxQuantityHint = document.getElementById('maxQuantityHint');
                 const deleteForm = document.getElementById('deleteForm');
-                
+
                 // Configurar el formulario
                 deleteForm.action = `/pantry/delete/${id_despensa}`;
-                quantityInput.max = currentQuantity;
+                quantityInput.min = 0.01;
+                quantityInput.step = 0.01; // Permitir decimales
+                quantityInput.max = parseFloat(currentQuantity);
                 quantityInput.value = 1;
                 maxQuantityHint.textContent = `Máximo: ${currentQuantity} unidades disponibles`;
-                
+
                 // Validación
-                quantityInput.oninvalid = function() {
-                    this.setCustomValidity(`Por favor ingresa un valor entre 1 y ${currentQuantity}`);
+                quantityInput.oninvalid = function () {
+                    this.setCustomValidity(`Por favor ingresa un valor entre 0,1 y ${currentQuantity}`);
                 };
-                quantityInput.oninput = function() {
+                quantityInput.oninput = function () {
                     this.setCustomValidity('');
                 };
+            });
+
+            // JavaScript para cambiar el paso en la cantidad
+            const quantityInput = document.getElementById('quantityToDelete');
+            quantityInput.addEventListener('input', function () {
+                const currentQuantity = parseFloat(quantityInput.max);
+                if (parseFloat(quantityInput.value) > currentQuantity) {
+                    quantityInput.value = currentQuantity; // No puede superar la cantidad disponible
+                }
             });
         });
     </script>
 </body>
+
 </html>
