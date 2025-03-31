@@ -130,7 +130,7 @@ describe("Servicio de Despensa", () => {
 		/**
          * Setup for delete tests
          */
-		beforeEach(async () => {
+		const insertarIngredienteTest = async () => {
 			await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", [ "Miel", "g" ]);
 			const [ ingrediente ] = await db.query("SELECT id FROM ingredientes WHERE nombre = ?", [ "Miel" ]);
 			idIngrediente = ingrediente.id;
@@ -139,9 +139,17 @@ describe("Servicio de Despensa", () => {
 				"INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)",
 				[ userId, idIngrediente, 200 ]
 			);
-
 			const [ item ] = await db.query("SELECT id_despensa FROM despensa WHERE id_ingrediente = ?", [ idIngrediente ]);
 			idDespensa = item.id_despensa;
+		};
+
+		beforeEach(async () => {
+			await insertarIngredienteTest();
+		});
+
+		afterEach(async () => {
+			await db.query("DELETE FROM despensa WHERE id_usuario = ?", [ userId ]);
+			await db.query("DELETE FROM ingredientes WHERE id = ?", [ idIngrediente ]);
 		});
 
 		/**
@@ -181,6 +189,94 @@ describe("Servicio de Despensa", () => {
 			}
 			catch (error) {
 				assert.strictEqual(error instanceof AppError, true);
+			}
+		});
+
+		/**
+		* Should throw an error when the userID is missing
+		*/
+		it("debería lanzar error si falta el userId", async () => {
+			try {
+				await PantryService.deleteIngredient(null, idDespensa, 50);
+				assert.fail("Debería haber fallado por falta de userId");
+			}
+			catch (error) {
+				assert.strictEqual(error instanceof AppError, true);
+				assert.strictEqual(error.message, "Missing required data");
+			}
+		});
+
+		/**
+		* Should throw an error when the idDespensa is missing
+		*/
+		it("debería lanzar error si falta el idDespensa", async () => {
+			try {
+				await PantryService.deleteIngredient(userId, null, 50);
+				assert.fail("Debería haber fallado por falta de idDespensa");
+			}
+			catch (error) {
+				assert.strictEqual(error instanceof AppError, true);
+				assert.strictEqual(error.message, "Missing required data");
+			}
+		});
+
+		/**
+		* Should throw an error when the quantity is zero
+		*/
+		it("debería lanzar error si la cantidad a eliminar es cero", async () => {
+			try {
+				await PantryService.deleteIngredient(userId, idDespensa, 0);
+				assert.fail("Debería haber fallado por cantidad inválida");
+			}
+			catch (error) {
+				assert.strictEqual(error instanceof AppError, true);
+				assert.strictEqual(error.message, "Missing required data");
+			}
+		});
+
+		/**
+		* Should throw an error when the quantity is null
+		*/
+		it("debería lanzar error si la cantidad a eliminar está ausente", async () => {
+			try {
+				await PantryService.deleteIngredient(userId, idDespensa, null);
+				assert.fail("Debería haber fallado por cantidad inválida");
+			}
+			catch (error) {
+				assert.strictEqual(error instanceof AppError, true);
+				assert.strictEqual(error.message, "Missing required data");
+			}
+		});
+
+		/**
+		* Should throw an error when the ingredient is missing
+		*/
+		it("debería lanzar error si no se encuentra el item en la despensa", async () => {
+			await db.query("DELETE FROM despensa WHERE id_despensa = ?", [ idDespensa ]);
+
+			try {
+				await PantryService.deleteIngredient(userId, idDespensa, 100);
+				assert.fail("Debería haber fallado por item inexistente");
+			}
+			catch (error) {
+				assert.strictEqual(error instanceof AppError, true);
+				assert.strictEqual(error.message, "Error deleting ingredient");
+			}
+		});
+
+		/**
+		* Should throw an error when the ingredient does not belong to the user
+		*/
+		it("debería lanzar error si el item no pertenece al usuario", async () => {
+			const otroUsuarioId = userId + 999;
+
+			try {
+				await PantryService.deleteIngredient(otroUsuarioId, idDespensa, 50);
+				assert.fail("Debería haber fallado por usuario no autorizado");
+			}
+			catch (error) {
+				assert.strictEqual(error instanceof AppError, true);
+				assert.strictEqual(error.message, "Error deleting ingredient");
 			}
 		});
 	});
