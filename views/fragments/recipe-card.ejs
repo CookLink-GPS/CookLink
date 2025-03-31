@@ -1,0 +1,16 @@
+<div class="card recipe-card" data-id="<%= recipe.id %>" style="width: 18rem; cursor: pointer;">
+    <div class="card-body">
+        <h5 class="card-title text-center user-select-none">
+            <%= recipe.nombre %>
+        </h5>
+        <hr class="custom-hr">
+        <ul>
+            <% recipe.ingredientes.forEach(({ nombre, unidades, tipoUnidad })=> { %>
+                <li>
+                    <%= nombre %> - <%= unidades %>
+                            <%= tipoUnidad %>
+                </li>
+                <% }); %>
+        </ul>
+    </div>
+</div>

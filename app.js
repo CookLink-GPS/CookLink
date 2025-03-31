@@ -6,7 +6,10 @@ const app = express();
 const errorHandler = require("./middlewares/errorHandler");
 const loadRoutes = require("./config/routes");
 const config = require("./config/config");
+const userSession = require("./middlewares/userSession"); // Importa el middleware
 const logRoutes = require("./middlewares/logRoutes"); // Importa el middleware
+const Recipe = require("./services/recipeService");
+const error = 404;
 
 // Middleware para parsear JSON y datos de formularios
 app.use(express.json());
@@ -14,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware para mostrar las rutas por consola
 app.use(logRoutes);
-
+app.use(userSession);
 
 // Configurar Express y motor de vistas
 app.set("view engine", "ejs");
@@ -31,6 +34,14 @@ const port = config.port;
 const server = app.listen(port, () => {
 	console.log(`Servidor en ejecución en http://${config.baseUrl}:${port}`);
 });
+
+app.get("/recipes/:id", (req, res) => {
+	const recipe = Recipe.getRecipeById(req.params.id);
+	if (recipe) res.render("recipe-detail", { recipe });
+	else res.status(error).send("Receta no encontrada");
+
+});
+
 
 module.exports = server;
 

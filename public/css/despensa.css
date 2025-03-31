@@ -1,0 +1,19 @@
+/* Contenedor de fondo */
+.light-red-container {
+    background-color: #ffcccc;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.ingredient-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ingredient-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    font-weight: 500;
+}

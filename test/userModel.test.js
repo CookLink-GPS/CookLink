@@ -42,7 +42,6 @@ describe("Modelo usuario", () => {
 				await User.registro(usuario);
 			}
 			catch (err) {
-				console.log(err.code);
 				good = true;
 			}
 
@@ -71,7 +70,6 @@ describe("Modelo usuario", () => {
 				await User.registro(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -89,7 +87,6 @@ describe("Modelo usuario", () => {
 				await User.registro(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -107,7 +104,6 @@ describe("Modelo usuario", () => {
 				await User.registro(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -125,7 +121,6 @@ describe("Modelo usuario", () => {
 				await User.registro(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -143,7 +138,6 @@ describe("Modelo usuario", () => {
 				await User.registro(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -161,7 +155,6 @@ describe("Modelo usuario", () => {
 				await User.registro(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -179,7 +172,6 @@ describe("Modelo usuario", () => {
 				await User.registro(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 

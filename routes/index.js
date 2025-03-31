@@ -1,4 +1,5 @@
 // Routes/index.js
+const pantryRoutes = require("./pantryRoutes");
 const express = require("express");
 const { noContent } = require("../config/httpcodes");
 const router = express.Router();
@@ -30,5 +31,7 @@ router.get("/favicon.ico", (req, res) => {
 // Router.get('/favicon.ico', (req, res) => {
 //     Res.sendFile(path.join(__dirname, '../public/favicon.ico'));
 //   });
+
+router.use("/pantry", pantryRoutes);
 
 module.exports = router;
