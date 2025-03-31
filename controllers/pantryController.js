@@ -46,18 +46,18 @@ const pantryController = {
 			console.error(error.message);
 			res.status(error.status || ERROR).render("error", { message: error.message || "Error deleting ingredient" });
 		}
-	}
-};
+	},
 
-/**
- * Renderiza una vista con todos los ingredientes de la despensa del usuario
- *
- * @param {HTTPRequest} req
- * @param {HTTPResponse} res
- */
-exports.getDespensa = async (req, res) => {
-	const ingredients = await PantryService.getIngredientsDetails(req.session.user.id);
-	renderView(res, "despensa", ok, { ingredients });
+	/**
+	 * Renderiza una vista con todos los ingredientes de la despensa del usuario
+	 *
+	 * @param {HTTPRequest} req
+	 * @param {HTTPResponse} res
+	 */
+	async getDespensa(req, res) {
+		const ingredients = await PantryService.getIngredientsDetails(req.session.user.id);
+		renderView(res, "despensa", ok, { ingredients });
+	}
 };
 
 module.exports = pantryController;
