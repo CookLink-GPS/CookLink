@@ -28,21 +28,23 @@ const Pantry = {
 		}
 	},
 
-  	/**
-     * Deletes an ingredient from a user's pantry.
+	/**
+     * Retrieves all ingredients with their name and unit type
+     * from a user's pantry.
      *
      * @async
      * @param {Number} userId - User ID.
-     * @param {Number} ingredientId - Ingredient ID to delete.
-     * @returns {Promise<void>}
-     * @throws {Error} - If an error occurs while deleting the ingredient.
+     * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
+	 *                                          name and unit type of each ingredient in the pantry.
      */
-	async deleteIngredient(userId, ingredientId) {
+	async getIngredientsDetails(userId) {
 		try {
-			await db.query(pantryQueries.deleteIngredient, [ userId, ingredientId ]);
+			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
+			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
-			throw new Error(`Error deleting ingredient ${ingredientId} from user ${userId}'s pantry`);
+			console.log("Error");
+			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	},
 
