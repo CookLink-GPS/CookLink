@@ -6,8 +6,12 @@ const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, dele
 const { baseUrl, port } = require("../config/config");
 const { ok } = require("../config/httpcodes");
 
+
 describe("Rutas de recetas", () => {
-	this.timeout(5000);
+
+	beforeEach(function () {
+		this.timeout(5000); // Establece el timeout para cada test individual
+	  });
 
 	beforeEach(async () => {
 		await deleteContains();
