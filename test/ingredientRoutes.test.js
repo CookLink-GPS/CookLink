@@ -3,13 +3,12 @@
 const assert = require("node:assert");
 const { baseUrl, port } = require("../config/config");
 const { insertIngredients, deleteIngredients, createuser, deletePantry, deleteUsers } = require("./testUtils");
-const { badRequest, ok, conflict } = require("../config/httpcodes");
+const { badRequest, ok } = require("../config/httpcodes");
 
 describe("Rutas ingrediente", () => {
-	const baseRoute = `http://${baseUrl}:${port}/ingredients`;
-
+	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
+	before(createuser);
 	beforeEach(async () => {
-		await createuser();
 		await deleteIngredients();
 		await deletePantry();
 	});
@@ -209,7 +208,7 @@ describe("Rutas ingrediente", () => {
 			});
 
 			assert.equal(res1.status, ok);
-			assert.equal(res2.status, conflict);
+			assert.equal(res2.status, badRequest);
 		});
 	});
 });

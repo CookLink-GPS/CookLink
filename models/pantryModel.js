@@ -97,7 +97,7 @@ const Pantry = {
 	 * @param {number} ingredientId - ID del ingrediente
 	 * @returns {Promise<boolean>} - true si existe, false si no
 	 */
-	findItem: async (userId, ingredientId) => {
+	async findItem(userId, ingredientId) {
 		try {
 			console.log(`[Model] Recibido:`, userId, ingredientId);
 			const rows = await db.query(
@@ -121,7 +121,7 @@ const Pantry = {
 	 * @param {number} cantidad - Cantidad a añadir
 	 * @returns {Promise<Object>} - Resultado de la inserción
 	 */
-	addItem: async (userId, ingredientId, cantidad) => {
+	async addItem(userId, ingredientId, cantidad) {
 		try {
 			console.log(`[Model pantry] Añadiendo a despensa - Usuario: ${userId}, Ingrediente: ${ingredientId}, Cantidad: ${cantidad}`);
 
@@ -148,7 +148,7 @@ const Pantry = {
 	 * @param {number} cantidad - Cantidad a sumar
 	 * @returns {Promise<Object>} - Resultado de la actualización
 	 */
-	updateItem: async (userId, ingredientId, cantidad) => {
+	async updateItem(userId, ingredientId, cantidad) {
 		try {
 			await db.query(
 				`UPDATE despensa SET cantidad = cantidad + ? WHERE id_usuario = ? AND id_ingrediente = ?`,

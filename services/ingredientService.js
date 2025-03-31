@@ -23,7 +23,6 @@ const IngredientService = {
 
 			// Comprobaciones de entrada
 			if (cantidad === undefined || cantidad === null || cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
-			if (userId === undefined || userId === null || userId <= 0) throw new AppError("El ID del usuario no es válido", badRequest);
 
 			// 1. Buscar el ingrediente en la tabla ingrediente
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
@@ -33,8 +32,7 @@ const IngredientService = {
 			if (ingredienteExistente) {
 				console.log(`[Service] Lectura ingrediente:`, ingredienteExistente);
 				console.log(`Esperado: '${ingredienteExistente.tipoUnidad}'`);
-				// If (ingredienteExistente.tipoUnidad !== unidadNormalizada) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${tipoUnidad}`, conflict);
-				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${ingrediente.tipoUnidad}`, conflict);
+				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${ingrediente.tipoUnidad}`, badRequest);
 
 				ingredientId = ingredienteExistente.id;
 
@@ -74,7 +72,6 @@ const IngredientService = {
 				ingrediente,
 				cantidad
 			};
-
 		}
 		catch (error) {
 			console.error("[Service] Error:", error);
