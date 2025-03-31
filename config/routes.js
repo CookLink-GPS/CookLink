@@ -14,9 +14,9 @@ const { notFound } = require("./httpcodes");
 module.exports = app => {
 	app.use("/", indexRouter);
 	app.use("/users", userRouter);
+	app.use("/inicio", inicioRouter);
 	app.use("/recipes", recipeRouter);
 	app.use("/ingredients", ingredientRouter);
-	app.use("/inicio", inicioRouter);
 	app.use("/pantry", pantryRouter);
 
 	// Manejo de errores 404

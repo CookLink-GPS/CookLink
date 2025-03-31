@@ -116,3 +116,10 @@ h1 {
 .footer-nav a:hover {
     color: #C78975;
 }
+
+.custom-hr {
+    border: none;
+    height: 2px;
+    background-color: #A25E4B;
+    margin: 20px 0;
+}
