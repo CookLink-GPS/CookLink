@@ -90,6 +90,9 @@ const Ingredient = {
 
 	create: async (nombre, tipoUnidad) => {
 		try {
+			if (nombre === undefined || nombre === null || nombre.trim() === "") throw new Error("El nombre del ingrediente no puede estar vacío");
+			if (tipoUnidad === undefined || tipoUnidad === null || tipoUnidad.trim() === "") throw new Error("El tipo de unidad no puede estar vacío");
+
 			console.log(`[Model] Creando ingrediente: ${nombre}`);
 
 			// Versión segura sin desestructuración inmediata

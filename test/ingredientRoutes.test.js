@@ -65,6 +65,7 @@ describe("Rutas ingrediente", () => {
 				tipoUnidad: "kg"
 			};
 
+
 			const res = await fetch(route, {
 				method: "POST",
 				body: JSON.stringify(ingrediente),

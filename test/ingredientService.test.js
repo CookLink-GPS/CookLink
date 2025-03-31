@@ -1,16 +1,21 @@
 /* eslint-disable no-undef */
 const assert = require("node:assert");
 const IngredientService = require("../services/ingredientService");
-const { deleteIngredients, insertIngredients, createuser, deletePantry } = require("./testUtils");
+const { deleteIngredients, insertIngredients, createuser, deletePantry, deleteUsers } = require("./testUtils");
 
 
 describe("Servicio Ingrediente", () => {
+	before(createuser);
 	beforeEach(async () => {
-		await createuser();
 		await deleteIngredients();
 		await deletePantry();
 	});
-	after(deleteIngredients);
+
+	after(async () => {
+		await deleteIngredients();
+		await deletePantry();
+		await deleteUsers();
+	});
 
 	describe("Filtro de ingredientes", () => {
 		const ingredientes = [
@@ -48,7 +53,8 @@ describe("Servicio Ingrediente", () => {
 
 	describe("processIngredient", () => {
 		it("Debe sumar la cantidad si el ingrediente ya existe y las unidades coinciden", async () => {
-			const data = { nombre: "Tomate", tipoUnidad: "kg", cantidad: 2, userId: 1 };
+			const ingrediente = { nombre: "Tomate", tipoUnidad: "kg" };
+			const data = { ingrediente, cantidad: 2, userId: 1 };
 
 			const res1 = await IngredientService.processIngredient(data);
 			const res2 = await IngredientService.processIngredient(data);
@@ -58,8 +64,12 @@ describe("Servicio Ingrediente", () => {
 		});
 
 		it("Debe lanzar un error si el ingrediente ya existe pero las unidades no coinciden", async () => {
-			const data1 = { nombre: "Tomate", tipoUnidad: "kg", cantidad: 2, userId: 1 };
-			const data2 = { nombre: "Tomate", tipoUnidad: "g", cantidad: 3, userId: 1 };
+			const ingrediente1 = { nombre: "Tomate", tipoUnidad: "kg" };
+			const data1 = { ingrediente1, cantidad: 2, userId: 1 };
+
+			// Introducimos el mismo ingrediente pero con diferente unidad
+			const ingrediente2 = { nombre: "Tomate", tipoUnidad: "g" };
+			const data2 = { ingrediente2, cantidad: 3, userId: 1 };
 
 			let good = false;
 			try {
@@ -73,7 +83,8 @@ describe("Servicio Ingrediente", () => {
 		});
 
 		it("Debe lanzar un error si la cantidad es igual a cero", async () => {
-			const data = { nombre: "Tomate", tipoUnidad: "kg", cantidad: 0, userId: 1 };
+			const ingrediente = { nombre: "Tomate", tipoUnidad: "kg" };
+			const data = { ingrediente, cantidad: 0, userId: 1 };
 
 			let good = false;
 			try {
@@ -86,7 +97,8 @@ describe("Servicio Ingrediente", () => {
 		});
 
 		it("Debe lanzar un error si la cantidad es menor que cero", async () => {
-			const data = { nombre: "Tomate", tipoUnidad: "kg", cantidad: -1, userId: 1 };
+			const ingrediente = { nombre: "Tomate", tipoUnidad: "kg" };
+			const data = { ingrediente, cantidad: -1, userId: 1 };
 
 			let good = false;
 			try {

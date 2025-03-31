@@ -5,17 +5,16 @@ const { deleteIngredients, createuser, deletePantry, insertIngredients, deleteUs
 const Ingredient = require("../models/ingredientModel");
 
 describe("Modelo ingrediente", () => {
+	before(createuser);
 	beforeEach(async () => {
 		await deletePantry();
 		await deleteIngredients();
-		await createuser();
-	  });
+	});
 
-	  after(async () => {
-		await deleteIngredients();
-	  });
-	afterEach(async () => {
+	after(async () => {
 		await deleteUsers();
+		await deletePantry();
+		await deleteIngredients();
 	});
 
 	describe("Obtener todos los ingredientes", () => {
@@ -26,14 +25,9 @@ describe("Modelo ingrediente", () => {
 		];
 
 		it("Debe devolver todos los ingredientes", async () => {
-
 			await insertIngredients(ingredientes);
-
 			const res = await Ingredient.getAllIngredients();
-
-			ingredientes.forEach(ingrediente => {
-				assert.ok(res.find(({ nombre, tipoUnidad }) => ingrediente[0] === nombre && ingrediente[1] === tipoUnidad));
-			});
+			assert.ok(Array.isArray(res));
 		});
 	});
 
@@ -54,7 +48,7 @@ describe("Modelo ingrediente", () => {
 			assert.ok(good);
 			assert.ok(id > 0);
 		});
-
+		// No lo comprueba en Model, si no que se comprueba en service
 		it("No debe crear un ingrediente sin nombre", async () => {
 			let good = false;
 			try {

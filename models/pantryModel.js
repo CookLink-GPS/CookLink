@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 const db = require("../config/database");
 const { pantryQueries } = require("../config/queries");
 
@@ -70,6 +71,7 @@ const Pantry = {
 			throw new Error(`Error getting pantry item ${idDespensa}`);
 		}
 	},
+
 	/**
      * Retrieves all ingredients with their name and unit type
      * from a user's pantry.
@@ -90,21 +92,21 @@ const Pantry = {
 	},
 
 	/**
- * Verifica si un ingrediente ya está en la despensa
- * @param {number} userId - ID del usuario
- * @param {number} ingredientId - ID del ingrediente
- * @returns {Promise<boolean>} - true si existe, false si no
- */
+	 * Verifica si un ingrediente ya está en la despensa
+	 * @param {number} userId - ID del usuario
+	 * @param {number} ingredientId - ID del ingrediente
+	 * @returns {Promise<boolean>} - true si existe, false si no
+	 */
 	findItem: async (userId, ingredientId) => {
 		try {
+			console.log(`[Model] Recibido:`, userId, ingredientId);
 			const rows = await db.query(
 				`SELECT id_ingrediente, cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? LIMIT 1`,
 				[ userId, ingredientId ]
 			);
 
 			console.log(`[Model] Resultado findItem:`, rows[0]);
-			const cero = 0;
-			return rows.length > cero ? rows[0] : null;
+			return rows.length > 0 ? rows[0] : null;
 		}
 		catch (error) {
 			console.error("[Model pantry] Error al buscar en la despensa:", error);
@@ -113,20 +115,20 @@ const Pantry = {
 	},
 
 	/**
- * Añade un nuevo ingrediente a la despensa (sin verificar duplicados).
- * @param {number} userId - ID del usuario
- * @param {number} ingredientId - ID del ingrediente
- * @param {number} cantidad - Cantidad a añadir
- * @returns {Promise<Object>} - Resultado de la inserción
- */
-	addItem: async (userId, ingredientId, cantidad) => {
+	 * Añade un nuevo ingrediente a la despensa (sin verificar duplicados).
+	 * @param {number} userId - ID del usuario
+	 * @param {number} ingredientId - ID del ingrediente
+	 * @param {number} cantidad - Cantidad a añadir
+	 * @returns {Promise<Object>} - Resultado de la inserción
+	 */
+	addItem: async (idDespensa, userId, ingredientId, cantidad) => {
 		try {
-			console.log(`[Model pantry] Añadiendo a despensa - Usuario: ${userId}, Ingrediente: ${ingredientId}, Cantidad: ${cantidad}`);
+			console.log(`[Model pantry] Añadiendo a despensa ${idDespensa} - Usuario: ${userId}, Ingrediente: ${ingredientId}, Cantidad: ${cantidad}`);
 
 			// Insertar directamente en la tabla "despensa"
 			const result = await db.query(
-				`INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)`,
-				[ userId, ingredientId, cantidad ]
+				`INSERT INTO despensa (id_despensa, id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?, ?)`,
+				[ idDespensa, userId, ingredientId, cantidad ]
 			);
 
 			console.log(`[Model pantry] Ingrediente añadido.`);
@@ -140,12 +142,12 @@ const Pantry = {
 	},
 
 	/**
- * Actualiza la cantidad de un ingrediente en la despensa
- * @param {number} userId - ID del usuario
- * @param {number} ingredientId - ID del ingrediente
- * @param {number} cantidad - Cantidad a sumar
- * @returns {Promise<Object>} - Resultado de la actualización
- */
+	 * Actualiza la cantidad de un ingrediente en la despensa
+	 * @param {number} userId - ID del usuario
+	 * @param {number} ingredientId - ID del ingrediente
+	 * @param {number} cantidad - Cantidad a sumar
+	 * @returns {Promise<Object>} - Resultado de la actualización
+	 */
 	updateItem: async (userId, ingredientId, cantidad) => {
 		try {
 			await db.query(
