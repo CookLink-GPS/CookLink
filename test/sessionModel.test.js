@@ -8,7 +8,7 @@ const User = require("../models/userModel");
 
 describe("Modelo usuario", () => {
 	before(testtingSession); // Antes de todos los test borramos usuarios
-	beforeEach(deleteUsers); // Despues de cada test borramos usuarios
+	after(deleteUsers); // Despues de cada test borramos usuarios
 
 	describe("Registro", () => {
 
