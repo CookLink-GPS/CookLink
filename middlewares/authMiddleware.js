@@ -1,7 +1,8 @@
 const { unauthorized } = require("../config/httpcodes");
+const { renderView } = require("./viewHelper");
 
 const authMiddleware = (req, res, next) => {
-	if (!req.session.user) return res.status(unauthorized).json({ error: "Acceso no autorizado" });
+	if (!req.session.user) return renderView(res, "unauthorized", unauthorized);
 	next();
 };
 
