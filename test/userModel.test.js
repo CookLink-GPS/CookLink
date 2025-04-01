@@ -182,7 +182,7 @@ describe("Modelo usuario", () => {
 	});
 
 
-	describe("Inicio de sesion", () => {
+	describe("[Model] Inicio de sesion", () => {
 		before(testtingSession);
 		after(deleteUsers);
 
@@ -195,7 +195,7 @@ describe("Modelo usuario", () => {
 				password: password
 			};
 
-			let good = true;
+			good = true;
 
 			try {
 				const result = await User.inicio( usuario);
