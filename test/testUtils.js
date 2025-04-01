@@ -121,5 +121,6 @@ module.exports = {
 	insertRecetas,
 	deleteContains,
 	insertContains,
-	insertDummy
+	insertDummy,
+	createuser
 };
