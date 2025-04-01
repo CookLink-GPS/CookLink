@@ -52,7 +52,8 @@ INSERT INTO recetas (nombre, descripcion) VALUES
   ("Lasagna Boloñesa", "Capas de pasta con salsa boloñesa y bechamel."),
   ("Ceviche de Camarón", "Camarones marinados en limón con cebolla y cilantro."),
   ("Ratatouille", "Guiso de verduras con berenjena, calabacín y tomate."),
-  ("Churrasco Argentino", "Carne asada con chimichurri.");
+  ("Churrasco Argentino", "Carne asada con chimichurri."),
+  ("Receta sin descripcion", "");
 
 
 INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES
@@ -122,56 +123,61 @@ INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES
   (10, 27, 300), -- Carne de Res (ya existe en Hamburguesa)
   (10, 38, 50),  -- Chimichurri
   (10, 39, 10),  -- Sal
-  (10, 40, 5);   -- Ajo
+  (10, 40, 5),   -- Ajo
+  
+  (11, 27, 300), -- Carne de Res (ya existe en Hamburguesa)
+  (11, 38, 50),  -- Chimichurri
+  (11, 39, 10),  -- Sal
+  (11, 40, 5);   -- Ajo
 
-INSERT INTO despensa (id_usuario, id_ingrediente, caducidad, cantidad) VALUES
-  (1, 1, '2025-12-31', 1000),  -- Harina
-  (1, 2, '2025-10-15', 500),   -- Tomate
-  (1, 3, '2025-09-20', 300),   -- Mozzarella
-  (1, 4, '2025-08-10', 50),    -- Albahaca
-  (1, 5, '2025-11-25', 100),   -- Aceite de Oliva
+INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES
+  (1, 1, 1000),  -- Harina
+  (1, 2, 500),   -- Tomate
+  (1, 3, 300),   -- Mozzarella
+  (1, 4, 50),    -- Albahaca
+  (1, 5, 100),   -- Aceite de Oliva
 
-  (1, 6, '2025-07-05', 500),   -- Pasta
-  (1, 7, '2025-06-30', 12),    -- Huevo
-  (1, 8, '2025-09-15', 200),   -- Panceta
-  (1, 9, '2025-12-10', 150),   -- Queso Pecorino
-  (1, 10, '2026-01-01', 50),   -- Pimienta Negra
+  (1, 6, 500),   -- Pasta
+  (1, 7, 12),    -- Huevo
+  (1, 8, 200),   -- Panceta
+  (1, 9, 150),   -- Queso Pecorino
+  (1, 10, 50),   -- Pimienta Negra
 
-  (1, 11, '2025-05-20', 300),  -- Lechuga
-  (1, 12, '2025-09-01', 200),  -- Crutones
-  (1, 13, '2025-10-10', 100),  -- Aderezo César
-  (1, 14, '2025-08-15', 150),  -- Queso Parmesano
-  (1, 15, '2025-06-22', 400),  -- Pollo
+  (1, 11, 300),  -- Lechuga
+  (1, 12, 200),  -- Crutones
+  (1, 13, 100),  -- Aderezo César
+  (1, 14, 150),  -- Queso Parmesano
+  (1, 15, 400),  -- Pollo
 
-  (1, 16, '2025-07-01', 10),   -- Tortilla
-  (1, 17, '2025-06-18', 500),  -- Cerdo
-  (1, 18, '2025-06-25', 200),  -- Piña
-  (1, 19, '2025-06-12', 150),  -- Cebolla
-  (1, 20, '2025-07-10', 100),  -- Cilantro
+  (1, 16, 10),   -- Tortilla
+  (1, 17, 500),  -- Cerdo
+  (1, 18, 200),  -- Piña
+  (1, 19, 150),  -- Cebolla
+  (1, 20, 100),  -- Cilantro
 
-  (1, 21, '2025-09-30', 1000), -- Arroz
-  (1, 22, '2026-02-01', 20),   -- Alga Nori
-  (1, 23, '2025-06-05', 300),  -- Pescado
-  (1, 24, '2025-05-28', 200),  -- Aguacate
-  (1, 25, '2025-06-08', 150),  -- Pepino
+  (1, 21, 1000), -- Arroz
+  (1, 22, 20),   -- Alga Nori
+  (1, 23, 300),  -- Pescado
+  (1, 24, 200),  -- Aguacate
+  (1, 25, 150),  -- Pepino
 
-  (1, 26, '2025-07-15', 5),    -- Pan
-  (1, 27, '2025-06-10', 800),  -- Carne de Res
-  (1, 28, '2025-05-29', 200),  -- Queso Cheddar
+  (1, 26, 5),    -- Pan
+  (1, 27, 800),  -- Carne de Res
+  (1, 28, 200),  -- Queso Cheddar
 
-  (1, 29, '2025-12-31', 500),  -- Pasta de Lasagna
-  (1, 30, '2025-10-10', 600),  -- Salsa Boloñesa
-  (1, 31, '2025-09-20', 300),  -- Queso Ricotta
-  (1, 32, '2025-08-25', 400),  -- Bechamel
+  (1, 29, 500),  -- Pasta de Lasagna
+  (1, 30, 600),  -- Salsa Boloñesa
+  (1, 31, 300),  -- Queso Ricotta
+  (1, 32, 400),  -- Bechamel
 
-  (1, 33, '2025-06-18', 500),  -- Camarón
-  (1, 34, '2025-07-30', 250),  -- Limón
+  (1, 33, 500),  -- Camarón
+  (1, 34, 250),  -- Limón
 
-  (1, 35, '2025-06-15', 400),  -- Berenjena
-  (1, 36, '2025-06-20', 300),  -- Calabacín
-  (1, 37, '2025-06-25', 350),  -- Pimiento
+  (1, 35, 400),  -- Berenjena
+  (1, 36, 300),  -- Calabacín
+  (1, 37, 350),  -- Pimiento
 
-  (1, 38, '2026-01-10', 100),  -- Chimichurri
-  (1, 39, '2026-12-31', 500),  -- Sal
-  (1, 40, '2025-09-15', 200);  -- Ajo
+  (1, 38, 100),  -- Chimichurri
+  (1, 39, 500),  -- Sal
+  (1, 40, 200);  -- Ajo
 
