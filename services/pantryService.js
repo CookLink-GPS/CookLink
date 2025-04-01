@@ -126,6 +126,7 @@ const PantryService = {
 	 *
 	 */
 	async searchIngredients(search, userId) {
+		if (!userId) throw new AppError("User ID is required", badRequest);
 		if (search === undefined || search === null) search = "";
 		const normalizedFilter = removeAccents(search.toLowerCase());
 

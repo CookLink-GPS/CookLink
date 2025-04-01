@@ -1,5 +1,5 @@
 const PantryService = require("../services/pantryService");
-const { badRequest, internalServerError } = require("../config/httpcodes");
+const { badRequest, internalServerError, forbidden } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const { ok } = require("../config/httpcodes");
 const { renderView } = require("../middlewares/viewHelper");
@@ -53,13 +53,15 @@ const PantryController = {
 	 */
 	async searchIngredients(req, res) {
 		try {
+			if (!req.session.user.id) throw new AppError("Usuario no autenticado", forbidden);
 			const ingredientes = await PantryService.searchIngredients(req.params.filter || "", req.session.user.id);
 
 			res.json({ ingredientes });
 		}
 		catch (err) {
 			console.error(err.message);
-			res.json({ mensajeError: "Error al filtrar los ingredientes" });
+			if (err.status === forbidden) res.status(forbidden).json({ mensajeError: err.message });
+			else res.status(badRequest).json({ mensajeError: "Error al filtrar los ingredientes" });
 		}
 	},
 	/**

@@ -42,7 +42,10 @@ const deletePantry = async () => {
 };
 
 const insertPantry = async pantrys => {
-	for (const pantry of pantrys) await db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)", pantry);
+	const queries = [];
+	for (const pantry of pantrys) queries.push(db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)", pantry));
+
+	await Promise.all(queries);
 };
 
 const deleteRecipes = async () => {
@@ -62,4 +65,19 @@ const insertContains = async contains => {
 	for (const contain of contains) await db.query("INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES (?, ?, ?)", contain);
 };
 
-module.exports = { deleteUsers, deleteIngredients, insertIngredients, deletePantry, insertPantry, deleteRecipes, insertRecetas, deleteContains, insertContains };
+const insertDummy = async () => {
+	await db.query(`INSERT INTO usuarios VALUES (1, "dummy", "dummy")`);
+};
+
+module.exports = {
+	deleteUsers,
+	deleteIngredients,
+	insertIngredients,
+	deletePantry,
+	insertPantry,
+	deleteRecipes,
+	insertRecetas,
+	deleteContains,
+	insertContains,
+	insertDummy
+};
