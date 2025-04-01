@@ -118,7 +118,7 @@ const PantryService = {
 			throw new AppError("Error adding ingredient to pantry", internalServerError);
 		}
 	},
-	/*
+	/**
 	 *
 	 * @async
 	 * @param {String} search

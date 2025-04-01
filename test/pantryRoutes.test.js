@@ -33,7 +33,7 @@ describe("Rutas despensa", () => {
 		before(async () => {
 
 			await insertIngredients(ingredients);
-
+			await insertDummy();
 			const ingredientIds = await db.query("SELECT id, nombre FROM ingredientes");
 
 			const pantry = [
@@ -43,8 +43,7 @@ describe("Rutas despensa", () => {
 				[ 1, ingredientIds[3].id, 100 ]
 			];
 
-			const promises = [ insertDummy(), insertPantry(pantry) ];
-			await Promise.all(promises);
+			await insertPantry(pantry);
 		});
 
 		after(async () => {

@@ -5,7 +5,7 @@ const db = require("../config/database");
 const PantryService = require("../services/pantryService");
 const Pantry = require("../models/pantryModel");
 const AppError = require("../utils/AppError");
-const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients } = require("./testUtils");
+const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients, insertDummy } = require("./testUtils");
 
 describe("Servicio de Despensa", () => {
 	/**
@@ -412,6 +412,61 @@ describe("Servicio de Despensa", () => {
 			catch (error) {
 				assert.strictEqual(error instanceof AppError, true);
 			}
+		});
+	});
+
+	describe("Buscar ingredientes", () => {
+		const ingredients = [
+			[ "harina", "gramos" ],
+			[ "arroz", "gramos" ],
+			[ "leche", "litros" ],
+			[ "harina de avena", "gramos" ]
+		];
+
+		before(async () => {
+			await deleteUsers();
+			await deleteIngredients();
+			await deletePantry();
+
+			await insertIngredients(ingredients);
+			await insertDummy();
+			const ingredientIds = await db.query("SELECT id, nombre FROM ingredientes");
+
+			const pantry = [
+				[ 1, ingredientIds[0].id, 100 ],
+				[ 1, ingredientIds[1].id, 100 ],
+				[ 1, ingredientIds[2].id, 100 ],
+				[ 1, ingredientIds[3].id, 100 ]
+			];
+
+			await insertPantry(pantry);
+		});
+
+		after(async () => {
+			await Promise.all([ deleteIngredients(), deleteUsers() ]);
+		});
+
+		it("Debe devolver todos los ingredientes cuando no metes nada", async () => {
+			const res = await PantryService.searchIngredients("", 1);
+
+			console.log("AY: ", res);
+			let good = res.length === ingredients.length;
+
+			if (good) good = ingredients.reduce((acc, [ ingName ]) => acc && res.some(({ nombre }) => ingName === nombre));
+
+			assert.ok(good);
+
+		});
+
+		it("Debe devolver los ingredientes coincidentes", async () => {
+			const res = await PantryService.searchIngredients("har", 1);
+
+			const filteredIngredients = ingredients.filter(([ nombre ]) => nombre.startsWith("har"));
+			let good = filteredIngredients.length === res.length;
+
+			if (good) good = filteredIngredients.reduce((acc, [ ingName ]) => acc && res.some(({ nombre }) => ingName === nombre));
+
+			assert.ok(good);
 		});
 	});
 });
