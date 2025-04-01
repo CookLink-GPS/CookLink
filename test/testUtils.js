@@ -9,13 +9,17 @@ const deleteUsers = async () => {
 	await db.query("DELETE FROM usuarios");
 };
 
+const createuser = async () => {
+	await db.query("INSERT INTO usuarios (id, username, password) VALUES (1, 'Luis', '12345678Aa:')");
+};
+
 /**
  * Elimina todos los ingredientes de la base de datos.
  *
  * @returns {Promise<void>}
  */
 const deleteIngredients = async () => {
-	await db.query("DELETE FROM contiene"); // Si existe esta tabla
+	await db.query("DELETE FROM contiene");
 	await db.query("DELETE FROM despensa");
 	await db.query("DELETE FROM ingredientes");
 };
@@ -44,7 +48,7 @@ const insertIngredients = async ingredients => {
  * @returns {Promise<void>}
  */
 const deletePantry = async () => {
-	await db.query("DELETE FROM contiene"); // Si existe
+	await db.query("DELETE FROM contiene");
 	await db.query("DELETE FROM despensa");
 };
 
@@ -103,4 +107,4 @@ const insertContains = async contains => {
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
 };
 
-module.exports = { deleteUsers,	deleteIngredients,	insertIngredients,	deletePantry,	insertPantry,	deleteRecipes,	insertRecetas,	deleteContains,	insertContains };
+module.exports = { createuser, deleteUsers, deleteIngredients, insertIngredients, deletePantry, insertPantry, deleteRecipes, insertRecetas, deleteContains, insertContains };

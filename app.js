@@ -42,7 +42,6 @@ app.get("/recipes/:id", (req, res) => {
 
 });
 
-
 module.exports = server;
 
 /* // middlewares/errorHandler.js

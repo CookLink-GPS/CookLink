@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 const db = require("../config/database");
 const { pantryQueries } = require("../config/queries");
 
@@ -17,7 +18,6 @@ const Pantry = {
      * @returns {Promise<PantryIngredient[]>} - Array containing the id, amount, and expiration date
      *                                           of each ingredient in the pantry.
      */
-
 	async getPantryFromUser(userId) {
 		try {
 			const result = await db.query(pantryQueries.getPantryFromUser, [ userId ]);
@@ -28,7 +28,7 @@ const Pantry = {
 		}
 	},
 
-  	/**
+	/**
      * Deletes an ingredient from a user's pantry.
      *
      * @async
@@ -100,13 +100,138 @@ const Pantry = {
 	async getIngredientsDetails(userId) {
 		try {
 			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
-			return result.map(row => ({ ...row }));
+			return result.map(row => ({
+				idDespensa: row.id_despensa,
+				idIngrediente: row.id_ingrediente,
+				nombre: row.nombre_ingrediente,
+				cantidad: row.cantidad,
+				tipoUnidad: row.tipoUnidad
+			}));
 		}
 		catch (error) {
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
-	}
+	},
 
+	/**
+     * Finds a pantry item by user and ingredient IDs
+     * @async
+     * @function getPantryItemByIngredient
+     * @memberof PantryModel
+     * @param {Number} userId - ID of the user
+     * @param {Number} ingredientId - ID of the ingredient
+     * @returns {Promise<Object|null>} Pantry item or null if not found
+     * @throws {Error} When database query fails
+     */
+	// TODO ESTA Y LA SIGUIENTE FUNCS SON IGUALES!!!! REVISAAAARRRR
+	async getPantryItemByIngredient(userId, ingredientId) {
+		try {
+			const [ result ] = await db.query(
+				"SELECT * FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
+				[ userId, ingredientId ]
+			);
+			return result;
+		}
+		catch (error) {
+			throw new Error(`Error getting pantry item for user ${userId} and ingredient ${ingredientId}`);
+		}
+	},
+	/**
+	 * Verifica si un ingrediente ya está en la despensa
+	 *
+	 * @param {number} userId - ID del usuario
+	 * @param {number} ingredientId - ID del ingrediente
+	 * @returns {Promise<boolean>} - true si existe, false si no
+	 */
+	async findItem(userId, ingredientId) {
+		try {
+			console.log(`[Model] Recibido:`, userId, ingredientId);
+			const rows = await db.query(
+				`SELECT id_ingrediente, cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? LIMIT 1`,
+				[ userId, ingredientId ]
+			);
+
+			console.log(`[Model] Resultado findItem:`, rows[0]);
+			return rows.length > 0 ? rows[0] : null;
+		}
+		catch (error) {
+			console.error("[Model pantry] Error al buscar en la despensa:", error);
+			return false;
+		}
+	},
+
+	/**
+     * Adds a new ingredient to user's pantry
+     * @async
+     * @function addIngredient
+     * @memberof PantryModel
+     * @param {Number} userId - ID of the user
+     * @param {Number} ingredientId - ID of the ingredient to add
+     * @param {Number} quantity - Initial quantity
+     * @returns {Promise<void>}
+     * @throws {Error} When database query fails
+     */
+	// TODO CON ESTAS DOS PASA LO MISMO!!!!
+	async addIngredient(userId, ingredientId, quantity) {
+		try {
+			await db.query(
+				"INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)",
+				[ userId, ingredientId, quantity ]
+			);
+		}
+		catch (error) {
+			throw new Error(`Error adding ingredient ${ingredientId} to user ${userId}'s pantry`);
+		}
+	},
+	/**
+	 * Añade un nuevo ingrediente a la despensa (sin verificar duplicados).
+	 *
+	 * @param {number} userId - ID del usuario
+	 * @param {number} ingredientId - ID del ingrediente
+	 * @param {number} cantidad - Cantidad a añadir
+	 * @returns {Promise<Object>} - Resultado de la inserción
+	 */
+	async addItem(userId, ingredientId, cantidad) {
+		try {
+			console.log(`[Model pantry] Añadiendo a despensa - Usuario: ${userId}, Ingrediente: ${ingredientId}, Cantidad: ${cantidad}`);
+
+			const result = await db.query(
+				`INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)`,
+				[ userId, ingredientId, cantidad ]
+			);
+
+			console.log(`[Model pantry] Ingrediente añadido.`);
+			return { success: true, message: "Ingrediente añadido a la despensa.", result };
+
+		}
+		catch (error) {
+			console.error("[Model pantry] Error al añadir a la despensa:", error);
+			return { success: false, message: "Error al añadir a la despensa.", error };
+		}
+	},
+
+	/**
+	 * Actualiza la cantidad de un ingrediente en la despensa
+	 *
+	 * @param {number} userId - ID del usuario
+	 * @param {number} ingredientId - ID del ingrediente
+	 * @param {number} cantidad - Cantidad a sumar
+	 * @returns {Promise<Object>} - Resultado de la actualización
+	 */
+	async updateItem(userId, ingredientId, cantidad) {
+		try {
+			await db.query(
+				`UPDATE despensa SET cantidad = cantidad + ? WHERE id_usuario = ? AND id_ingrediente = ?`,
+				[ cantidad, userId, ingredientId ]
+			);
+			console.log(`[Model pantry] Cantidad actualizada.`);
+			return { success: true, message: "Cantidad actualizada en la despensa." };
+		}
+		catch (error) {
+			console.error("[Model pantry] Error al actualizar la despensa:", error);
+			return { success: false, message: "Error al actualizar la cantidad.", error };
+		}
+	}
 
 };
 
