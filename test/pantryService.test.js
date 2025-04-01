@@ -5,39 +5,38 @@ const db = require("../config/database");
 const PantryService = require("../services/pantryService");
 const Pantry = require("../models/pantryModel");
 const AppError = require("../utils/AppError");
-const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients } = require("./testUtils");
+const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients, insertDummy } = require("./testUtils");
 
 describe("Servicio de Despensa", () => {
-	let userId;
-	beforeEach(async () => {
-		await deletePantry();
-		await deleteIngredients();
-		await deleteUsers();
-
-		// Crear usuario de prueba
-		await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [ "test_user", "password123" ]);
-		const [ user ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
-		userId = user.id;
-
-		// Crear ingredientes de prueba
-		const ingredients = [
-			[ "Harina", "kg" ],
-			[ "Azúcar", "kg" ],
-			[ "Sal", "g" ]
-		];
-		await insertIngredients(ingredients);
-
-		// Agregar ingredientes a la despensa
-		const ingredientes = await db.query("SELECT id FROM ingredientes");
-		const pantryItems = ingredientes.map(ing => [ userId, ing.id, 1 ]);
-		await insertPantry(pantryItems);
-	});
-
 	/**
      * Test group for getPantryIngredients functionality
      * @describe Get pantry ingredients
      */
 	describe("Obtener ingredientes de despensa", () => {
+		let userId;
+		beforeEach(async () => {
+			await deletePantry();
+			await deleteIngredients();
+			await deleteUsers();
+
+			// Crear usuario de prueba
+			await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [ "test_user", "password123" ]);
+			const [ user ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
+			userId = user.id;
+
+			// Crear ingredientes de prueba
+			const ingredients = [
+				[ "Harina", "kg" ],
+				[ "Azúcar", "kg" ],
+				[ "Sal", "g" ]
+			];
+			await insertIngredients(ingredients);
+
+			// Agregar ingredientes a la despensa
+			const ingredientes = await db.query("SELECT id FROM ingredientes");
+			const pantryItems = ingredientes.map(ing => [ userId, ing.id, 1 ]);
+			await insertPantry(pantryItems);
+		});
 		/**
          * Should return all ingredients for a given user
          */
@@ -85,6 +84,29 @@ describe("Servicio de Despensa", () => {
      * @describe Get ingredients details
      */
 	describe("Obtener detalles de ingredientes", () => {
+		beforeEach(async () => {
+			await deletePantry();
+			await deleteIngredients();
+			await deleteUsers();
+
+			// Crear usuario de prueba
+			await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [ "test_user", "password123" ]);
+			const [ user ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
+			userId = user.id;
+
+			// Crear ingredientes de prueba
+			const ingredients = [
+				[ "Harina", "kg" ],
+				[ "Azúcar", "kg" ],
+				[ "Sal", "g" ]
+			];
+			await insertIngredients(ingredients);
+
+			// Agregar ingredientes a la despensa
+			const ingredientes = await db.query("SELECT id FROM ingredientes");
+			const pantryItems = ingredientes.map(ing => [ userId, ing.id, 1 ]);
+			await insertPantry(pantryItems);
+		});
 		/**
          * Should return ingredients in alphabetical order
          */
@@ -143,8 +165,28 @@ describe("Servicio de Despensa", () => {
 			const [ item ] = await db.query("SELECT id_despensa FROM despensa WHERE id_ingrediente = ?", [ idIngrediente ]);
 			idDespensa = item.id_despensa;
 		};
-
 		beforeEach(async () => {
+			await deletePantry();
+			await deleteIngredients();
+			await deleteUsers();
+
+			// Crear usuario de prueba
+			await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [ "test_user", "password123" ]);
+			const [ user ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
+			userId = user.id;
+
+			// Crear ingredientes de prueba
+			const ingredients = [
+				[ "Harina", "kg" ],
+				[ "Azúcar", "kg" ],
+				[ "Sal", "g" ]
+			];
+			await insertIngredients(ingredients);
+
+			// Agregar ingredientes a la despensa
+			const ingredientes = await db.query("SELECT id FROM ingredientes");
+			const pantryItems = ingredientes.map(ing => [ userId, ing.id, 1 ]);
+			await insertPantry(pantryItems);
 			await insertarIngredienteTest();
 		});
 
@@ -162,11 +204,10 @@ describe("Servicio de Despensa", () => {
 			const idIng = pantryItem.id_ingrediente;
 
 			await PantryService.deleteIngredient(userId, idDespensa, cantidadInicial);
-
 			const ingredientes = await PantryService.getPantryIngredients(userId);
 			const existe = ingredientes.some(ing => ing.id_ingrediente === idIng);
 
-			assert.strictEqual(existe, false, "El ingrediente debería haber sido eliminado completamente");
+			assert.equal(existe, false, "El ingrediente debería haber sido eliminado completamente");
 		});
 
 		/**
@@ -289,10 +330,29 @@ describe("Servicio de Despensa", () => {
 	describe("Agregar ingredientes", () => {
 		let idAceite, idLeche;
 
-		/**
-         * Setup for add ingredient tests
-         */
 		beforeEach(async () => {
+			await deletePantry();
+			await deleteIngredients();
+			await deleteUsers();
+
+			// Crear usuario de prueba
+			await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [ "test_user", "password123" ]);
+			const [ user ] = await db.query("SELECT id FROM usuarios WHERE username = ?", [ "test_user" ]);
+			userId = user.id;
+
+			// Crear ingredientes de prueba
+			const ingredients = [
+				[ "Harina", "kg" ],
+				[ "Azúcar", "kg" ],
+				[ "Sal", "g" ]
+			];
+			await insertIngredients(ingredients);
+
+			// Agregar ingredientes a la despensa
+			const ingredientes = await db.query("SELECT id FROM ingredientes");
+			const pantryItems = ingredientes.map(ing => [ userId, ing.id, 1 ]);
+			await insertPantry(pantryItems);
+
 			await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", [ "Aceite", "ml" ]);
 			const [ aceite ] = await db.query("SELECT id FROM ingredientes WHERE nombre = ?", [ "Aceite" ]);
 			idAceite = aceite.id;
@@ -352,6 +412,61 @@ describe("Servicio de Despensa", () => {
 			catch (error) {
 				assert.strictEqual(error instanceof AppError, true);
 			}
+		});
+	});
+
+	describe("Buscar ingredientes", () => {
+		const ingredients = [
+			[ "harina", "gramos" ],
+			[ "arroz", "gramos" ],
+			[ "leche", "litros" ],
+			[ "harina de avena", "gramos" ]
+		];
+
+		before(async () => {
+			await deleteUsers();
+			await deleteIngredients();
+			await deletePantry();
+
+			await insertIngredients(ingredients);
+			await insertDummy();
+			const ingredientIds = await db.query("SELECT id, nombre FROM ingredientes");
+
+			const pantry = [
+				[ 1, ingredientIds[0].id, 100 ],
+				[ 1, ingredientIds[1].id, 100 ],
+				[ 1, ingredientIds[2].id, 100 ],
+				[ 1, ingredientIds[3].id, 100 ]
+			];
+
+			await insertPantry(pantry);
+		});
+
+		after(async () => {
+			await Promise.all([ deleteIngredients(), deleteUsers() ]);
+		});
+
+		it("Debe devolver todos los ingredientes cuando no metes nada", async () => {
+			const res = await PantryService.searchIngredients("", 1);
+
+			console.log("AY: ", res);
+			let good = res.length === ingredients.length;
+
+			if (good) good = ingredients.reduce((acc, [ ingName ]) => acc && res.some(({ nombre }) => ingName === nombre));
+
+			assert.ok(good);
+
+		});
+
+		it("Debe devolver los ingredientes coincidentes", async () => {
+			const res = await PantryService.searchIngredients("har", 1);
+
+			const filteredIngredients = ingredients.filter(([ nombre ]) => nombre.startsWith("har"));
+			let good = filteredIngredients.length === res.length;
+
+			if (good) good = filteredIngredients.reduce((acc, [ ingName ]) => acc && res.some(({ nombre }) => ingName === nombre));
+
+			assert.ok(good);
 		});
 	});
 });

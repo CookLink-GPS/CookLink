@@ -15,7 +15,7 @@ const Pantry = {
      *
      * @async
      * @param {Number} userId - User ID.
-     * @returns {Promise<PantryIngredient[]>} - Array containing the id, amount, and expiration date
+     * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
      *                                           of each ingredient in the pantry.
      */
 	async getPantryFromUser(userId) {
@@ -27,7 +27,6 @@ const Pantry = {
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	},
-
 	/**
      * Deletes an ingredient from a user's pantry.
      *
@@ -45,7 +44,6 @@ const Pantry = {
 			throw new Error(`Error deleting ingredient ${ingredientId} from user ${userId}'s pantry`);
 		}
 	},
-
 	/**
      * Updates the quantity of an ingredient in the pantry.
      *
@@ -94,7 +92,7 @@ const Pantry = {
      *
      * @async
      * @param {Number} userId - User ID.
-     * @returns {Promise<PantryIngredient[]>} - Array containing the id, amount, expiration date,
+     * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
 	 *                                          name and unit type of each ingredient in the pantry.
      */
 	async getIngredientsDetails(userId) {

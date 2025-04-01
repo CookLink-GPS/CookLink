@@ -18,90 +18,70 @@
 
     <div class="container content text-center py-5">
         <h1 class="mb-4 p-3 text-white rounded">Mi Despensa</h1>
-        <!-- AQUI EL BUSCADOR DE LA HU_007 -->
-        <a href="/ingredients" class="btn btn-custom btn-lg m-2">Añadir ingrediente</a>
         <!-- Tabla de ingredientes -->
-        <div class="table-responsive">
-            <table class="table shadow-sm" style="background-color: #EBD4C3; border: 2px solid #A25E4B;">
-                <thead style="background-color: #8C4A3D; color: #EBD4C3;">
-                    <tr>
-                        <th>Nombre Ingrediente</th>
-                        <th>Cantidad</th>
-                        <th>Tipo Unidad</th>
-                        <!-- <th>Remover</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <% if (ingredients.length> 0) { %>
-                        <% ingredients.forEach(ingredient=> { %>
-                            <tr>
-                                <td>
-                                    <%= ingredient.nombre %>
-                                </td>
-                                <td class="ingredient-quantity">
-                                    <%= ingredient.cantidad || "N/A" %>
-                                </td>
-                                <td class="tipo-unidad" data-tipo="<%= ingredient.tipoUnidad %>">
-                                    <%= ingredient.tipoUnidad %>
-                                </td>
-                                <!-- <td>
-                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#confirmDeleteModal"
-                                        data-despensa-id="<%= ingredient.id_despensa %>"
-                                        data-ingredient-quantity="<%= ingredient.cantidad %>">
-                                        Eliminar
-                                    </button>
-                                </td> -->
-                            </tr>
-                            <% }) %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="4" class="text-center text-muted">No tienes ingredientes en la
-                                            despensa.</td>
-                                    </tr>
-                                    <% } %>
-                </tbody>
-            </table>
+        <div class="light-red-container" style="width: 80%; margin: auto;">
+            <div class="mb-3 d-flex justify-content-center">
+                <div class="input-group" style="width: 80%;">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar ingrediente...">
+                    <a href="/ingredients" class="btn btn-custom btn-lg m-2">Añadir ingrediente</a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table shadow-sm" style="background-color: #EBD4C3; border: 2px solid #A25E4B;">
+                    <thead style="background-color: #8C4A3D; color: #EBD4C3;">
+                        <tr>
+                            <th>Nombre Ingrediente</th>
+                            <th>Cantidad</th>
+                            <th>Tipo Unidad</th>
+                            <th>Remover</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ingredientList">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Botón de Volver -->
+            <a href="/inicio" class="btn btn-custom btn-lg m-2">Volver</a>
         </div>
 
-        <!-- Botón de Volver -->
-        <a href="/inicio" class="btn btn-custom btn-lg m-2">Volver</a>
-    </div>
-
-    <!-- Modal de Confirmación -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="deleteForm" method="POST" action="">
-                        <div class="mb-3">
-                            <label for="quantityToDelete" class="form-label">Cantidad a eliminar:</label>
-                            <input type="number" class="form-control" id="quantityToDelete" name="quantity" min="0.1"
-                                step="0.1" required>
-                            <small class="text-muted" id="maxQuantityHint"></small>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </div>
-                    </form>
+        <!-- Modal de Confirmación -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="deleteForm" method="POST" action="">
+                            <div class="mb-3">
+                                <label for="quantityToDelete" class="form-label">Cantidad a eliminar:</label>
+                                <input type="number" class="form-control" id="quantityToDelete" name="quantity"
+                                    min="0.1" step="0.1" required>
+                                <small class="text-muted" id="maxQuantityHint"></small>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
+    </div>
     <!-- Footer -->
     <div>
         <%- include("fragments/footer") %>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/pantryScript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

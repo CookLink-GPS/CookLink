@@ -75,12 +75,13 @@ const Ingredient = {
 	async getIngredient(id) {
 		try {
 			const sql = `SELECT * FROM ${nombreTabla} WHERE id = ?`;
-			const rows = await db.promise().query(sql, [ id ]);
+			const rows = await db.query(sql, [ id ]);
 			let ingredient;
 			if (rows.length > 0) ingredient = rows[0];
 			return ingredient;
 		}
 		catch (error) {
+			console.error(error.message);
 			throw new Error(`Error obteniendo el ingrediente ${id}`);
 		}
 	},

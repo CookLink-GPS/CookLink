@@ -1,8 +1,21 @@
 /* eslint-disable no-magic-numbers */
 const Pantry = require("../models/pantryModel");
-const { badRequest, internalServerError } = require("../config/httpcodes");
+const Ingredient = require("../models/ingredientModel");
+const { badRequest, internalServerError, forbidden } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
+const { removeAccents } = require("../utils/stringFunctions");
 
+
+/**
+ *
+ * @typedef IngredientQuantity
+ * @property {Number} Id
+ * @property {Number} idDespensa
+ * @property {String} nombre
+ * @property {String} tipoUnidad
+ * @property {Number} cantidad
+ *
+ */
 const PantryService = {
 	/**
      * Retrieves all ingredients from a user's pantry.
@@ -58,20 +71,18 @@ const PantryService = {
 	async deleteIngredient(userId, idDespensa, quantityToDelete) {
 		if (!userId || !idDespensa || !quantityToDelete) throw new AppError("Missing required data", badRequest);
 
-		const ERROR = 403;
 		try {
 			const pantryItem = await Pantry.getPantryItemById(idDespensa);
 
 			if (!pantryItem) throw new AppError("Item not found in pantry", badRequest);
-
-			if (pantryItem.id_usuario !== userId) throw new AppError("Unauthorized operation", ERROR);
-
+			if (pantryItem.id_usuario !== userId) throw new AppError("Unauthorized operation", forbidden);
 			if (quantityToDelete > pantryItem.cantidad) throw new AppError("Cannot delete more than available quantity", badRequest);
 
 			if (quantityToDelete === pantryItem.cantidad) await Pantry.deleteIngredient(userId, pantryItem.id_ingrediente);
-			 else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
+			else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
 		}
 		catch (error) {
+			console.error(error.message);
 			throw new AppError("Error deleting ingredient", internalServerError);
 		}
 	},
@@ -100,11 +111,41 @@ const PantryService = {
 				existingItem.id_despensa,
 				existingItem.cantidad + quantity
 			);
-			 else await Pantry.addIngredient(userId, ingredientId, quantity);
+			else await Pantry.addIngredient(userId, ingredientId, quantity);
 		}
 		catch (error) {
 			throw new AppError("Error adding ingredient to pantry", internalServerError);
 		}
+	},
+	/**
+	 *
+	 * @async
+	 * @param {String} search
+	 * @param {Number} userId
+	 * @returns {Promise<IngredientQuantity[]>}
+	 *
+	 */
+	async searchIngredients(search, userId) {
+		if (!userId) throw new AppError("User ID is required", badRequest);
+		if (search === undefined || search === null) search = "";
+		const normalizedFilter = removeAccents(search.toLowerCase());
+
+
+		const pantry = await Pantry.getPantryFromUser(userId);
+		pantry.sort((a, b) => a.nombre_ingrediente.localeCompare(b.nombre_ingrediente));
+
+
+		const ingredients = await Promise.all(pantry.map( async ({ id_ingrediente: id, cantidad, id_despensa: idDespensa }) => {
+			const ingredient = await Ingredient.getIngredient(id);
+			return { ...ingredient, cantidad, idDespensa };
+		}));
+
+		const res = ingredients.filter(item => {
+			const text = removeAccents(item.nombre.toLowerCase());
+			return text.startsWith(normalizedFilter);
+		});
+
+		return res;
 	}
 };
 
