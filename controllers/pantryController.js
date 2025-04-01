@@ -34,9 +34,6 @@ const PantryController = {
 			const pantryId = req.params.id_despensa;
 			const quantityToDelete = parseInt(req.body.quantity, 10);
 
-			if (!userId || !pantryId || isNaN(quantityToDelete)) throw new AppError("Missing required data", badRequest);
-
-
 			await PantryService.deleteIngredient(userId, pantryId, quantityToDelete);
 			res.redirect("/pantry");
 		}

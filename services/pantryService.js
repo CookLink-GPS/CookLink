@@ -10,6 +10,7 @@ const { removeAccents } = require("../utils/stringFunctions");
  *
  * @typedef IngredientQuantity
  * @property {Number} Id
+ * @property {Number} idDespensa
  * @property {String} nombre
  * @property {String} tipoUnidad
  * @property {Number} cantidad
@@ -85,6 +86,7 @@ const PantryService = {
 			 else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
 		}
 		catch (error) {
+			console.log(error);
 			throw new AppError("Error deleting ingredient", internalServerError);
 		}
 	},
@@ -137,9 +139,9 @@ const PantryService = {
 		pantry.sort((a, b) => a.nombre_ingrediente.localeCompare(b.nombre_ingrediente));
 
 
-		const ingredients = await Promise.all(pantry.map( async ({ id_ingrediente: id, cantidad }) => {
+		const ingredients = await Promise.all(pantry.map( async ({ id_ingrediente: id, cantidad, id_despensa: idDespensa }) => {
 			const ingredient = await Ingredient.getIngredient(id);
-			return { ...ingredient, cantidad };
+			return { ...ingredient, cantidad, idDespensa };
 		}));
 
 		const res = ingredients.filter(item => {
