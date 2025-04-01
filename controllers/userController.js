@@ -23,16 +23,18 @@ exports.getAllUsers = async (req, res, next) => {
 exports.login = async (req, res) => {
 	const { username, password } = req.body;
 
-	try {
-		const user = await UserService.iniciarSesion({ username, password });
+ 	try {
+ 		const user = await UserService.iniciarSesion({ username, password });
 
-		req.session.user = { ...user };
-		renderView(res, "inicio", ok, { usuario: req.session.username });
-	}
-	catch (error) {
-		console.error(error.message);
-		renderView(res, "login", error.status || badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
-	}
+ 		req.session.user = { ...user };
+
+
+ 		renderView(res, "inicio", ok, { usuario: req.session.username });
+ 	}
+ 	catch (error) {
+ 		console.error(error.message);
+ 		renderView(res, "login", error.status || badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
+	};
 };
 
 /**
