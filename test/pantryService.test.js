@@ -90,14 +90,18 @@ describe("Servicio de Despensa", () => {
          */
 
 		it("debería devolver ingredientes ordenados alfabéticamente", async () => {
+			// TODO este está mal, debería devolver result una lista ordenada alfabeticamente según el título
+			// TODO devuelve bien la despensa según el id, pero revisa lo de arriba, eso es fallo de la propia
+			// TODO función del service
 			const mockIngredients = [
 				{ nombre: "Azúcar", tipoUnidad: "kg" },
 				{ nombre: "Harina", tipoUnidad: "kg" },
 				{ nombre: "Sal", tipoUnidad: "g" }
 			];
 
-			const result = await Pantry.getIngredientsDetails();
-
+			const result = await PantryService.getIngredientsDetails(userId);// Cuidado, tenías puesto el model
+			// Tienes que llamar al service!
+			console.log(result);
 			let f = false;
 			mockIngredients.forEach(mock => {
 				result.find(ing => {
@@ -114,7 +118,8 @@ describe("Servicio de Despensa", () => {
          * Should return empty array when pantry has no ingredients
          */
 		it("debería devolver lista vacía cuando no hay ingredientes", async () => {
-			const result = await Pantry.getIngredientsDetails();
+			await deleteIngredients();
+			const result = await PantryService.getIngredientsDetails(userId);
 			const f = result.length !== 0;
 			assert.ok(!f, "Debería estar vacía");
 		});
