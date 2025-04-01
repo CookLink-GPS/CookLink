@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
 
 	const { username, password } = req.body;
 	try {
-		const user = await UserService.login( { username, password });
+		const user = await UserService.iniciarSesion( { username, password });
 
 		// Comparar la contraseña hashada en la base de datos
 		const valido = await bcrypt.compare(password, user.password);
@@ -44,22 +44,22 @@ exports.login = async (req, res) => {
 	}
 };
 
-exports.login = async (req, res) => {
-	const { username, password } = req.body;
+// Exports.login = async (req, res) => {
+// 	Const { username, password } = req.body;
 
-	try {
-		const user = await UserService.iniciarSesion({ username, password });
+// 	Try {
+// 		Const user = await UserService.iniciarSesion({ username, password });
 
-		req.session.user = { ...user };
+// 		Req.session.user = { ...user };
 
-		// Console.log("Sesión guardada:", req.session); // Debugging
-		renderView(res, "inicio", ok, { usuario: req.session.username });
-	}
-	catch (error) {
-		console.error(error.message);
-		renderView(res, "login", error.status || badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
-	}
-};
+// 		// Console.log("Sesión guardada:", req.session); // Debugging
+// 		RenderView(res, "inicio", ok, { usuario: req.session.username });
+// 	}
+// 	Catch (error) {
+// 		Console.error(error.message);
+// 		RenderView(res, "login", error.status || badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
+// 	}
+// };
 
 /**
  * Redirige a la página de registro de usuario.
