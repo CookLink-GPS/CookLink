@@ -20,22 +20,22 @@ exports.getAllUsers = async (req, res, next) => {
 	}
 };
 
-// Exports.login = async (req, res) => {
-//	Const { username, password } = req.body;
+exports.login = async (req, res) => {
+	const { username, password } = req.body;
 
-// 	Try {
-// 		Const user = await UserService.iniciarSesion({ username, password });
+ 	try {
+ 		const user = await UserService.iniciarSesion({ username, password });
 
-// 		Req.session.user = { ...user };
+ 		req.session.user = { ...user };
 
-// 		// Console.log("Sesión guardada:", req.session); // Debugging
-// 		RenderView(res, "inicio", ok, { usuario: req.session.username });
-// 	}
-// 	Catch (error) {
-// 		Console.error(error.message);
-// 		RenderView(res, "login", error.status || badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
-// 	}
-// };
+
+ 		renderView(res, "inicio", ok, { usuario: req.session.username });
+ 	}
+ 	catch (error) {
+ 		console.error(error.message);
+ 		renderView(res, "login", error.status || badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
+	};
+};
 
 /**
  * Redirige a la página de registro de usuario.
