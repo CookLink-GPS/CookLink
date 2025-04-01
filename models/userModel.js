@@ -85,15 +85,17 @@ const User = {
 		}
 	},
 
-	inicio: async ({ username, password }) => {
+	inicio: async usuario => {
 		try {
-			const [ usuarioDB ] = await db.query(`SELECT username,password,id from ${nombreTabla} where username = ?`, [ username ]);
+			console.log("Datos recibidos en el modelo:", { usuario });
+			const [ usuarioDB ] = await db.query(`SELECT username,password,id from ${nombreTabla} where username = ?`, [ usuario.username ]);
 			if (!usuarioDB) throw new Error("Usuario no encontrado");
 
-			const correctPassword = await bcrypt.compare(password, usuarioDB.password);
+			const correctPassword = await bcrypt.compare(usuario.password, usuarioDB.password);
 			if (!correctPassword) throw new Error("Contraseña incorrecta");
 			return usuarioDB;
 		}
+
 		catch (error) {
 			console.error(error.message);
 			throw new Error("Error al iniciar sesion");

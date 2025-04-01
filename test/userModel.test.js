@@ -3,6 +3,8 @@
 const assert = require("assert");
 const { deleteUsers, testtingSession } = require("./testUtils");
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
+const { saltRounds } = require("../config/config");
 
 describe("Modelo usuario", () => {
 
@@ -179,24 +181,33 @@ describe("Modelo usuario", () => {
 		});
 	});
 
+
 	describe("Inicio de sesion", () => {
 		before(testtingSession);
 		after(deleteUsers);
 
 		it("✅ Inicio de sesión con credenciales válidas", async () => {
+			const password = "12345678"; // Contraseña en texto plano
+			const hashedPassword = await bcrypt.hash(password, saltRounds); // La hasheamos
+			console.log("hashedPassword", hashedPassword); // Para ver el hash generado
 			const usuario = {
 				username: "user1",
-				password: "12345678"
+				password: password
 			};
 
 			let good = true;
 
 			try {
-				const result = await User.inicio(usuario);
+				const result = await User.inicio( usuario);
 				assert.ok(result);
 				assert.equal(result.username, usuario.username); // Verificamos que el nombre de usuario sea correcto
+
+				// Ahora comprobamos que la contraseña proporcionada por el usuario sea correcta
+				const validPassword = await bcrypt.compare(usuario.password, result.password); // Comparar con la contraseña en texto plano
+				assert.ok(validPassword); // Debería ser `true` si la contraseña es correcta
 			}
 			catch (err) {
+				console.log(err);
 				good = false;
 			}
 
