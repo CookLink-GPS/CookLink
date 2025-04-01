@@ -1,8 +1,7 @@
 const UserService = require("../services/userService");
 const { validationResult } = require("express-validator");
 const { renderView } = require("../middlewares/viewHelper"); // Importamos la función centralizada
-const { ok, badRequest, unauthorized } = require("../config/httpcodes");
-const bcrypt = require("bcrypt");
+const { ok, badRequest } = require("../config/httpcodes");
 
 /**
  * Obtiene todos los usuarios y los renderiza en la vista "users"
