@@ -13,12 +13,16 @@ const { authMiddleware } = require("../middlewares/authMiddleware");
  * @param {Object} app - Instancia de la aplicación Express.
  */
 module.exports = app => {
-	app.use("/", indexRouter);
-	app.use("/users", userRouter);
+
+	// Rutas protegidas
 	app.use("/inicio", authMiddleware, inicioRouter);
 	app.use("/recipes", authMiddleware, recipeRouter);
-	app.use("/ingredients", authMiddleware, ingredientRouter);
 	app.use("/pantry", authMiddleware, pantryRouter);
+	app.use("/ingredients", authMiddleware, ingredientRouter);
+
+	// Rutas no protegidas
+	app.use("/users", userRouter);
+	app.use("/", indexRouter);
 
 	// Manejo de errores 404
 	app.use((req, res, next) => {

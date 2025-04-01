@@ -24,7 +24,7 @@ app.use(session({
 	secret: config.secret,
 	resave: true,
 	saveUninitialized: true,
-	cookie: { maxAge: 60000 }
+	cookie: { maxAge: 10000 }
 }));
 
 // Cargar rutas de forma modular
@@ -40,10 +40,4 @@ const server = app.listen(port, () => {
 
 
 module.exports = server;
-
-/* // middlewares/errorHandler.js
-module.exports = (err, req, res, next) => {
-    console.error(err.stack);
-    res.status(err.status || 500).render('error', { error: err.message, status: err.status || 500 });
-};*/
 
