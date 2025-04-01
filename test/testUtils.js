@@ -125,6 +125,18 @@ const createTestUsers = async () => {
 	]);
 };
 
+const testtingSession = async () => {
+	await db.query("DELETE FROM usuarios");
+	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
+		"user1",
+		"12345678"
+	]);
+	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
+		"user2",
+		"12345678"
+	]);
+};
+
 module.exports = {
 	deleteUsers,
 	deleteIngredients,
@@ -137,6 +149,6 @@ module.exports = {
 	insertContains,
 	insertDummy,
 	createuser,
-	createTestUsers
+	createTestUsers,
+	testtingSession
 };
-
