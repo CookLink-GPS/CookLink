@@ -10,6 +10,8 @@ const logRoutes = require("./middlewares/logRoutes"); // Importa el middleware
 const session = require("express-session");
 const testSession = require("./middlewares/testSession");
 
+const COOKIE_EXPIRES = 86400000; // 1 dia
+
 // Middleware para parsear JSON y datos de formularios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,7 +27,7 @@ app.use(session({
 	secret: config.secret,
 	resave: true,
 	saveUninitialized: true,
-	cookie: { maxAge: 60000 }
+	cookie: { maxAge: COOKIE_EXPIRES }
 }));
 
 if (process.env.MODE !== "prod" && process.env.MODE !== "dev") app.use(testSession);
