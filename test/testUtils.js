@@ -23,4 +23,16 @@ const createTestUsers = async () => {
 	]);
 };
 
-module.exports = { deleteUsers, createTestUsers };
+const testtingSession = async () => {
+	await db.query("DELETE FROM usuarios");
+	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
+		"user1",
+		"12345678"
+	]);
+	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
+		"user2",
+		"12345678"
+	]);
+};
+
+module.exports = { deleteUsers, createTestUsers, testtingSession };
