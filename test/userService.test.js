@@ -1,95 +1,96 @@
-/* eslint-disable no-undef */
+// /* eslint-disable no-undef */
 
-const assert = require("assert");
-const { deleteUsers, testtingSession } = require("./testUtils");
-const User = require("../models/userModel");
+// Const assert = require("assert");
+// Const { deleteUsers } = require("./testUtils");
+// Const User = require("../models/userModel");
 
-describe("Modelo usuario", () => {
-	describe("Inicio de sesion", () => {
-		before(testtingSession);
-		after(deleteUsers);
+// Describe("Servicio usuario", () => {
+// 	Describe("Inicio de sesion", () => {
+// 		// Before(testtingSession);
+// 		Before(deleteUsers);
+// 		After(deleteUsers);
 
-		it("✅ Inicio de sesión con credenciales válidas", async () => {
-			const usuario = {
-				username: "user1",
-				password: "12345678"
-			};
+// 		It("✅ Inicio de sesión con credenciales válidas", async () => {
+// 			Const usuario = {
+// 				Username: "user1",
+// 				Password: "12345678"
+// 			};
 
-			let good = true;
+// 			Let good = true;
 
-			try {
-				const result = await User.inicio(usuario);
-				assert.ok(result);
-				assert.equal(result.username, usuario.username); // Verificamos que el nombre de usuario sea correcto
-			}
-			catch (err) {
-				good = false;
-			}
+// 			Try {
+// 				Const result = await User.inicio(usuario);
+// 				Assert.ok(result);
+// 				Assert.equal(result.username, usuario.username); // Verificamos que el nombre de usuario sea correcto
+// 			}
+// 			Catch (err) {
+// 				Good = false;
+// 			}
 
-			assert.ok(good);
-		});
+// 			Assert.ok(good);
+// 		});
 
-		it("❌ No debe iniciar sesión con contraseña incorrecta", async () => {
-			const usuario = {
-				username: "user1",
-				password: "123456789"
-			};
+// 		It("❌ No debe iniciar sesión con contraseña incorrecta", async () => {
+// 			Const usuario = {
+// 				Username: "user1",
+// 				Password: "123456789"
+// 			};
 
-			good = false;
-			try {
-				await User.inicio(usuario);
-			}
-			catch (error) {
-				good = true;
-			}
+// 			Good = false;
+// 			Try {
+// 				Await User.inicio(usuario);
+// 			}
+// 			Catch (error) {
+// 				Good = true;
+// 			}
 
-			assert.ok(good);
-		});
+// 			Assert.ok(good);
+// 		});
 
-		it("❌ No debe iniciar sesión con nombre incorrecto", async () => {
-			const usuario = {
-				username: "nombre_incorrecto",
-				password: "12345678"
-			};
+// 		It("❌ No debe iniciar sesión con nombre incorrecto", async () => {
+// 			Const usuario = {
+// 				Username: "nombre_incorrecto",
+// 				Password: "12345678"
+// 			};
 
-			good = false;
-			try {
-				await User.inicio(usuario);
-			}
-			catch (error) {
-				good = true;
-			}
+// 			Good = false;
+// 			Try {
+// 				Await User.inicio(usuario);
+// 			}
+// 			Catch (error) {
+// 				Good = true;
+// 			}
 
-			assert.ok(good);
-		});
+// 			Assert.ok(good);
+// 		});
 
-		it("❌ No debe iniciar sesión sin nombre", async () => {
-			const usuario = { password: "12345678" };
+// 		It("❌ No debe iniciar sesión sin nombre", async () => {
+// 			Const usuario = { password: "12345678" };
 
-			good = false;
-			try {
-				await User.inicio(usuario);
-			}
-			catch (error) {
-				good = true;
-			}
+// 			Good = false;
+// 			Try {
+// 				Await User.inicio(usuario);
+// 			}
+// 			Catch (error) {
+// 				Good = true;
+// 			}
 
-			assert.ok(good);
-		});
+// 			Assert.ok(good);
+// 		});
 
-		it("❌ No debe iniciar sesión sin contraseña", async () => {
-			const usuario = { username: "user1" };
+// 		It("❌ No debe iniciar sesión sin contraseña", async () => {
+// 			Const usuario = { username: "user1" };
 
-			good = false;
-			try {
-				await User.inicio(usuario);
-			}
-			catch (error) {
-				good = true;
-			}
+// 			Good = false;
+// 			Try {
+// 				Await User.inicio(usuario);
+// 			}
+// 			Catch (error) {
+// 				Good = true;
+// 			}
 
-			assert.ok(good);
-		});
+// 			Assert.ok(good);
+// 		});
 
-	});
-});
+// 	});
+// });

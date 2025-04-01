@@ -134,6 +134,9 @@ const PantryService = {
 
 
 		const pantry = await Pantry.getPantryFromUser(userId);
+		console.log(pantry);
+		pantry.sort((a, b) => a.nombre_ingrediente.localeCompare(b.nombre_ingrediente));
+
 
 		const ingredients = await Promise.all(pantry.map( async ({ id_ingrediente: id, cantidad }) => {
 			const ingredient = await Ingredient.getIngredient(id);
