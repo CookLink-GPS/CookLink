@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		// Configurar el formulario
 		deleteForm.action = `/pantry/delete/${id_despensa}`;
-		quantityInput.min = 0.01;
-		quantityInput.step = 0.01; // Permitir decimales
+		quantityInput.min = 0.1;
+		quantityInput.step = 0.1; // Permitir decimales
 		quantityInput.max = parseFloat(currentQuantity);
 		quantityInput.value = 1;
 		maxQuantityHint.textContent = `Máximo: ${currentQuantity} unidades disponibles`;
