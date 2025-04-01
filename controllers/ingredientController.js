@@ -28,6 +28,7 @@ exports.toIngredient = (req, res, next) => {
  * @param {Object} res - HTTP response object.
  */
 exports.addIngredient = async (req, res) => {
+	console.log("HOLA");
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		console.log("Error details: ", JSON.stringify(errors.array(), null));
