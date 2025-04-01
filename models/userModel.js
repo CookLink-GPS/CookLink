@@ -9,6 +9,7 @@ const { userQueries } = require("../config/queries");
  * @typedef User
  * @property {Number} id
  * @property {String} username
+ * @property {String} password
  *
  */
 const User = {

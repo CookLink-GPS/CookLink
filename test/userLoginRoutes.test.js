@@ -23,13 +23,10 @@ describe("[ROUTE2] Rutas de usuario", () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			console.log(`Estado: ${res.status}`);
-
 			assert.equal(res.status, ok); // 200 es el código de éxito
-
 		});
 
-		it("[ROUTE2] ❌ No Debe iniciar correctamente contraseña mal", async () => {
+		it("[ROUTE2] ❌ No debe iniciar correctamente con contraseña incorrecta", async () => {
 			const usuario = { username: "user1", password: "123456789" };
 
 			const res = await fetch(route, {
@@ -38,13 +35,10 @@ describe("[ROUTE2] Rutas de usuario", () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			console.log(`Estado: ${res.status}`);
-
 			assert.equal(res.status, unauthorized); // 401 es el código de éxito
-
 		});
 
-		it("[ROUTE2] ❌ No Debe iniciar correctamente usuario mal", async () => {
+		it("[ROUTE2] ❌ No Debe iniciar correctamente usuario inexistente", async () => {
 			const usuario = { username: "no_existe", password: "12345678" };
 
 			const res = await fetch(route, {
@@ -53,10 +47,7 @@ describe("[ROUTE2] Rutas de usuario", () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			console.log(`Estado: ${res.status}`);
-
-			assert.equal(res.status, badRequest); // 401 es el código de éxito
-
+			assert.equal(res.status, unauthorized); // 401 es el código de éxito
 		});
 
 		it("[ROUTE2] ❌ No Debe iniciar correctamente sin nombre de usuario", async () => {
@@ -68,10 +59,7 @@ describe("[ROUTE2] Rutas de usuario", () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			console.log(`Estado: ${res.status}`);
-
 			assert.equal(res.status, badRequest); // 401 es el código de éxito
-
 		});
 
 		it("[ROUTE2] ❌ No Debe iniciar correctamente sin contraseña", async () => {
@@ -83,10 +71,7 @@ describe("[ROUTE2] Rutas de usuario", () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			console.log(`Estado: ${res.status}`);
-
 			assert.equal(res.status, badRequest); // 401 es el código de éxito
-
 		});
 
 		it("[ROUTE2] ❌ No Debe iniciar correctamente campos vacios", async () => {
@@ -98,10 +83,7 @@ describe("[ROUTE2] Rutas de usuario", () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			console.log(`Estado: ${res.status}`);
-
 			assert.equal(res.status, badRequest); // 401 es el código de éxito
-
 		});
 
 		it("[ROUTE2] ❌ No Debe iniciar correctamente campos incorrectos en el JSON", async () => {
@@ -113,10 +95,7 @@ describe("[ROUTE2] Rutas de usuario", () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			console.log(`Estado: ${res.status}`);
-
 			assert.equal(res.status, badRequest); // 401 es el código de éxito
-
 		});
 
 

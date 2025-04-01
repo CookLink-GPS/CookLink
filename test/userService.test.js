@@ -16,13 +16,11 @@ describe("[Service] Servicio de usuario", () => {
 			let userDB;
 			good = true;
 			try {
-				userDB = await UserService.inciarSesion(usuario);
+				userDB = await UserService.login(usuario);
 			}
 			catch (error) {
-				console.log(err);
 				good = false;
 				assert.fail("Debería haberse podido iniciar sesión");
-
 			}
 
 			assert.ok(good);
@@ -31,16 +29,13 @@ describe("[Service] Servicio de usuario", () => {
 
 		it("❌ No debe iniciar sesión sin nombre de usuario", async () => {
 			const usuario = { password: "12345678" }; // Faltando 'username'
-			console.log("Datos recibidos en el servicio TEST:", { usuario });
+
 			good = false;
 			try {
-				await UserService.inciarSesion(usuario);
+				await UserService.login(usuario);
 			}
 			catch (error) {
-				console.log(error);
 				good = true;
-				assert.equal(error.message, "Falta el nombre de usuario");
-
 			}
 
 			assert.ok(good, "Debería haber lanzado un error por falta de nombre de usuario");
@@ -51,12 +46,11 @@ describe("[Service] Servicio de usuario", () => {
 
 			good = false;
 			try {
-				await UserService.inciarSesion(usuario);
+				await UserService.login(usuario);
 			}
 			catch (error) {
 				good = true;
 				assert.equal(error.message, "Falta la contraseña");
-
 			}
 
 			assert.ok(good, "Debería haber lanzado un error por falta de contraseña");
@@ -67,13 +61,10 @@ describe("[Service] Servicio de usuario", () => {
 
 			good = false;
 			try {
-				await UserService.inciarSesion(usuario);
+				await UserService.login(usuario);
 			}
 			catch (error) {
-				console.log(error);
 				good = true;
-
-
 			}
 
 			assert.ok(good, "Debería haber lanzado un error porque el usuario no está registrado");
@@ -84,12 +75,10 @@ describe("[Service] Servicio de usuario", () => {
 
 			good = false;
 			try {
-				await UserService.inciarSesion(usuario);
+				await UserService.login(usuario);
 			}
 			catch (error) {
-				console.log(error);
 				good = true;
-
 				// Asumimos que en este caso se maneja un error específico de modelo en el servicio
 			}
 

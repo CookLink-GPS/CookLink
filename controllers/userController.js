@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
 	const { username, password } = req.body;
 
  	try {
- 		const user = await UserService.iniciarSesion({ username, password });
+ 		const user = await UserService.login({ username, password });
 
  		req.session.user = { ...user };
 
@@ -71,10 +71,8 @@ exports.toLogin = (req, res, next) => {
  */
 exports.registroUser = async (req, res) => {
 	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		console.log("Error details: ", JSON.stringify(errors.array(), null));
-		return renderView(res, "registro", badRequest, { mensajeError: errors.array() });
-	}
+	if (!errors.isEmpty()) return renderView(res, "registro", badRequest, { mensajeError: errors.array() });
+
 
 	try {
 		await UserService.registroUser(req.body);
