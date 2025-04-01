@@ -29,30 +29,22 @@ exports.toIngredient = (req, res, next) => {
  */
 exports.addIngredient = async (req, res) => {
 	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		console.log("Error details: ", JSON.stringify(errors.array(), null));
-		return renderView(res, "ingredientes", badRequest, { mensajeError: errors.msg });
-	}
-	console.log("[Controller] Datos recibidos:", req.body);
+	if (!errors.isEmpty()) return renderView(res, "ingredientes", badRequest, { mensajeError: errors.msg });
+
 	try {
 		const { nombre, tipoUnidad, cantidad } = req.body;
 		const ingrediente = { nombre, tipoUnidad };
-		// Const userId = usuarioAutenticado.id; // Asumiendo autenticación
-		const userId = 1;
-		console.log(`[Controller] Procesando para usuario ${userId}`);
+		const userId = req.session.user.id; // Asumiendo autenticación
 
 		const result = await ingredientService.processIngredient({
 			ingrediente,
 			cantidad: parseFloat(cantidad),
 			userId
 		});
-		console.log("[Controller] Resultado del servicio:", result);
 
 		const message = result.action === "updated"
 			? `Cantidad actualizada a tu despensa de ${result.ingrediente.nombre}: ${result.cantidad} ${normalizarUnidad(result.ingrediente.tipoUnidad)}`
 			: `Nuevo ingrediente: "${ingrediente.nombre}" añadido a tu despensa: ${cantidad} ${normalizarUnidad(ingrediente.tipoUnidad)}`;
-
-		console.log(`[Controller] Enviando respuesta: ${message}`);
 
 		renderView(res, "ingredientes", ok, {
 			mensajeExito: message,

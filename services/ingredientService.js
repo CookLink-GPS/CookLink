@@ -19,8 +19,6 @@ const IngredientService = {
      */
 	async processIngredient({ ingrediente, cantidad, userId }) {
 		try {
-			console.log(`[Service] Procesando ingrediente:`, { ingrediente, cantidad, userId });
-
 			// La cantidad es obligatoria y debe ser mayor que 0
 			if (cantidad === undefined || cantidad === null || cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
 			// Validar que el nombre del ingrediente solo contenga letras
@@ -29,13 +27,11 @@ const IngredientService = {
 
 			// 1. Buscar el ingrediente en la tabla ingrediente
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
-			console.log(`[Service] Ingrediente encontrado:`, ingredienteExistente);
+
 			let ingredientId;
 			let existsInPantry;
 			let action = "";
 			if (ingredienteExistente) {
-				console.log(`[Service] Lectura ingrediente:`, ingredienteExistente);
-				console.log(`Esperado: '${ingredienteExistente.tipoUnidad}'`);
 				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${ingrediente.tipoUnidad}`, badRequest);
 
 				ingredientId = ingredienteExistente.id;
@@ -44,7 +40,6 @@ const IngredientService = {
 				existsInPantry = await Pantry.findItem(userId, ingredientId);
 
 				if (existsInPantry) {
-					console.log(`[Service] Ingrediente ya en la despensa, actualizando cantidad... ID:`, existsInPantry.id_ingrediente);
 					await Pantry.updateItem(userId, ingredientId, cantidad);
 					action = "updated";
 					return {
@@ -54,7 +49,6 @@ const IngredientService = {
 					};
 				}
 				// 4. Si no está en la despensa, añadirlo
-				console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
 				await Pantry.addItem(userId, ingredientId, cantidad);
 				action = "added";
 				return {
@@ -65,10 +59,7 @@ const IngredientService = {
 			}
 
 			// 2. Si no existe en la tabla ingrediente, crearlo
-			console.log(`[Service] Ingrediente no encontrado`);
 			ingredientId = await Ingredient.create(ingrediente.nombre, ingrediente.tipoUnidad);
-			console.log(`[Service] Ingrediente creado con ID:`, ingredientId);
-			console.log(`[Service] Ingrediente no en despensa, añadiendo...`);
 			await Pantry.addItem(userId, ingredientId, cantidad);
 			action = "added";
 			return {
@@ -78,7 +69,7 @@ const IngredientService = {
 			};
 		}
 		catch (error) {
-			console.error("[Service] Error:", error);
+			console.error(error.message);
 			throw new AppError(error, badRequest);
 		}
 	},
