@@ -32,7 +32,7 @@ const PantryController = {
 		try {
 			const userId = req.session.user.id;
 			const pantryId = req.params.id_despensa;
-			const quantityToDelete = parseInt(req.body.quantity, 10);
+			const quantityToDelete = parseFloat(req.body.quantity, 10);
 
 			await PantryService.deleteIngredient(userId, pantryId, quantityToDelete);
 			res.redirect("/pantry");

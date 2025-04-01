@@ -55,14 +55,17 @@ describe("Rutas despensa", () => {
 			const { ingredientes: appIngredients } = await fetch(`${baseRoute}/search`).then(res => res.json());
 
 			let f = appIngredients.length !== ingredients.length;
+
 			if (!f) ingredients.forEach(ing => {
-				appIngredients.find(({ nombre }) => {
-					f = ing[0] !== nombre;
-				});
+				const found = appIngredients.some(({ nombre }) => nombre === ing[0]);
+				if (!found) f = true;
+
 			});
+
 
 			assert.ok(!f);
 		});
+
 
 		it("Debe devolver los ingredientes coincidentes", async () => {
 			const { ingredientes: appIngredients } = await fetch(`${baseRoute}/search/hari`).then(res => res.json());
