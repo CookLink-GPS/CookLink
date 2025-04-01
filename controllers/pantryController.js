@@ -11,12 +11,9 @@ const PantryController = {
      * @param {Request} req - HTTP request object.
      * @param {Response} res - HTTP response object.
      */
-	async showPantry(req, res) {
+	showPantry(req, res) {
 		try {
-			const userId = req.session.user.id;
-			const ingredients = await PantryService.getIngredientsDetails(userId);
-			console.log(ingredients);
-			renderView(res, "pantry", ok, { ingredients });
+			renderView(res, "pantry", ok);
 		}
 		catch (error) {
 			console.error(error.message);
