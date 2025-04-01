@@ -4,129 +4,97 @@ const assert = require("assert");
 const UserService = require("../services/userService"); // Asegúrate de que el path es correcto
 const { deleteUsers, testtingSession } = require("./testUtils");
 
-describe("Servicio de usuario", () => {
-	// Describe("Inicio de sesión", () => {
-	// 	Before(testtingSession);
-	// 	After(deleteUsers);
+describe("[Service] Servicio de usuario", () => {
 
-	// 	It("✅ Debe iniciar sesión con credenciales válidas", async () => {
-	// 		Const usuario = {
-	// 			Username: "user1",
-	// 			Password: "12345678"
-	// 		};
 
-	// 		Let result;
-	// 		Try {
-	// 			Result = await UserService.iniciarSesion(usuario);
-	// 		}
-	// 		Catch (err) {
-	// 			Assert.fail("Error en el inicio de sesión");
-	// 		}
+	describe("[Service] Inicio de sesión", () => {
+		before(testtingSession);
+		after(deleteUsers);
 
-	// 		Assert.ok(result);
-	// 		Assert.equal(result.username, usuario.username); // Verificamos que el nombre de usuario sea correcto
-	// 	});
+		it("✅ Inicio de sesión con credenciales válidas", async () => {
+			const usuario = { username: "user1", password: "12345678" }; // Usuario registrado y contraseña correcta
+			let userDB;
+			good = true;
+			try {
+				userDB = await UserService.inciarSesion(usuario);
+			}
+			catch (error) {
+				console.log(err);
+				good = false;
+				assert.fail("Debería haberse podido iniciar sesión");
 
-	// 	It("❌ No debe iniciar sesión con contraseña incorrecta", async () => {
-	// 		Const usuario = {
-	// 			Username: "user1",
-	// 			Password: "123456789"
-	// 		};
+			}
 
-	// 		Let error;
-	// 		Try {
-	// 			Await UserService.iniciarSesion(usuario);
-	// 		}
-	// 		Catch (err) {
-	// 			Error = err;
-	// 		}
+			assert.ok(good);
+			assert.equal(userDB.username, usuario.username);
+		});
 
-	// 		Assert.ok(error);
-	// 		Assert.equal(error.message, "Credenciales inválidas");
-	// 	});
+		it("❌ No debe iniciar sesión sin nombre de usuario", async () => {
+			const usuario = { password: "12345678" }; // Faltando 'username'
+			console.log("Datos recibidos en el servicio TEST:", { usuario });
+			good = false;
+			try {
+				await UserService.inciarSesion(usuario);
+			}
+			catch (error) {
+				console.log(error);
+				good = true;
+				assert.equal(error.message, "Falta el nombre de usuario");
 
-	// 	It("❌ No debe iniciar sesión con nombre incorrecto", async () => {
-	// 		Const usuario = {
-	// 			Username: "nombre_incorrecto",
-	// 			Password: "12345678"
-	// 		};
+			}
 
-	// 		Let error;
-	// 		Try {
-	// 			Await UserService.iniciarSesion(usuario);
-	// 		}
-	// 		Catch (err) {
-	// 			Error = err;
-	// 		}
+			assert.ok(good, "Debería haber lanzado un error por falta de nombre de usuario");
+		});
 
-	// 		Assert.ok(error);
-	// 		Assert.equal(error.message, "Usuario no encontrado");
-	// 	});
+		it("❌ No debe iniciar sesión sin contraseña", async () => {
+			const usuario = { username: "user1" }; // Faltando 'password'
 
-	// 	It("❌ No debe iniciar sesión sin nombre de usuario", async () => {
-	// 		Const usuario = { password: "12345678" };
+			good = false;
+			try {
+				await UserService.inciarSesion(usuario);
+			}
+			catch (error) {
+				good = true;
+				assert.equal(error.message, "Falta la contraseña");
 
-	// 		Let error;
-	// 		Try {
-	// 			Await UserService.iniciarSesion(usuario);
-	// 		}
-	// 		Catch (err) {
-	// 			Error = err;
-	// 		}
+			}
 
-	// 		Assert.ok(error);
-	// 		Assert.equal(error.message, "Falta el nombre de usuario");
-	// 	});
+			assert.ok(good, "Debería haber lanzado un error por falta de contraseña");
+		});
 
-	// 	It("❌ No debe iniciar sesión sin contraseña", async () => {
-	// 		Const usuario = { username: "user1" };
+		it("❌ No debe iniciar sesión con usuario no registrado", async () => {
+			const usuario = { username: "nonExistentUser", password: "12345678" }; // Usuario no registrado
 
-	// 		Let error;
-	// 		Try {
-	// 			Await UserService.iniciarSesion(usuario);
-	// 		}
-	// 		Catch (err) {
-	// 			Error = err;
-	// 		}
+			good = false;
+			try {
+				await UserService.inciarSesion(usuario);
+			}
+			catch (error) {
+				console.log(error);
+				good = true;
 
-	// 		Assert.ok(error);
-	// 		Assert.equal(error.message, "Falta la contraseña");
-	// 	});
 
-	// 	It("❌ No debe iniciar sesión con una contraseña vacía", async () => {
-	// 		Const usuario = {
-	// 			Username: "user1",
-	// 			Password: ""
-	// 		};
+			}
 
-	// 		Let error;
-	// 		Try {
-	// 			Await UserService.iniciarSesion(usuario);
-	// 		}
-	// 		Catch (err) {
-	// 			Error = err;
-	// 		}
+			assert.ok(good, "Debería haber lanzado un error porque el usuario no está registrado");
+		});
 
-	// 		Assert.ok(error);
-	// 		Assert.equal(error.message, "Falta la contraseña");
-	// 	});
+		it("❌ Manejo de errores generales", async () => {
+			const usuario = { username: "user1", password: "incorrectPassword" }; // Contraseña incorrecta
 
-	// 	It("❌ No debe iniciar sesión si el usuario no existe en la base de datos", async () => {
-	// 		Const usuario = {
-	// 			Username: "usuario_no_existente",
-	// 			Password: "12345678"
-	// 		};
+			good = false;
+			try {
+				await UserService.inciarSesion(usuario);
+			}
+			catch (error) {
+				console.log(error);
+				good = true;
 
-	// 		Let error;
-	// 		Try {
-	// 			Await UserService.iniciarSesion(usuario);
-	// 		}
-	// 		Catch (err) {
-	// 			Error = err;
-	// 		}
+				// Asumimos que en este caso se maneja un error específico de modelo en el servicio
+			}
 
-	// 		Assert.ok(error);
-	// 		Assert.equal(error.message, "Usuario no encontrado");
-	// 	});
-	// });
+			assert.ok(good, "Debería haber lanzado un error por contraseña incorrecta");
+		});
+
+	});
 });
