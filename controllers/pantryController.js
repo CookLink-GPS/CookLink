@@ -15,7 +15,7 @@ const pantryController = {
 		try {
 			const userId = req.session.user.id;
 			const ingredients = await PantryService.getPantryIngredients(userId);
-			res.render("pantry", { ingredients });
+			renderView(res, "pantry", ok, { ingredients });
 		}
 		catch (error) {
 			console.error(error.message);

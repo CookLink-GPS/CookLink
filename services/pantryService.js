@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 const Pantry = require("../models/pantryModel");
 const { badRequest, internalServerError } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
@@ -71,6 +72,37 @@ const PantryService = {
 		}
 		catch (error) {
 			throw new AppError("Error deleting ingredient", internalServerError);
+		}
+	},
+
+	/**
+     * Adds or updates an ingredient in the user's pantry.
+     *
+     * @async
+     * @function addIngredient
+     * @memberof PantryService
+     * @param {Number} userId - User ID.
+     * @param {Number} ingredientId - Ingredient ID to add/update.
+     * @param {Number} quantity - Quantity to add.
+     * @returns {Promise<void>}
+     * @throws {AppError} If validation fails or database error occurs.
+     */
+	async addIngredient(userId, ingredientId, quantity) {
+		if (!userId || !ingredientId || quantity === undefined) throw new AppError("Missing required data", badRequest);
+
+		if (quantity <= 0) throw new AppError("Quantity must be positive", badRequest);
+
+		try {
+			const existingItem = await Pantry.getPantryItemByIngredient(userId, ingredientId);
+
+			if (existingItem) await Pantry.updateIngredientQuantity(
+				existingItem.id_despensa,
+				existingItem.cantidad + quantity
+			);
+			 else await Pantry.addIngredient(userId, ingredientId, quantity);
+		}
+		catch (error) {
+			throw new AppError("Error adding ingredient to pantry", internalServerError);
 		}
 	}
 };

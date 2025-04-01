@@ -15,7 +15,7 @@ const deleteUsers = async () => {
  * @returns {Promise<void>}
  */
 const deleteIngredients = async () => {
-	await db.query("DELETE FROM contiene"); // Si existe esta tabla
+	await db.query("DELETE FROM contiene");
 	await db.query("DELETE FROM despensa");
 	await db.query("DELETE FROM ingredientes");
 };
@@ -44,7 +44,7 @@ const insertIngredients = async ingredients => {
  * @returns {Promise<void>}
  */
 const deletePantry = async () => {
-	await db.query("DELETE FROM contiene"); // Si existe
+	await db.query("DELETE FROM contiene");
 	await db.query("DELETE FROM despensa");
 };
 
