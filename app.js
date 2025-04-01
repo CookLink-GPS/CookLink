@@ -8,6 +8,7 @@ const loadRoutes = require("./config/routes");
 const config = require("./config/config");
 const logRoutes = require("./middlewares/logRoutes"); // Importa el middleware
 const session = require("express-session");
+const testSession = require("./middlewares/testSession");
 
 // Middleware para parsear JSON y datos de formularios
 app.use(express.json());
@@ -24,14 +25,17 @@ app.use(session({
 	secret: config.secret,
 	resave: true,
 	saveUninitialized: true,
-	cookie: { maxAge: 10000 }
+	cookie: { maxAge: 60000 }
 }));
+
+if (process.env.MODE !== "prod" && process.env.MODE !== "dev") app.use(testSession);
 
 // Cargar rutas de forma modular
 loadRoutes(app);
 
 // Middleware centralizado de manejo de errores
 app.use(errorHandler);
+
 
 const port = config.port;
 const server = app.listen(port, () => {

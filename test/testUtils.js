@@ -1,4 +1,4 @@
-const { saltRounds, baseUrl, port } = require("../config/config");
+const { saltRounds } = require("../config/config");
 const db = require("../config/database");
 const bcrypt = require("bcrypt");
 
@@ -12,7 +12,7 @@ const deleteUsers = async () => {
 };
 
 const createuser = async () => {
-	await db.query("INSERT INTO usuarios (id, username, password) VALUES (1, 'Luis', '12345678Aa:')");
+	await db.query("INSERT INTO usuarios (id, username, password) VALUES (1, 'dummy', '12345678Aa:')");
 };
 
 /**
@@ -139,22 +139,6 @@ const testtingSession = async () => {
 		"user2",
 		password
 	]);
-};
-
-const authenticate = () => {
-	const baseRoute = `http://${baseUrl}:${port}`;
-
-	const usuario = {
-		username: "testdummy",
-		password: "12345678Aa:",
-		confirm_password: "12345678Aa:"
-	};
-
-	fetch(`${baseRoute}/users/register`, {
-		method: "POST",
-		body: { ...usuario },
-		headers: { "Content-Type": "application/json" }
-	});
 };
 
 module.exports = {
