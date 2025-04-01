@@ -71,14 +71,14 @@ const UserService = {
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
 	},
-	inciarSesion: async user => {
-		if (!user.username) throw new AppError("Falta el nombre de usuario", badRequest);
-		if (!user.password) throw new AppError("Falta la contraseña", badRequest);
+	iniciarSesion: async ({ username, password }) => {
+		if (!username) throw new AppError("Falta el nombre de usuario", badRequest);
+		if (!password) throw new AppError("Falta la contraseña", badRequest);
 
-		const userDB = await User.inicio(user);
-		if (!userDB) throw new AppError("Usuario no encontrado", notFound); // O el código de error que prefieras
+		const user = await User.getByUsername(username);
+		if (!user) throw new AppError("Usuario no encontrado", notFound);
 
-		return userDB;
+		return user;
 	}
 };
 
