@@ -107,4 +107,19 @@ const insertContains = async contains => {
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
 };
 
-module.exports = { createuser, deleteUsers, deleteIngredients, insertIngredients, deletePantry, insertPantry, deleteRecipes, insertRecetas, deleteContains, insertContains };
+const insertDummy = async () => {
+	await db.query(`INSERT INTO usuarios VALUES (1, "dummy", "dummy")`);
+};
+
+module.exports = {
+	deleteUsers,
+	deleteIngredients,
+	insertIngredients,
+	deletePantry,
+	insertPantry,
+	deleteRecipes,
+	insertRecetas,
+	deleteContains,
+	insertContains,
+	insertDummy
+};

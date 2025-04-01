@@ -1,8 +1,20 @@
 /* eslint-disable no-magic-numbers */
 const Pantry = require("../models/pantryModel");
+const Ingredient = require("../models/ingredientModel");
 const { badRequest, internalServerError } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
+const { removeAccents } = require("../utils/stringFunctions");
 
+
+/**
+ *
+ * @typedef IngredientQuantity
+ * @property {Number} Id
+ * @property {String} nombre
+ * @property {String} tipoUnidad
+ * @property {Number} cantidad
+ *
+ */
 const PantryService = {
 	/**
      * Retrieves all ingredients from a user's pantry.
@@ -69,6 +81,7 @@ const PantryService = {
 			if (quantityToDelete > pantryItem.cantidad) throw new AppError("Cannot delete more than available quantity", badRequest);
 
 			if (quantityToDelete === pantryItem.cantidad) await Pantry.deleteIngredient(userId, pantryItem.id_ingrediente);
+
 			 else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
 		}
 		catch (error) {
@@ -105,6 +118,34 @@ const PantryService = {
 		catch (error) {
 			throw new AppError("Error adding ingredient to pantry", internalServerError);
 		}
+	},
+	/**
+	 *
+	 * @async
+	 * @param {String} search
+	 * @param {Number} userId
+	 * @returns {Promise<IngredientQuantity[]>}
+	 *
+	 */
+	async searchIngredients(search, userId) {
+		if (!userId) throw new AppError("User ID is required", badRequest);
+		if (search === undefined || search === null) search = "";
+		const normalizedFilter = removeAccents(search.toLowerCase());
+
+
+		const pantry = await Pantry.getPantryFromUser(userId);
+
+		const ingredients = await Promise.all(pantry.map( async ({ id_ingrediente: id, cantidad }) => {
+			const ingredient = await Ingredient.getIngredient(id);
+			return { ...ingredient, cantidad };
+		}));
+
+		const res = ingredients.filter(item => {
+			const text = removeAccents(item.nombre.toLowerCase());
+			return text.startsWith(normalizedFilter);
+		});
+
+		return res;
 	}
 };
 
