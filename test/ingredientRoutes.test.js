@@ -6,7 +6,7 @@ const { insertIngredients, deleteIngredients, createuser, deletePantry, deleteUs
 const { badRequest, ok } = require("../config/httpcodes");
 
 describe("Rutas ingrediente", () => {
-	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
+	const baseRoute = `http://${baseUrl}:${port}/ingredients`;
 	before(createuser);
 	beforeEach(async () => {
 		await deleteIngredients();

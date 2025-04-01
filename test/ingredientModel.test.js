@@ -5,7 +5,10 @@ const { deleteIngredients, createuser, deletePantry, insertIngredients, deleteUs
 const Ingredient = require("../models/ingredientModel");
 
 describe("Modelo ingrediente", () => {
-	before(createuser);
+	before(async () => {
+		await deleteUsers();
+		await createuser();
+	});
 	beforeEach(async () => {
 		await deletePantry();
 		await deleteIngredients();
