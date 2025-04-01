@@ -39,6 +39,7 @@ jobs:
           MODE: ${{ secrets.MODE }}
           SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
           BASE_URL: ${{ secrets.BASE_URL }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         run: npm run test
         
       - name: Zip artifact for deployment
