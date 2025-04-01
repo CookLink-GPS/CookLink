@@ -1,19 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
 
 	const unidadMap = {
-		"gramos": "Gramos (g)",
-		"kilogramos": "Kilogramos (kg)",
-		"mililitros": "Mililitros (ml)",
-		"litros": "Litros (l)",
-		"unidades": "Unidades (ud)",
-		"cucharadas": "Cucharadas (cda)",
-		"cucharaditas": "Cucharaditas (cdta)",
-		"tazas": "Tazas (tz)"
+		"gramos": "g",
+		"kilogramos": "kg",
+		"mililitros": "ml",
+		"litros": "l",
+		"unidades": "ud",
+		"cucharadas": "cda (cucharada)",
+		"cucharaditas": "cdta (cucharadita)",
+		"tazas": "tz (taza)"
 	};
 
 	document.querySelectorAll("td.tipo-unidad").forEach(td => {
-		const tipo = td.textContent.trim(); // Obtener el contenido de la celda y eliminar espacios en blanco
-		if (unidadMap[tipo]) td.textContent = unidadMap[tipo]; // Reemplazar por el formato correcto
+		const tipo = td.textContent.trim();
+		if (unidadMap[tipo]) td.textContent = unidadMap[tipo];
 
 	});
 
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	deleteModal.addEventListener("show.bs.modal", event => {
 		const button = event.relatedTarget;
-		const id_despensa = button.getAttribute("data-despensa-id");
+		const idDespensa = button.getAttribute("data-despensa-id");
 		const currentQuantity = button.getAttribute("data-ingredient-quantity");
 
 		const quantityInput = document.getElementById("quantityToDelete");
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const deleteForm = document.getElementById("deleteForm");
 
 		// Configurar el formulario
-		deleteForm.action = `/pantry/delete/${id_despensa}`;
+		deleteForm.action = `/pantry/delete/${idDespensa}`;
 		quantityInput.min = 0.1;
 		quantityInput.step = 0.1; // Permitir decimales
 		quantityInput.max = parseFloat(currentQuantity);
