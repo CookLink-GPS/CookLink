@@ -76,7 +76,7 @@ exports.registroUser = async (req, res) => {
 
 	try {
 		await UserService.registroUser(req.body);
-		renderView(res, "inicio", ok, { mensajeExito: "Usuario registrado correctamente." });
+		renderView(res, "login", ok, { mensajeExito: "Usuario registrado correctamente." });
 	}
 	catch (err) {
 		console.error("Error al crear usuario:", err.message);
