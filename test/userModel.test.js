@@ -1,15 +1,17 @@
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const { deleteUsers } = require("./testUtils");
+const { deleteUsers, testtingSession } = require("./testUtils");
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
+const { saltRounds } = require("../config/config");
 
 describe("Modelo usuario", () => {
-	before(deleteUsers); // Antes de todos los test
-	beforeEach(deleteUsers); // Despues de cada test
+
 
 	describe("Registro", () => {
-
+		before(deleteUsers); // Antes de todos los test
+		beforeEach(deleteUsers); // Despues de cada test
 
 		it("Debe registrar correctamente un usuario nuevo con contraseña correcta", async () => {
 			const usuario = {
@@ -177,5 +179,102 @@ describe("Modelo usuario", () => {
 
 			assert.ok(good);
 		});
+	});
+
+
+	describe("[Model] Inicio de sesion", () => {
+		before(testtingSession);
+		after(deleteUsers);
+
+		it("✅ Inicio de sesión con credenciales válidas", async () => {
+			const password = "12345678"; // Contraseña en texto plano
+			const hashedPassword = await bcrypt.hash(password, saltRounds); // La hasheamos
+			console.log("hashedPassword", hashedPassword); // Para ver el hash generado
+			const usuario = {
+				username: "user1",
+				password: password
+			};
+
+			good = true;
+
+			try {
+				const result = await User.inicio( usuario);
+				assert.ok(result);
+				assert.equal(result.username, usuario.username); // Verificamos que el nombre de usuario sea correcto
+
+				// Ahora comprobamos que la contraseña proporcionada por el usuario sea correcta
+				const validPassword = await bcrypt.compare(usuario.password, result.password); // Comparar con la contraseña en texto plano
+				assert.ok(validPassword); // Debería ser `true` si la contraseña es correcta
+			}
+			catch (err) {
+				console.log(err);
+				good = false;
+			}
+
+			assert.ok(good);
+		});
+
+		it("❌ No debe iniciar sesión con contraseña incorrecta", async () => {
+			const usuario = {
+				username: "user1",
+				password: "123456789"
+			};
+
+			good = false;
+			try {
+				await User.inicio(usuario);
+			}
+			catch (error) {
+				good = true;
+			}
+
+			assert.ok(good);
+		});
+
+		it("❌ No debe iniciar sesión con nombre incorrecto", async () => {
+			const usuario = {
+				username: "nombre_incorrecto",
+				password: "12345678"
+			};
+
+			good = false;
+			try {
+				await User.inicio(usuario);
+			}
+			catch (error) {
+				good = true;
+			}
+
+			assert.ok(good);
+		});
+
+		it("❌ No debe iniciar sesión sin nombre", async () => {
+			const usuario = { password: "12345678" };
+
+			good = false;
+			try {
+				await User.inicio(usuario);
+			}
+			catch (error) {
+				good = true;
+			}
+
+			assert.ok(good);
+		});
+
+		it("❌ No debe iniciar sesión sin contraseña", async () => {
+			const usuario = { username: "user1" };
+
+			good = false;
+			try {
+				await User.inicio(usuario);
+			}
+			catch (error) {
+				good = true;
+			}
+
+			assert.ok(good);
+		});
+
 	});
 });

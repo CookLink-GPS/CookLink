@@ -1,4 +1,4 @@
-const { badRequest, conflict, internalServerError } = require("../config/httpcodes");
+const { badRequest, conflict, internalServerError, notFound } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
 
@@ -70,6 +70,15 @@ const UserService = {
 		catch (error) {
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
+	},
+	iniciarSesion: async ({ username, password }) => {
+		if (!username) throw new AppError("Falta el nombre de usuario", badRequest);
+		if (!password) throw new AppError("Falta la contraseña", badRequest);
+
+		const user = await User.getByUsername(username);
+		if (!user) throw new AppError("Usuario no encontrado", notFound);
+
+		return user;
 	}
 };
 
