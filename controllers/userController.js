@@ -1,8 +1,7 @@
 const UserService = require("../services/userService");
 const { validationResult } = require("express-validator");
 const { renderView } = require("../middlewares/viewHelper"); // Importamos la función centralizada
-const { ok, badRequest, unauthorized } = require("../config/httpcodes");
-const bcrypt = require("bcrypt");
+const { ok, badRequest } = require("../config/httpcodes");
 
 /**
  * Obtiene todos los usuarios y los renderiza en la vista "users"
@@ -21,31 +20,8 @@ exports.getAllUsers = async (req, res, next) => {
 	}
 };
 
-exports.login = async (req, res) => {
-
-
-	const { username, password } = req.body;
-	try {
-		const user = await UserService.iniciarSesion( { username, password });
-
-		// Comparar la contraseña hashada en la base de datos
-		const valido = await bcrypt.compare(password, user.password);
-		if (!valido) return res.status(unauthorized).json({ error: "Credenciales inválidas" });
-
-		req.session.userId = user.id; // Guarda el ID del usuario en la sesión
-		req.session.username = user.username;
-
-		console.log("Sesión guardada:", req.session); // Debugging
-		renderView(res, "inicio", ok, { usuario: req.session.username });
-	}
-	catch (error) {
-		console.error(error);
-		renderView(res, "login", badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
-	}
-};
-
 // Exports.login = async (req, res) => {
-// 	Const { username, password } = req.body;
+//	Const { username, password } = req.body;
 
 // 	Try {
 // 		Const user = await UserService.iniciarSesion({ username, password });
