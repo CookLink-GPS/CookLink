@@ -100,7 +100,13 @@ const Pantry = {
 	async getIngredientsDetails(userId) {
 		try {
 			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
-			return result.map(row => ({ ...row }));
+			return result.map(row => ({
+				idDespensa: row.id_despensa,
+				idIngrediente: row.id_ingrediente,
+				nombre: row.nombre_ingrediente,
+				cantidad: row.cantidad,
+				tipoUnidad: row.tipoUnidad
+			}));
 		}
 		catch (error) {
 			throw new Error(`Error fetching pantry for user ${userId}`);

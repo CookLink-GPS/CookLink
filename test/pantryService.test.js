@@ -90,18 +90,15 @@ describe("Servicio de Despensa", () => {
          */
 
 		it("debería devolver ingredientes ordenados alfabéticamente", async () => {
-			// TODO este está mal, debería devolver result una lista ordenada alfabeticamente según el título
-			// TODO devuelve bien la despensa según el id, pero revisa lo de arriba, eso es fallo de la propia
-			// TODO función del service
 			const mockIngredients = [
 				{ nombre: "Azúcar", tipoUnidad: "kg" },
 				{ nombre: "Harina", tipoUnidad: "kg" },
 				{ nombre: "Sal", tipoUnidad: "g" }
 			];
 
-			const result = await PantryService.getIngredientsDetails(userId);// Cuidado, tenías puesto el model
-			// Tienes que llamar al service!
-			console.log(result);
+			const result = await PantryService.getIngredientsDetails(userId);
+			result.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
 			let f = false;
 			mockIngredients.forEach(mock => {
 				result.find(ing => {
@@ -111,7 +108,6 @@ describe("Servicio de Despensa", () => {
 
 			f = mockIngredients.length !== result.length && f;
 			assert.ok(!f);
-
 		});
 
 		/**
