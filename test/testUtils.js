@@ -1,4 +1,6 @@
+const { saltRounds } = require("../config/config");
 const db = require("../config/database");
+const bcrypt = require("bcrypt");
 
 /**
  * Elimina todos los usuarios de la base de datos.
@@ -25,13 +27,15 @@ const createTestUsers = async () => {
 
 const testtingSession = async () => {
 	await db.query("DELETE FROM usuarios");
+	const password = await bcrypt.hash("12345678", saltRounds);
+
 	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
 		"user1",
-		"12345678"
+		password
 	]);
 	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
 		"user2",
-		"12345678"
+		password
 	]);
 };
 
