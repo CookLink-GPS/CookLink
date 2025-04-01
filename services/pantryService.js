@@ -134,7 +134,6 @@ const PantryService = {
 
 
 		const pantry = await Pantry.getPantryFromUser(userId);
-		console.log(pantry);
 		pantry.sort((a, b) => a.nombre_ingrediente.localeCompare(b.nombre_ingrediente));
 
 
