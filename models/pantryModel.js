@@ -27,25 +27,6 @@ const Pantry = {
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	},
-
-  	/**
-     * Deletes an ingredient from a user's pantry.
-     *
-     * @async
-     * @param {Number} userId - User ID.
-     * @param {Number} ingredientId - Ingredient ID to delete.
-     * @returns {Promise<void>}
-     * @throws {Error} - If an error occurs while deleting the ingredient.
-     */
-	async deleteIngredient(userId, ingredientId) {
-		try {
-			await db.query(pantryQueries.deleteIngredient, [ userId, ingredientId ]);
-		}
-		catch (error) {
-			throw new Error(`Error deleting ingredient ${ingredientId} from user ${userId}'s pantry`);
-		}
-	},
-
 	/**
      * Updates the quantity of an ingredient in the pantry.
      *
