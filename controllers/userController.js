@@ -22,37 +22,12 @@ exports.getAllUsers = async (req, res, next) => {
 };
 
 exports.login = async (req, res) => {
-
-
-	const { username, password } = req.body;
-	try {
-		const user = await UserService.login( { username, password });
-
-		// Comparar la contraseña hashada en la base de datos
-		const valido = await bcrypt.compare(password, user.password);
-		if (!valido) return res.status(unauthorized).json({ error: "Credenciales inválidas" });
-
-		req.session.userId = user.id; // Guarda el ID del usuario en la sesión
-		req.session.username = user.username;
-
-		console.log("Sesión guardada:", req.session); // Debugging
-		renderView(res, "inicio", ok, { usuario: req.session.username });
-	}
-	catch (error) {
-		console.error(error);
-		renderView(res, "login", badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
-	}
-};
-
-exports.login = async (req, res) => {
 	const { username, password } = req.body;
 
 	try {
 		const user = await UserService.iniciarSesion({ username, password });
 
 		req.session.user = { ...user };
-
-		// Console.log("Sesión guardada:", req.session); // Debugging
 		renderView(res, "inicio", ok, { usuario: req.session.username });
 	}
 	catch (error) {
