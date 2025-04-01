@@ -50,6 +50,7 @@ const PantryService = {
 
 		try {
 			const ingredients = await Pantry.getIngredientsDetails(userId);
+			ingredients.sort((a, b) => a.nombre.localeCompare(b.nombre));
 			return ingredients;
 		}
 		catch (error) {

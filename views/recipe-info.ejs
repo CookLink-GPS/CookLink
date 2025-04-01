@@ -19,28 +19,48 @@
             <div class="col-12 col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title   ">
-                            <%= recipe.nombre %>
-                        </h4>
-                        <p class="card-text">
-                            Descripción:
-                        </p>
-                        <p class="card-text">
-                            <%= recipe.descripcion %>
-                        </p>
-                        <p class="card-text">
-                        <h5>Ingredientes:</h5>
-                        <ul>
-                            <% recipe.ingredients.forEach(ingrediente=> { %>
-                                <li>
-                                    <%= ingrediente.ingrediente %>: <%= ingrediente.unidades %>
-                                            <%= ingrediente.tipoUnidad %>
-                                </li>
-                                <% }) %>
-                        </ul>
-                        </p>
-                        <a href="#" class="btn btn-custom btn-primary">Cocinar</a>
-                        <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                        <% if (!recipe) { %>
+                            <div class="alert alert-danger" role="alert">
+                                No se encontró la receta.
+                            </div>
+                            <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                            <% } else if (!recipe.nombre) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    La receta no tiene nombre.
+                                </div>
+                                <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                                <% } else if (!recipe.descripcion) { %>
+                                    <div class="alert alert-danger" role="alert">
+                                        La receta no tiene descripción.
+                                    </div>
+                                    <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                                    <% } else if (!recipe.ingredients || recipe.ingredients.length===0) { %>
+                                        <div class="alert alert-danger" role="alert">
+                                            La receta no tiene ingredientes.
+                                        </div>
+                                        <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                                        <% } else { %>
+                                            <h4 class="card-title">
+                                                <%= recipe.nombre %>
+                                            </h4>
+                                            <p class="card-text">
+                                                <strong>Descripción:</strong>
+                                                <%= recipe.descripcion %>
+                                            </p>
+                                            <p class="card-text">
+                                            <h5>Ingredientes:</h5>
+                                            <ul>
+                                                <% recipe.ingredients.forEach(ingrediente=> { %>
+                                                    <li>
+                                                        <%= ingrediente.ingrediente %>: <%= ingrediente.unidades %>
+                                                                <%= ingrediente.tipoUnidad %>
+                                                    </li>
+                                                    <% }) %>
+                                            </ul>
+                                            </p>
+                                            <!-- <a href="#" class="btn btn-custom btn-primary">Cocinar</a> -->
+                                            <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                                            <% } %>
                     </div>
                 </div>
             </div>

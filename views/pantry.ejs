@@ -18,7 +18,8 @@
 
     <div class="container content text-center py-5">
         <h1 class="mb-4 p-3 text-white rounded">Mi Despensa</h1>
-
+        <!-- AQUI EL BUSCADOR DE LA HU_007 -->
+        <a href="/ingredients" class="btn btn-custom btn-lg m-2">Añadir ingrediente</a>
         <!-- Tabla de ingredientes -->
         <div class="table-responsive">
             <table class="table shadow-sm" style="background-color: #EBD4C3; border: 2px solid #A25E4B;">
@@ -27,7 +28,7 @@
                         <th>Nombre Ingrediente</th>
                         <th>Cantidad</th>
                         <th>Tipo Unidad</th>
-                        <th>Remover</th>
+                        <!-- <th>Remover</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +36,7 @@
                         <% ingredients.forEach(ingredient=> { %>
                             <tr>
                                 <td>
-                                    <%= ingredient.nombre_ingrediente %>
+                                    <%= ingredient.nombre %>
                                 </td>
                                 <td class="ingredient-quantity">
                                     <%= ingredient.cantidad || "N/A" %>
@@ -43,14 +44,14 @@
                                 <td class="tipo-unidad" data-tipo="<%= ingredient.tipoUnidad %>">
                                     <%= ingredient.tipoUnidad %>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#confirmDeleteModal"
                                         data-despensa-id="<%= ingredient.id_despensa %>"
                                         data-ingredient-quantity="<%= ingredient.cantidad %>">
                                         Eliminar
                                     </button>
-                                </td>
+                                </td> -->
                             </tr>
                             <% }) %>
                                 <% } else { %>
@@ -80,8 +81,8 @@
                     <form id="deleteForm" method="POST" action="">
                         <div class="mb-3">
                             <label for="quantityToDelete" class="form-label">Cantidad a eliminar:</label>
-                            <input type="number" class="form-control" id="quantityToDelete" name="quantity" min="0.01"
-                                step="0.01" required>
+                            <input type="number" class="form-control" id="quantityToDelete" name="quantity" min="0.1"
+                                step="0.1" required>
                             <small class="text-muted" id="maxQuantityHint"></small>
                         </div>
                         <div class="modal-footer">
@@ -100,65 +101,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-
-            const unidadMap = {
-                "gramos": "Gramos (g)",
-                "kilogramos": "Kilogramos (kg)",
-                "mililitros": "Mililitros (ml)",
-                "litros": "Litros (l)",
-                "unidades": "Unidades (ud)",
-                "cucharadas": "Cucharadas (cda)",
-                "cucharaditas": "Cucharaditas (cdta)",
-                "tazas": "Tazas (tz)"
-            };
-
-            document.querySelectorAll("td.tipo-unidad").forEach(td => {
-                const tipo = td.textContent.trim(); // Obtener el contenido de la celda y eliminar espacios en blanco
-                if (unidadMap[tipo]) {
-                    td.textContent = unidadMap[tipo]; // Reemplazar por el formato correcto
-                }
-            });
-
-            const deleteModal = document.getElementById('confirmDeleteModal');
-
-            deleteModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-                const id_despensa = button.getAttribute('data-despensa-id');
-                const currentQuantity = button.getAttribute('data-ingredient-quantity');
-
-                const quantityInput = document.getElementById('quantityToDelete');
-                const maxQuantityHint = document.getElementById('maxQuantityHint');
-                const deleteForm = document.getElementById('deleteForm');
-
-                // Configurar el formulario
-                deleteForm.action = `/pantry/delete/${id_despensa}`;
-                quantityInput.min = 0.01;
-                quantityInput.step = 0.01; // Permitir decimales
-                quantityInput.max = parseFloat(currentQuantity);
-                quantityInput.value = 1;
-                maxQuantityHint.textContent = `Máximo: ${currentQuantity} unidades disponibles`;
-
-                // Validación
-                quantityInput.oninvalid = function () {
-                    this.setCustomValidity(`Por favor ingresa un valor entre 0,1 y ${currentQuantity}`);
-                };
-                quantityInput.oninput = function () {
-                    this.setCustomValidity('');
-                };
-            });
-
-            // JavaScript para cambiar el paso en la cantidad
-            const quantityInput = document.getElementById('quantityToDelete');
-            quantityInput.addEventListener('input', function () {
-                const currentQuantity = parseFloat(quantityInput.max);
-                if (parseFloat(quantityInput.value) > currentQuantity) {
-                    quantityInput.value = currentQuantity; // No puede superar la cantidad disponible
-                }
-            });
-        });
-    </script>
+    <script src="/js/pantryScript.js"></script>
 </body>
 
 </html>

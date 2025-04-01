@@ -8,6 +8,7 @@ const db = require("../config/database");
 const CERO = 0;
 const QUINIENTOS = 500;
 
+
 describe("Servicio de recetas", () => {
 	let user, user2, user0;
 

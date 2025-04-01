@@ -6,6 +6,7 @@ const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, dele
 const { baseUrl, port } = require("../config/config");
 const { ok } = require("../config/httpcodes");
 
+
 describe("Rutas de recetas", () => {
 
 	beforeEach(async () => {
@@ -25,7 +26,7 @@ describe("Rutas de recetas", () => {
 	describe("Obtener recetas recomendadas", () => {
 		const route = `${baseRoute}recommended`;
 
-		it("Redirige correctamente", async () => {
+		it("Redirige correctamente", async () => { // TODO obtener lista recetas y comprobar que son iguales
 			const res = await fetch(route);
 
 			assert.equal(res.status, ok); // 200 éxito
