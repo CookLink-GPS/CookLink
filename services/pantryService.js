@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 const Pantry = require("../models/pantryModel");
 const Ingredient = require("../models/ingredientModel");
-const { badRequest, internalServerError } = require("../config/httpcodes");
+const { badRequest, internalServerError, forbidden } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const { removeAccents } = require("../utils/stringFunctions");
 
@@ -71,22 +71,18 @@ const PantryService = {
 	async deleteIngredient(userId, idDespensa, quantityToDelete) {
 		if (!userId || !idDespensa || !quantityToDelete) throw new AppError("Missing required data", badRequest);
 
-		const ERROR = 403;
 		try {
 			const pantryItem = await Pantry.getPantryItemById(idDespensa);
 
 			if (!pantryItem) throw new AppError("Item not found in pantry", badRequest);
-
-			if (pantryItem.id_usuario !== userId) throw new AppError("Unauthorized operation", ERROR);
-
+			if (pantryItem.id_usuario !== userId) throw new AppError("Unauthorized operation", forbidden);
 			if (quantityToDelete > pantryItem.cantidad) throw new AppError("Cannot delete more than available quantity", badRequest);
 
 			if (quantityToDelete === pantryItem.cantidad) await Pantry.deleteIngredient(userId, pantryItem.id_ingrediente);
-
-			 else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
+			else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
 		}
 		catch (error) {
-			console.log(error);
+			console.error(error.message);
 			throw new AppError("Error deleting ingredient", internalServerError);
 		}
 	},
@@ -115,7 +111,7 @@ const PantryService = {
 				existingItem.id_despensa,
 				existingItem.cantidad + quantity
 			);
-			 else await Pantry.addIngredient(userId, ingredientId, quantity);
+			else await Pantry.addIngredient(userId, ingredientId, quantity);
 		}
 		catch (error) {
 			throw new AppError("Error adding ingredient to pantry", internalServerError);
