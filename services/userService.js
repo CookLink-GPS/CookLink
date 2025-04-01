@@ -1,4 +1,4 @@
-const { badRequest, conflict } = require("../config/httpcodes");
+const { badRequest, conflict, notFound } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
 
@@ -48,6 +48,7 @@ const UserService = {
 		if (!user.password) throw new AppError("Falta la contraseña", badRequest);
 
 		const userDB = await User.inicio(user);
+		if (!userDB) throw new AppError("Usuario no encontrado", notFound); // O el código de error que prefieras
 
 		return userDB;
 	}
