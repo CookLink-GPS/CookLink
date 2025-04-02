@@ -20,6 +20,23 @@ exports.getAllUsers = async (req, res, next) => {
 	}
 };
 
+exports.login = async (req, res) => {
+	const { username, password } = req.body;
+
+ 	try {
+ 		const user = await UserService.login({ username, password });
+
+ 		req.session.user = { ...user };
+
+
+ 		renderView(res, "inicio", ok, { usuario: req.session.username });
+ 	}
+ 	catch (error) {
+ 		console.error(error.message);
+ 		renderView(res, "login", error.status || badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
+	};
+};
+
 /**
  * Redirige a la página de registro de usuario.
  *
@@ -36,6 +53,16 @@ exports.toRegistro = (req, res, next) => {
 	}
 };
 
+exports.toLogin = (req, res, next) => {
+	try {
+		renderView(res, "login", ok);
+	}
+	catch (err) {
+		next(err.mensajeError);
+	}
+};
+
+
 /**
  * Registra un nuevo usuario en la base de datos y muestra mensajes de éxito o error según el resultado.
  *
@@ -44,14 +71,12 @@ exports.toRegistro = (req, res, next) => {
  */
 exports.registroUser = async (req, res) => {
 	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		console.log("Error details: ", JSON.stringify(errors.array(), null));
-		return renderView(res, "registro", badRequest, { mensajeError: errors.array() });
-	}
+	if (!errors.isEmpty()) return renderView(res, "registro", badRequest, { mensajeError: errors.array() });
+
 
 	try {
 		await UserService.registroUser(req.body);
-		renderView(res, "inicio", ok, { mensajeExito: "Usuario registrado correctamente." });
+		renderView(res, "login", ok, { mensajeExito: "Usuario registrado correctamente." });
 	}
 	catch (err) {
 		console.error("Error al crear usuario:", err.message);

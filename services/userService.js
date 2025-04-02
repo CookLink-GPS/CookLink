@@ -1,6 +1,7 @@
-const { badRequest, conflict, internalServerError } = require("../config/httpcodes");
+const { badRequest, conflict, internalServerError, unauthorized } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
+const { compare } = require("bcrypt");
 
 /**
  *
@@ -70,6 +71,19 @@ const UserService = {
 		catch (error) {
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
+	},
+	login: async ({ username, password }) => {
+		if (!username) throw new AppError("Falta el nombre de usuario", badRequest);
+		if (!password) throw new AppError("Falta la contraseña", badRequest);
+
+		const user = await User.getByUsername(username);
+
+		if (!user) throw new AppError("Usuario no encontrado", unauthorized);
+
+		const correctPassword = await compare(password, user.password);
+
+		if (!correctPassword) throw new AppError("Contraseña incorrecta", unauthorized);
+		return user;
 	}
 };
 

@@ -5,6 +5,7 @@ const ingredientRouter = require("../routes/ingredientRoutes");
 const inicioRouter = require("../routes/inicioRoutes");
 const pantryRouter = require("../routes/pantryRoutes");
 const { notFound } = require("./httpcodes");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 
 /**
  * Configura las rutas de la aplicación y el manejo de errores 404.
@@ -12,12 +13,16 @@ const { notFound } = require("./httpcodes");
  * @param {Object} app - Instancia de la aplicación Express.
  */
 module.exports = app => {
-	app.use("/", indexRouter);
+
+	// Rutas protegidas
+	app.use("/inicio", authMiddleware, inicioRouter);
+	app.use("/recipes", authMiddleware, recipeRouter);
+	app.use("/pantry", authMiddleware, pantryRouter);
+	app.use("/ingredients", authMiddleware, ingredientRouter);
+
+	// Rutas no protegidas
 	app.use("/users", userRouter);
-	app.use("/inicio", inicioRouter);
-	app.use("/recipes", recipeRouter);
-	app.use("/ingredients", ingredientRouter);
-	app.use("/pantry", pantryRouter);
+	app.use("/", indexRouter);
 
 	// Manejo de errores 404
 	app.use((req, res, next) => {

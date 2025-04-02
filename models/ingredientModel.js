@@ -35,12 +35,10 @@ const Ingredient = {
 	 */
 	async findByName(nombre) {
 		try {
-			console.log(`[Model] Buscando ingrediente: ${nombre}`);
 			const rows = await db.query(
 				`SELECT id, nombre, tipoUnidad FROM ${nombreTabla} WHERE nombre = ? LIMIT 1`,
 				[ nombre ]
 			);
-			console.log(`[Model] Resultado findByName:`, rows[0]);
 			const cero = 0;
 			return rows.length > cero ? rows[0] : null;
 		}
@@ -98,7 +96,6 @@ const Ingredient = {
 			if (nombre === undefined || nombre === null || nombre.trim() === "") throw new Error("El nombre del ingrediente no puede estar vacío");
 			if (tipoUnidad === undefined || tipoUnidad === null || tipoUnidad.trim() === "") throw new Error("El tipo de unidad no puede estar vacío");
 
-			console.log(`[Model] Creando ingrediente: ${nombre}`);
 			const result = await db.query(
 				`INSERT INTO ${nombreTabla} (nombre, tipoUnidad) VALUES (?, ?)`,
 				[ nombre, tipoUnidad ]
@@ -106,7 +103,7 @@ const Ingredient = {
 			return result.insertId;
 		}
 		catch (error) {
-			console.error("[Model] Error en create:", error);
+			console.error(error.message);
 			if (error.code === "ER_DUP_ENTRY") throw new Error("Este ingrediente ya existe");
 			throw new Error("Error al crear ingrediente");
 		}

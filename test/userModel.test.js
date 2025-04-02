@@ -5,11 +5,11 @@ const { deleteUsers } = require("./testUtils");
 const User = require("../models/userModel");
 
 describe("Modelo usuario", () => {
-	before(deleteUsers); // Antes de todos los test
-	beforeEach(deleteUsers); // Despues de cada test
+
 
 	describe("Registro", () => {
-
+		before(deleteUsers); // Antes de todos los test
+		beforeEach(deleteUsers); // Despues de cada test
 
 		it("Debe registrar correctamente un usuario nuevo con contraseña correcta", async () => {
 			const usuario = {

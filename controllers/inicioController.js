@@ -11,7 +11,7 @@ const { ok } = require("../config/httpcodes");
  */
 exports.mostrarInicio = (req, res, next) => {
 	try {
-		renderView(res, "inicio", ok);
+		renderView(res, "inicio", ok, { username: req.session.username } );
 	}
 	catch (err) {
 		next(err);

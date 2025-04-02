@@ -1,96 +1,89 @@
-// /* eslint-disable no-undef */
+/* eslint-disable no-undef */
 
-// Const assert = require("assert");
-// Const { deleteUsers } = require("./testUtils");
-// Const User = require("../models/userModel");
+const assert = require("assert");
+const UserService = require("../services/userService"); // Asegúrate de que el path es correcto
+const { deleteUsers, testtingSession } = require("./testUtils");
 
-// Describe("Servicio usuario", () => {
-// 	Describe("Inicio de sesion", () => {
-// 		// Before(testtingSession);
-// 		Before(deleteUsers);
-// 		After(deleteUsers);
+describe("[Service] Servicio de usuario", () => {
 
-// 		It("✅ Inicio de sesión con credenciales válidas", async () => {
-// 			Const usuario = {
-// 				Username: "user1",
-// 				Password: "12345678"
-// 			};
 
-// 			Let good = true;
+	describe("[Service] Inicio de sesión", () => {
+		before(testtingSession);
+		after(deleteUsers);
 
-// 			Try {
-// 				Const result = await User.inicio(usuario);
-// 				Assert.ok(result);
-// 				Assert.equal(result.username, usuario.username); // Verificamos que el nombre de usuario sea correcto
-// 			}
-// 			Catch (err) {
-// 				Good = false;
-// 			}
+		it("✅ Inicio de sesión con credenciales válidas", async () => {
+			const usuario = { username: "user1", password: "12345678" }; // Usuario registrado y contraseña correcta
+			let userDB;
+			good = true;
+			try {
+				userDB = await UserService.login(usuario);
+			}
+			catch (error) {
+				good = false;
+				assert.fail("Debería haberse podido iniciar sesión");
+			}
 
-// 			Assert.ok(good);
-// 		});
+			assert.ok(good);
+			assert.equal(userDB.username, usuario.username);
+		});
 
-// 		It("❌ No debe iniciar sesión con contraseña incorrecta", async () => {
-// 			Const usuario = {
-// 				Username: "user1",
-// 				Password: "123456789"
-// 			};
+		it("❌ No debe iniciar sesión sin nombre de usuario", async () => {
+			const usuario = { password: "12345678" }; // Faltando 'username'
 
-// 			Good = false;
-// 			Try {
-// 				Await User.inicio(usuario);
-// 			}
-// 			Catch (error) {
-// 				Good = true;
-// 			}
+			good = false;
+			try {
+				await UserService.login(usuario);
+			}
+			catch (error) {
+				good = true;
+			}
 
-// 			Assert.ok(good);
-// 		});
+			assert.ok(good, "Debería haber lanzado un error por falta de nombre de usuario");
+		});
 
-// 		It("❌ No debe iniciar sesión con nombre incorrecto", async () => {
-// 			Const usuario = {
-// 				Username: "nombre_incorrecto",
-// 				Password: "12345678"
-// 			};
+		it("❌ No debe iniciar sesión sin contraseña", async () => {
+			const usuario = { username: "user1" }; // Faltando 'password'
 
-// 			Good = false;
-// 			Try {
-// 				Await User.inicio(usuario);
-// 			}
-// 			Catch (error) {
-// 				Good = true;
-// 			}
+			good = false;
+			try {
+				await UserService.login(usuario);
+			}
+			catch (error) {
+				good = true;
+				assert.equal(error.message, "Falta la contraseña");
+			}
 
-// 			Assert.ok(good);
-// 		});
+			assert.ok(good, "Debería haber lanzado un error por falta de contraseña");
+		});
 
-// 		It("❌ No debe iniciar sesión sin nombre", async () => {
-// 			Const usuario = { password: "12345678" };
+		it("❌ No debe iniciar sesión con usuario no registrado", async () => {
+			const usuario = { username: "nonExistentUser", password: "12345678" }; // Usuario no registrado
 
-// 			Good = false;
-// 			Try {
-// 				Await User.inicio(usuario);
-// 			}
-// 			Catch (error) {
-// 				Good = true;
-// 			}
+			good = false;
+			try {
+				await UserService.login(usuario);
+			}
+			catch (error) {
+				good = true;
+			}
 
-// 			Assert.ok(good);
-// 		});
+			assert.ok(good, "Debería haber lanzado un error porque el usuario no está registrado");
+		});
 
-// 		It("❌ No debe iniciar sesión sin contraseña", async () => {
-// 			Const usuario = { username: "user1" };
+		it("❌ Manejo de errores generales", async () => {
+			const usuario = { username: "user1", password: "incorrectPassword" }; // Contraseña incorrecta
 
-// 			Good = false;
-// 			Try {
-// 				Await User.inicio(usuario);
-// 			}
-// 			Catch (error) {
-// 				Good = true;
-// 			}
+			good = false;
+			try {
+				await UserService.login(usuario);
+			}
+			catch (error) {
+				good = true;
+				// Asumimos que en este caso se maneja un error específico de modelo en el servicio
+			}
 
-// 			Assert.ok(good);
-// 		});
+			assert.ok(good, "Debería haber lanzado un error por contraseña incorrecta");
+		});
 
-// 	});
-// });
+	});
+});

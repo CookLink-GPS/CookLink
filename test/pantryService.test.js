@@ -449,7 +449,6 @@ describe("Servicio de Despensa", () => {
 		it("Debe devolver todos los ingredientes cuando no metes nada", async () => {
 			const res = await PantryService.searchIngredients("", 1);
 
-			console.log("AY: ", res);
 			let good = res.length === ingredients.length;
 
 			if (good) good = ingredients.reduce((acc, [ ingName ]) => acc && res.some(({ nombre }) => ingName === nombre));

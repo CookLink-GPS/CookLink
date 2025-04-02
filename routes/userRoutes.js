@@ -6,6 +6,8 @@ const AppError = require("../utils/AppError");
 const { badRequest } = require("../config/httpcodes");
 
 router.get("/", userController.getAllUsers);
+router.get("/login", userController.toLogin);
+router.post("/login", userController.login);
 router.get("/registro", userController.toRegistro);
 router.delete("/delete/:id", userController.deleteUser);
 router.post(
@@ -22,6 +24,5 @@ router.post(
 		})
 	, userController.registroUser
 );
-
 
 module.exports = router;
