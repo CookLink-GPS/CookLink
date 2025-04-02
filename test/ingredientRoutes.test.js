@@ -2,12 +2,14 @@
 
 const assert = require("node:assert");
 const { baseUrl, port } = require("../config/config");
-const { deleteIngredients, createuser, deletePantry, deleteUsers } = require("./testUtils");
+const { deleteIngredients, deletePantry, deleteUsers, testtingSession } = require("./testUtils");
 const { badRequest, ok } = require("../config/httpcodes");
+const UserService = require("../services/userService"); // Asegúrate de que el path es correcto
+
 
 describe("Rutas ingrediente", () => {
 	const baseRoute = `http://${baseUrl}:${port}/ingredients`;
-	before(createuser);
+	before(testtingSession);
 	beforeEach(async () => {
 		await deleteIngredients();
 		await deletePantry();
@@ -24,11 +26,13 @@ describe("Rutas ingrediente", () => {
 
 		// CL_003_01: Añadir un nuevo ingrediente correctamente
 		it("Debe agregar un nuevo ingrediente correctamente a la despensa cuando se introduce un nombre, unidad y cantidad válidos", async () => {
+
+			const usuario = { username: "user1", password: "12345678" };
+			await UserService.login(usuario);
 			const ingrediente = {
 				nombre: "Tomate",
 				tipoUnidad: "kg"
 			};
-
 
 			const res = await fetch(route, {
 				method: "POST",
