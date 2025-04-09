@@ -10,6 +10,11 @@ const Routes = {
 		default: "/recetas",
 		recommendations: "recomendaciones",
 		recipeInfo: "/:id"
+	},
+	ingredientRoutes: {
+		default: "/ingredientes",
+		toIngredient: "/",
+		add: "/añadir"
 	}
 };
 
