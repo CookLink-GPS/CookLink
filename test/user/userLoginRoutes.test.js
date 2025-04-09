@@ -2,9 +2,9 @@
 
 
 const assert = require("assert");
-const { deleteUsers, testtingSession } = require("./testUtils");
-const { baseUrl, port } = require("../config/config");
-const { ok, badRequest, unauthorized } = require("../config/httpcodes");
+const { deleteUsers, testtingSession } = require("../testUtils");
+const { baseUrl, port } = require("../../config/config");
+const { ok, badRequest, unauthorized } = require("../../config/httpcodes");
 
 
 describe("[ROUTE2] Rutas de usuario", () => {

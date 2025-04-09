@@ -2,9 +2,9 @@
 
 /* eslint-disable no-undef */
 const assert = require("node:assert");
-const { baseUrl, port } = require("../config/config");
-const { insertIngredients, insertDummy, insertPantry, deleteIngredients, deleteUsers } = require("./testUtils");
-const db = require("../config/database");
+const { baseUrl, port } = require("../../config/config");
+const { insertIngredients, insertDummy, insertPantry, deleteIngredients, deleteUsers } = require("../testUtils");
+const db = require("../../config/database");
 
 describe("Rutas despensa", () => {
 	const baseRoute = `http://${baseUrl}:${port}/pantry`;

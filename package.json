@@ -21,7 +21,7 @@
     "nodemon": "^3.1.9"
   },
   "scripts": {
-    "test": "mocha --require test/onExit.js test/*.test.js --exit --timeout 5000",
+    "test": "mocha --require test/onExit.js test/**/*.test.js --exit --timeout 5000",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "eslint ."

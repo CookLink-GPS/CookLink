@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const assert = require("node:assert");
-const IngredientService = require("../services/ingredientService");
-const { deleteIngredients, insertIngredients, createuser, deletePantry, deleteUsers } = require("./testUtils");
+const IngredientService = require("../../services/ingredientService");
+const { deleteIngredients, insertIngredients, createuser, deletePantry, deleteUsers } = require("../testUtils");
 
 
 describe("Servicio Ingrediente", () => {

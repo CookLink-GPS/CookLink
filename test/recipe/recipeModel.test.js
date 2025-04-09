@@ -2,8 +2,8 @@
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, deleteContains, insertContains } = require("./testUtils");
-const Recipe = require("../models/recipeModel");
+const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, deleteContains, insertContains } = require("../testUtils");
+const Recipe = require("../../models/recipeModel");
 
 describe("Modelo Receta", () => {
 

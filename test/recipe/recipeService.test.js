@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-magic-numbers */
 const assert = require("assert");
-const Recipe = require("../services/recipeService");
-const { deleteIngredients, insertIngredients, insertPantry, deletePantry, deleteUsers, insertRecetas, deleteRecipes, insertContains, deleteContains } = require("./testUtils");
-const User = require("../models/userModel");
-const db = require("../config/database");
+const Recipe = require("../../services/recipeService");
+const { deleteIngredients, insertIngredients, insertPantry, deletePantry, deleteUsers, insertRecetas, deleteRecipes, insertContains, deleteContains } = require("../testUtils");
+const User = require("../../models/userModel");
+const db = require("../../config/database");
 const CERO = 0;
 const QUINIENTOS = 500;
 

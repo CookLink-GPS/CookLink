@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
 
 const assert = require("node:assert");
-const { baseUrl, port } = require("../config/config");
-const { deleteIngredients, deletePantry, deleteUsers, testtingSession } = require("./testUtils");
-const { badRequest, ok } = require("../config/httpcodes");
-const UserService = require("../services/userService"); // Asegúrate de que el path es correcto
+const { baseUrl, port } = require("../../config/config");
+const { deleteIngredients, deletePantry, deleteUsers, testtingSession } = require("../testUtils");
+const { badRequest, ok } = require("../../config/httpcodes");
+const UserService = require("../../services/userService"); // Asegúrate de que el path es correcto
 
 
 describe("Rutas ingrediente", () => {

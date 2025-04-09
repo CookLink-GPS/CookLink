@@ -2,9 +2,9 @@
 /* eslint-disable camelcase */
 
 const assert = require("assert");
-const { deleteUsers } = require("./testUtils");
-const { baseUrl, port } = require("../config/config");
-const { badRequest, ok, conflict } = require("../config/httpcodes");
+const { deleteUsers } = require("../testUtils");
+const { baseUrl, port } = require("../../config/config");
+const { badRequest, ok, conflict } = require("../../config/httpcodes");
 
 
 describe("Rutas de usuario", () => {
