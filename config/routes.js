@@ -22,6 +22,10 @@ const Routes = {
 		deleteIngredient: "/borrar/:id_despensa",
 		searchAll: "/buscar",
 		search: "/buscar/:filter"
+	},
+	inicioRoutes: {
+		default: "/inicio",
+		show: "/"
 	}
 };
 
