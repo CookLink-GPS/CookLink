@@ -26,6 +26,11 @@ const Routes = {
 	inicioRoutes: {
 		default: "/inicio",
 		show: "/"
+	},
+	indexRoutes: {
+		default: "/",
+		index: "/",
+		favicon: "/favicon.ico"
 	}
 };
 
