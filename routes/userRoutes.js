@@ -4,14 +4,15 @@ const userController = require("../controllers/userController");
 const { check } = require("express-validator");
 const AppError = require("../utils/AppError");
 const { badRequest } = require("../config/httpcodes");
+const { userRoutes } = require("../config/routes");
 
-router.get("/", userController.getAllUsers);
-router.get("/login", userController.toLogin);
-router.post("/login", userController.login);
-router.get("/registro", userController.toRegistro);
-router.delete("/delete/:id", userController.deleteUser);
+router.get(userRoutes.getAllUsers, userController.getAllUsers);
+router.get(userRoutes.login, userController.toLogin);
+router.post(userRoutes.login, userController.login);
+router.get(userRoutes.register, userController.toRegistro);
+router.delete(userRoutes.delete, userController.deleteUser);
 router.post(
-	"/registro",
+	userRoutes.register,
 	check("password", "La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial")
 		.matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&'*+-/=.?^_{|}@(),:;<>@[])/),
 	check("password", "La longitud minima de la contraseña debe ser 8").isLength({ min: 8 }),
