@@ -49,7 +49,7 @@ const configureButtonModal = (idDespensa, cantidad) => {
 		const deleteForm = document.getElementById("deleteForm");
 
 		// Configurar el formulario
-		deleteForm.action = `/pantry/delete/${pantryId}`;
+		deleteForm.action = `/despensa/borrar/${pantryId}`;
 		quantityInput.min = 0.1;
 		quantityInput.step = 0.1; // Permitir decimales
 		quantityInput.max = parseFloat(currentQuantity);
@@ -93,7 +93,7 @@ const createIngredientRow = ({ idDespensa, nombre, cantidad, tipoUnidad }) => {
 
 const searchIngredients = async search => {
 	ingredientList.innerHTML = "";
-	const { ingredientes } = await fetch(`/pantry/search/${search}`, { method: "GET" }).then(res => res.json());
+	const { ingredientes } = await fetch(`/despensa/buscar/${search}`, { method: "GET" }).then(res => res.json());
 
 	ingredientes.forEach(ingredient => {
 		ingredientList.appendChild(createIngredientRow(ingredient));

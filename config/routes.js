@@ -15,6 +15,13 @@ const Routes = {
 		default: "/ingredientes",
 		toIngredient: "/",
 		add: "/añadir"
+	},
+	pantryRoutes: {
+		default: "/despensa",
+		show: "/",
+		deleteIngredient: "/borrar/:id_despensa",
+		searchAll: "/buscar",
+		search: "/buscar/:filter"
 	}
 };
 

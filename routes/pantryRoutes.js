@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const pantryController = require("../controllers/pantryController");
+const { pantryRoutes } = require("../config/routes");
 
-router.get("/", pantryController.showPantry);
+router.get(pantryRoutes.show, pantryController.showPantry);
 
-router.post("/delete/:id_despensa", pantryController.deleteIngredient);
+router.post(pantryRoutes.deleteIngredient, pantryController.deleteIngredient);
 
 
-router.get("/search/", pantryController.searchIngredients);
-router.get("/search/:filter", pantryController.searchIngredients);
+router.get(pantryRoutes.searchAll, pantryController.searchIngredients);
+router.get(pantryRoutes.search, pantryController.searchIngredients);
 
 
 module.exports = router;

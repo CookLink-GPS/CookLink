@@ -6,7 +6,7 @@ const inicioRouter = require("../routes/inicioRoutes");
 const pantryRouter = require("../routes/pantryRoutes");
 const { notFound } = require("./httpcodes");
 const { authMiddleware } = require("../middlewares/authMiddleware");
-const { userRoutes, recipeRoutes } = require("./routes");
+const { userRoutes, recipeRoutes, pantryRoutes } = require("./routes");
 
 /**
  * Configura las rutas de la aplicación y el manejo de errores 404.
@@ -18,8 +18,8 @@ module.exports = app => {
 	// Rutas protegidas
 	app.use("/inicio", authMiddleware, inicioRouter);
 	app.use(recipeRoutes.default, authMiddleware, recipeRouter);
-	app.use("/pantry", authMiddleware, pantryRouter);
-	app.use("/ingredients", authMiddleware, ingredientRouter);
+	app.use(pantryRoutes.default, authMiddleware, pantryRouter);
+	app.use(recipeRoutes.default, authMiddleware, ingredientRouter);
 
 	// Rutas no protegidas
 	app.use(userRoutes.default, userRouter);
