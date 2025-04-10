@@ -4,17 +4,17 @@ const Routes = {
 		getAllUsers: "/",
 		login: "/inicio",
 		register: "/registro",
-		delete: "borrar/:id"
+		delete: "/borrar/:id"
 	},
 	recipeRoutes: {
 		default: "/recetas",
-		recommendations: "recomendaciones",
+		recommendations: "/recomendaciones",
 		recipeInfo: "/:id"
 	},
 	ingredientRoutes: {
 		default: "/ingredientes",
 		toIngredient: "/",
-		add: "/añadir"
+		add: "/anyadir"
 	},
 	pantryRoutes: {
 		default: "/despensa",

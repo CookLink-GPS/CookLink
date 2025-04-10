@@ -56,6 +56,7 @@ const RecipeService = {
 			const allRecipes = await Recipe.getAllRecipes();
 			const pantry = await Pantry.getPantryFromUser(id);
 
+			console.log(pantry);
 			// Usando un Map para busquedas constantes
 			const pantryMap = new Map(pantry.map(({ id_ingrediente: ingredientId, cantidad }) => [ ingredientId, { cantidad } ]));
 
