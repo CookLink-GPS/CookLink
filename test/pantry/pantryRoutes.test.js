@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-
 /* eslint-disable no-undef */
 const assert = require("node:assert");
 const { baseUrl, port } = require("../../config/config");

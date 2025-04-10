@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 const { badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");

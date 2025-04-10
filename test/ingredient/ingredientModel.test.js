@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-/* eslint-disable no-magic-numbers */
+
 const assert = require("node:assert");
 const { deleteIngredients, createuser, deletePantry, insertIngredients, deleteUsers } = require("../testUtils");
 const Ingredient = require("../../models/ingredientModel");

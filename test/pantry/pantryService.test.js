@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 /* eslint-disable no-undef */
 const assert = require("assert");
 const db = require("../../config/database");
