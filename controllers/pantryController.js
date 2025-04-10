@@ -22,7 +22,6 @@ const PantryController = {
 			renderView(res, "error", internalServerError, { error: "Error fetching pantry", status: internalServerError });
 		}
 	},
-
 	/**
      * Deletes an ingredient from the user's pantry.
      *
@@ -59,16 +58,6 @@ const PantryController = {
 			if (err.status === forbidden) res.status(forbidden).json({ mensajeError: err.message });
 			else res.status(badRequest).json({ mensajeError: "Error al filtrar los ingredientes" });
 		}
-	},
-	/**
-	 * Renderiza una vista con todos los ingredientes de la despensa del usuario
-	 *
-	 * @param {Request} req
-	 * @param {Response} res
-	 */
-	async getDespensa(req, res) {
-		const ingredients = await PantryService.getIngredientsDetails(req.session.user.id);
-		renderView(res, "despensa", ok, { ingredients });
 	}
 };
 

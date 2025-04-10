@@ -25,9 +25,7 @@ exports.login = async (req, res) => {
 
  	try {
  		const user = await UserService.login({ username, password });
-
  		req.session.user = { ...user };
-
 
  		renderView(res, "inicio", ok, { usuario: req.session.username });
  	}
@@ -44,7 +42,7 @@ exports.login = async (req, res) => {
  * @param {Response} res
  * @param {Function} next
  */
-exports.toRegistro = (req, res, next) => {
+exports.toRegister = (req, res, next) => {
 	try {
 		renderView(res, "registro", ok);
 	}
@@ -69,13 +67,13 @@ exports.toLogin = (req, res, next) => {
  * @param {Request} req
  * @param {Response} res
  */
-exports.registroUser = async (req, res) => {
+exports.register = async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) return renderView(res, "registro", badRequest, { mensajeError: errors.array() });
 
 
 	try {
-		await UserService.registroUser(req.body);
+		await UserService.register(req.body);
 		renderView(res, "login", ok, { mensajeExito: "Usuario registrado correctamente." });
 	}
 	catch (err) {

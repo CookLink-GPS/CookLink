@@ -1,4 +1,5 @@
 module.exports.pantryQueries = {
+	addingredient: "INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)",
 	getPantryFromUser: `
         SELECT d.id_despensa, d.id_ingrediente, i.nombre AS nombre_ingrediente, d.cantidad,  i.tipoUnidad
         FROM despensa d
@@ -6,6 +7,7 @@ module.exports.pantryQueries = {
         WHERE d.id_usuario = ?
     `,
 	deleteIngredient: "DELETE FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
+	getPantryItemByIngredient: "SELECT * FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
 	updateIngredientQuantity: "UPDATE despensa SET cantidad = ? WHERE id_despensa = ?",
 	getPantryItemById: "SELECT * FROM despensa WHERE id_despensa = ?",
 	getIngredientsDetails: `
@@ -27,6 +29,13 @@ module.exports.recipeQueries = {
 	getAllRecipes: "SELECT id, nombre, descripcion FROM recetas",
 	getRecipeById: "SELECT * FROM recetas WHERE id = ?",
 	getIngredients: "SELECT i.nombre AS ingrediente, i.tipoUnidad, c.unidades FROM contiene c JOIN ingredientes i ON c.id_ingrediente = i.id WHERE c.id_receta = ?;"
+};
+
+module.exports.ingredientQueries = {
+	create: "INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)",
+	findByName: "SELECT id, nombre, tipoUnidad FROM ingredientes WHERE nombre = ? LIMIT 1",
+	getAll: "SELECT * FROM ingredientes",
+	getById: "SELECT * FROM ingredientes WHERE id = ?"
 };
 
 module.exports.containsQueries = { getFromRecipe: "SELECT i.id, i.nombre, c.unidades, i.tipoUnidad FROM contiene c JOIN ingredientes i ON i.id = id_ingrediente WHERE c.id_receta = ?;" };

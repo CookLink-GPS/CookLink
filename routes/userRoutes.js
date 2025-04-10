@@ -9,7 +9,7 @@ const { userRoutes } = require("../config/routes");
 router.get(userRoutes.getAllUsers, userController.getAllUsers);
 router.get(userRoutes.login, userController.toLogin);
 router.post(userRoutes.login, userController.login);
-router.get(userRoutes.register, userController.toRegistro);
+router.get(userRoutes.register, userController.toRegister);
 router.delete(userRoutes.delete, userController.deleteUser);
 router.post(
 	userRoutes.register,
@@ -23,7 +23,7 @@ router.post(
 
 			return true;
 		})
-	, userController.registroUser
+	, userController.register
 );
 
 module.exports = router;

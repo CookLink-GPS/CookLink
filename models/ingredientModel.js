@@ -1,5 +1,5 @@
 const db = require("../config/database");
-const nombreTabla = "ingredientes";
+const { ingredientQueries } = require("../config/queries");
 
 /**
  *
@@ -11,51 +11,34 @@ const nombreTabla = "ingredientes";
  */
 const Ingredient = {
 	/**
-	 * Agrega un nuevo ingrediente a la base de datos
+	 * Busca un ingrediente por nombre
 	 *
-	 * @param {Object} ingredient - Objeto que contiene los datos del ingrediente
-	 * @returns {Promise<number>} - ID del ingrediente recién agregado
-	 */
-	add(ingredient) {
-		try {
-			const sql = `INSERT INTO ${nombreTabla} (nombre) VALUES (?)`;
-			return db.query(sql, [ ingredient ]);
-		}
-		catch (error) {
-			throw Error("Error al agregar ingrediente");
-		}
-	},
-
-	/**
-	 * Busca un ingrediente por nombre (devuelve el id y el nombre si existe)
-	 *
-	 * @param {string} nombre - Nombre del ingrediente a buscar
+	 * @param {string} name - Nombre del ingrediente a buscar
 	 * @returns {Promise<Object|null>} - Objeto con id y nombre o null si no existe
 	 */
-	async findByName(nombre) {
+	async findByName(name) {
 		try {
-			const rows = await db.query(
-				`SELECT id, nombre, tipoUnidad FROM ${nombreTabla} WHERE nombre = ? LIMIT 1`,
-				[ nombre ]
+			const [ result ] = await db.query(
+				ingredientQueries.findByName,
+				[ name ]
 			);
-			const cero = 0;
-			return rows.length > cero ? rows[0] : null;
+
+			return result;
 		}
 		catch (error) {
-			throw Error("Error al agregar ingrediente");
+			throw Error("Error al encontrar ingrediente");
 		}
 	},
 
 	/**
-	 * Description placeholder
+	 * Returns all ingredients
 	 *
 	 * @async
 	 * @returns {Promise<Ingredient[]>}
 	 */
 	async getAllIngredients() {
 		try {
-			const sql = `SELECT * FROM ${nombreTabla}`;
-			const res = await db.query(sql);
+			const res = await db.query(ingredientQueries.getAll);
 			return res.map(row => ({ ...row }));
 		}
 		catch (error) {
@@ -71,10 +54,7 @@ const Ingredient = {
 	 */
 	async getIngredient(id) {
 		try {
-			const sql = `SELECT * FROM ${nombreTabla} WHERE id = ?`;
-			const rows = await db.query(sql, [ id ]);
-			let ingredient;
-			if (rows.length > 0) ingredient = rows[0];
+			const [ ingredient ] = await db.query(ingredientQueries.getById, [ id ]);
 			return ingredient;
 		}
 		catch (error) {
@@ -86,18 +66,18 @@ const Ingredient = {
 	/**
      * Crea un nuevo ingrediente (versión corregida)
 	 *
-     * @param {string} nombre - Nombre del ingrediente
-     * @param {string} tipoUnidad - Tipo de unidad
+     * @param {string} name - Nombre del ingrediente
+     * @param {string} unit - Tipo de unidad
      * @returns {Promise<{id: number, nombre: string, tipoUnidad: string}>}
      */
-	async create(nombre, tipoUnidad) {
+	async create(name, unit) {
 		try {
-			if (nombre === undefined || nombre === null || nombre.trim() === "") throw new Error("El nombre del ingrediente no puede estar vacío");
-			if (tipoUnidad === undefined || tipoUnidad === null || tipoUnidad.trim() === "") throw new Error("El tipo de unidad no puede estar vacío");
+			if (!name || name.trim() === "") throw new Error("El nombre del ingrediente no puede estar vacío");
+			if (!unit || unit.trim() === "") throw new Error("El tipo de unidad no puede estar vacío");
 
 			const result = await db.query(
-				`INSERT INTO ${nombreTabla} (nombre, tipoUnidad) VALUES (?, ?)`,
-				[ nombre, tipoUnidad ]
+				ingredientQueries.create,
+				[ name, unit ]
 			);
 			return result.insertId;
 		}

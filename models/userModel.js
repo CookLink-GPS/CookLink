@@ -53,7 +53,7 @@ const User = {
 	 * @returns {Promise<Boolean>} Devuelve el resultado de la inserción en la base de datos.
 	 * @throws {Error} Lanza un error si ocurre un problema en la inserción.
 	 */
-	registro: async ({ username, password }) => {
+	register: async ({ username, password }) => {
 		try {
 			if (username === "" || /[\s\t]/.test(username)) throw new Error();
 			if (password === "" || /[\s\t]/.test(password)) throw new Error();
