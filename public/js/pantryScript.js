@@ -9,6 +9,14 @@ const unidadMap = {
 	"tazas": "tz (taza)"
 };
 
+function debounce(func, delay) {
+	let timer;
+	return function (...args) {
+	  clearTimeout(timer);
+	  timer = setTimeout(() => func.apply(this, args), delay);
+	};
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
 	document.querySelectorAll("td.tipo-unidad").forEach(td => {
@@ -92,7 +100,6 @@ const createIngredientRow = ({ idDespensa, nombre, cantidad, tipoUnidad }) => {
 };
 
 const searchIngredients = async search => {
-	ingredientList.innerHTML = "";
 	const { ingredientes } = await fetch(`/despensa/buscar/${search}`, { method: "GET" }).then(res => res.json());
 
 	ingredientes.forEach(ingredient => {
@@ -128,13 +135,12 @@ const searchIngredients = async search => {
 
 searchIngredients("");
 
-searchInput.addEventListener("input", async () => {
+searchInput.addEventListener("input", debounce(async () => {
 	let search = searchInput.value;
 	if (searchInput.value.length < MIN_FILTER_LENGTH) search = "";
 
 	if (search === prevSearch) return;
 	prevSearch = search;
-
+	ingredientList.innerHTML = "";
 	await searchIngredients(search);
-});
-
+}, 100));
