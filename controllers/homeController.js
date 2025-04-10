@@ -9,7 +9,7 @@ const { ok } = require("../config/httpcodes");
  * @param {Object} res - Objeto de respuesta HTTP que renderiza la vista de inicio.
  * @param {Function} next - Función para manejar errores.
  */
-exports.mostrarInicio = (req, res, next) => {
+exports.showHome = (req, res, next) => {
 	try {
 		renderView(res, "inicio", ok, { username: req.session.username } );
 	}

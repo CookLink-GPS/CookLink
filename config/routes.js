@@ -23,7 +23,7 @@ const Routes = {
 		searchAll: "/buscar",
 		search: "/buscar/:filter"
 	},
-	inicioRoutes: {
+	homeRoutes: {
 		default: "/inicio",
 		show: "/"
 	},
