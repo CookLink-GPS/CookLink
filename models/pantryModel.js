@@ -175,7 +175,28 @@ const Pantry = {
 			console.error("[Model pantry] Error al buscar en la despensa:", error);
 			return false;
 		}
+	},
+	/**
+		 * Resta cantidad de un ingrediente de la despensa del usuario
+		 *
+		 * @param {Number} userId - ID del usuario
+		 * @param {Number} ingredientId - ID del ingrediente
+		 * @param {Number} cantidad - Cantidad a restar
+		 * @returns {Promise<void>}
+		 */
+	async decreaseQuantity(userId, ingredientId, cantidad) {
+		try {
+			await db.query(
+				"UPDATE despensa SET cantidad = cantidad - ? WHERE id_usuario = ? AND id_ingrediente = ?",
+				[ cantidad, userId, ingredientId ]
+			);
+		}
+		catch (error) {
+			throw new Error(`Error al restar ${cantidad} del ingrediente ${ingredientId} para el usuario ${userId}`);
+		}
 	}
+
 };
 
 module.exports = Pantry;
+
