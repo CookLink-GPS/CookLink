@@ -35,7 +35,7 @@ exports.login = async (req, res) => {
 		if (err.message.toLowerCase().includes("contraseña")) mensajeError.password = err.message;
 		if (Object.keys(mensajeError).length === 0) mensajeError.general = "Las credenciales de acceso son incorrectas";
 
-		renderView(res, "login", badRequest, { mensajeError, formData: req.body });
+		renderView(res, "login", err.status, { mensajeError, formData: req.body });
 	}
 };
 
@@ -98,7 +98,7 @@ exports.register = async (req, res) => {
 		if (err.message.toLowerCase().includes("confirmar")) mensajeError.confirm_password = err.message;
 		if (Object.keys(mensajeError).length === 0) mensajeError.general = err.message;
 
-		renderView(res, "registro", badRequest, { mensajeError, formData: req.body });
+		renderView(res, "registro", err.status, { mensajeError, formData: req.body });
 	}
 };
 

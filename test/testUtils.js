@@ -131,11 +131,13 @@ const testtingSession = async () => {
 	await db.query("DELETE FROM usuarios");
 	const password = await bcrypt.hash("12345678", saltRounds);
 
-	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
+	await db.query("INSERT INTO usuarios (id, username, password) VALUES (?, ?, ?)", [
+		1,
 		"user1",
 		password
 	]);
-	await db.query("INSERT INTO usuarios (username, password) VALUES (?, ?)", [
+	await db.query("INSERT INTO usuarios (id, username, password) VALUES (?, ?, ?)", [
+		2,
 		"user2",
 		password
 	]);

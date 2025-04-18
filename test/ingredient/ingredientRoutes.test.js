@@ -31,7 +31,8 @@ describe("Rutas ingrediente", () => {
 			await UserService.login(usuario);
 			const ingrediente = {
 				nombre: "Tomate",
-				tipoUnidad: "kg"
+				tipoUnidad: "kg",
+				cantidad: 10
 			};
 
 			const res = await fetch(route, {
