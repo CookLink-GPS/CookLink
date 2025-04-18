@@ -39,7 +39,7 @@ const IngredientService = {
 				existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
 
 				if (existsInPantry) {
-					await Pantry.updateItem(userId, ingredientId, cantidad);
+					await Pantry.updateIngredientQuantity(userId, ingredientId, cantidad);
 					action = "updated";
 					return {
 						action,

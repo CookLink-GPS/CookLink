@@ -1,10 +1,7 @@
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
 	"use strict";
-
-	// Fetch all the forms we want to apply custom Bootstrap validation styles to
 	const forms = document.querySelectorAll(".needs-validation");
 
-	// Loop over them and prevent submission
 	Array.from(forms).forEach(form => {
 		form.addEventListener("submit", event => {
 			if (!form.checkValidity()) {
@@ -17,8 +14,16 @@
 	});
 
 
-	document.addEventListener("DOMContentLoaded", () => {
-		const modal = new bootstrap.Modal(document.getElementById("exitoModal"));
-		modal.show();
-	});
-})();
+	// Mostrar el modal personalizado
+	const modalElement = document.getElementById("exitoModal");
+	if (modalElement) {
+		// Mostrar el modal cambiando su propiedad 'display' a 'block'
+		modalElement.style.display = "block";
+
+		// Opcionalmente, puedes agregar un evento de clic fuera del modal para cerrarlo
+		modalElement.addEventListener("click", event => {
+			if (event.target === modalElement) modalElement.style.display = "none";
+
+		});
+	}
+});

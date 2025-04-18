@@ -14,7 +14,7 @@ const { validationResult } = require("express-validator");
  */
 exports.toIngredient = (req, res, next) => {
 	try {
-		renderView(res, "ingredientes", ok);
+		renderView(res, "ingredientes", ok, { formData: {} });
 	}
 	catch (err) {
 		next(err);
