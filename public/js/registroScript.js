@@ -1,10 +1,7 @@
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
 	"use strict";
-
-	// Fetch all the forms we want to apply custom Bootstrap validation styles to
 	const forms = document.querySelectorAll(".needs-validation");
 
-	// Loop over them and prevent submission
 	Array.from(forms).forEach(form => {
 		form.addEventListener("submit", event => {
 			if (!form.checkValidity()) {
@@ -15,4 +12,16 @@
 			form.classList.add("was-validated");
 		}, false);
 	});
-})();
+
+
+	// Mostrar el modal personalizado
+	const modalElement = document.getElementById("exitoModal");
+	if (modalElement) {
+		modalElement.style.display = "block";
+
+		modalElement.addEventListener("click", event => {
+			if (event.target === modalElement) modalElement.style.display = "none";
+
+		});
+	}
+});

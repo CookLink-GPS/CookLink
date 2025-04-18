@@ -23,16 +23,20 @@ exports.getAllUsers = async (req, res, next) => {
 exports.login = async (req, res) => {
 	const { username, password } = req.body;
 
- 	try {
- 		const user = await UserService.login({ username, password });
- 		req.session.user = { ...user };
+	try {
+		const user = await UserService.login({ username, password });
+		req.session.user = { ...user };
 
 		res.redirect("/inicio");
- 	}
- 	catch (error) {
- 		console.error(error.message);
- 		renderView(res, "login", error.status || badRequest, { mensajeError: "Las Credenciales de acceso son incorrectas" });
-	};
+	}
+	catch (err) {
+		const mensajeError = {};
+		if (err.message.toLowerCase().includes("usuario")) mensajeError.username = err.message;
+		if (err.message.toLowerCase().includes("contraseña")) mensajeError.password = err.message;
+		if (Object.keys(mensajeError).length === 0) mensajeError.general = "Las credenciales de acceso son incorrectas";
+
+		renderView(res, "login", badRequest, { mensajeError, formData: req.body });
+	}
 };
 
 /**
@@ -69,16 +73,32 @@ exports.toLogin = (req, res, next) => {
  */
 exports.register = async (req, res) => {
 	const errors = validationResult(req);
-	if (!errors.isEmpty()) return renderView(res, "registro", badRequest, { mensajeError: errors.array() });
+	if (!errors.isEmpty()) {
+		const mensajeError = {};
+		errors.array().forEach(err => {
+			if (err.msg.toLowerCase().includes("nombre")) mensajeError.nombre = err.msg;
+			if (err.msg.toLowerCase().includes("contraseña")) mensajeError.password = err.msg;
+			if (err.msg.toLowerCase().includes("confirmar")) mensajeError.confirm_password = err.msg;
+		});
+
+		if (Object.keys(mensajeError).length === 0) mensajeError.general = "Hay errores en el formulario.";
+
+		return renderView(res, "registro", badRequest, { mensajeError, formData: req.body });
+	}
 
 
 	try {
 		await UserService.register(req.body);
-		renderView(res, "login", ok, { mensajeExito: "Usuario registrado correctamente." });
+		renderView(res, "registro", ok, { mensajeExito: "Usuario registrado correctamente.", formData: {} });
 	}
 	catch (err) {
-		console.error("Error al crear usuario:", err.message);
-		renderView(res, "registro", err.status, { mensajeError: [ err.message ] });
+		const mensajeError = {};
+		if (err.message.toLowerCase().includes("nombre")) mensajeError.nombre = err.message;
+		if (err.message.toLowerCase().includes("contraseña")) mensajeError.password = err.message;
+		if (err.message.toLowerCase().includes("confirmar")) mensajeError.confirm_password = err.message;
+		if (Object.keys(mensajeError).length === 0) mensajeError.general = err.message;
+
+		renderView(res, "registro", badRequest, { mensajeError, formData: req.body });
 	}
 };
 
