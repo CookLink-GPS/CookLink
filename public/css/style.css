@@ -203,3 +203,21 @@ h1 {
 .exitoModal .exitoModal-backdrop {
     background-color: rgba(140, 74, 61, 0.8);
 }
+@media (max-width: 576px) {
+    .input-group {
+        margin-bottom: 15px;
+    }
+}
+
+#clearSearch {
+	background-color: white ;
+	opacity: 1;
+}
+
+#clearSearch:disabled {
+	background-color: white ;
+	opacity: 1 ;
+	cursor: default;
+}
+
+
