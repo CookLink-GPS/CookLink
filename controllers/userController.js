@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
  		const user = await UserService.login({ username, password });
  		req.session.user = { ...user };
 
- 		renderView(res, "inicio", ok, { usuario: req.session.username });
+		res.redirect("/inicio");
  	}
  	catch (error) {
  		console.error(error.message);
