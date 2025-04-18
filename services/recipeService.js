@@ -128,14 +128,16 @@ const RecipeService = {
 		}
 	},
 	/**
-	 * Mira que ingredientes tiene el usuario y cuales le faltan
+	 * Cocinar receta
 	 *
-	 * @param {Number} userId - ID del usuario
-	 * @param {Number} recipeId - ID de la receta
-	 * @returns {Promise<{ suficientes: RecipeIngredient[], faltantes: Object[] }>}
+	 * @param {Object} params
+	 * @param {Number} params.userId - ID del usuario
+	 * @param {Number} params.recipeId - ID de la receta
+	 * @returns {Promise<Object>} - Resultado del intento de cocina
 	 */
-	async checkRecipeRequirements(userId, recipeId) {
-		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o receta", badRequest);
+	async cookRecipe({ userId, recipeId }) {
+		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o de la receta", badRequest);
+
 
 		try {
 			const pantry = await Pantry.getPantryFromUser(userId);
@@ -145,40 +147,23 @@ const RecipeService = {
 			const faltantes = [];
 			const suficientes = [];
 
-			for (const { id, nombre, unidades, tipoUnidad } of ingredientes) {
+			for (const { id, nombre, unidades } of ingredientes) {
 				const disponibles = pantryMap.get(id) || 0;
 
-				if (disponibles >= unidades) suficientes.push({ id, nombre, unidades, tipoUnidad });
-					 else faltantes.push({
+				if (disponibles >= unidades) suficientes.push({ id, nombre, unidades });
+				 else faltantes.push({
 					id,
 					nombre,
-					unidadesNecesarias: unidades - disponibles,
-					tipoUnidad
+					unidadesNecesarias: unidades - disponibles
 				});
 
 			}
 
-			return { suficientes, faltantes };
-		}
-		catch (error) {
-			throw new AppError("Error al comprobar los ingredientes", internalServerError);
-		}
-	},
-
-	/**
-		 * Cocina una receta restando ingredientes de la despensa
-		 *
-		 * @param {Number} userId - ID del usuario
-		 * @param {Number} recipeId - ID de la receta
-		 * @returns {Promise<Object>} - Ingredientes usados o error si faltan
-		 */
-	async cookRecipe({ userId, recipeId }) {
-		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o de la receta", badRequest);
-
-		try {
-			const { suficientes, faltantes } = await this.checkRecipeRequirements(userId, recipeId);
-
-			if (faltantes.length > 0) throw new AppError("No tienes todos los ingredientes necesarios para cocinar", badRequest);
+			if (faltantes.length > 0) return {
+				success: false,
+				message: "Faltan ingredientes para cocinar la receta",
+				faltantes
+			};
 
 
 			for (const { id, unidades } of suficientes) await Pantry.decreaseQuantity(userId, id, unidades);
