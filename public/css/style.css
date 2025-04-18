@@ -82,12 +82,12 @@ h1 {
 }
 
 .navbar {
-    background-color: #8C4A3D !important;
+    background-color: rgb(123, 63, 50) !important;
     color: white !important;
 }
 
 .footer {
-    background-color: #8C4A3D;
+    background-color: rgb(123, 63, 50);
     color: #EBD4C3;
     text-align: center;
     padding: 20px;
