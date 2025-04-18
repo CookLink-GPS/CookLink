@@ -53,7 +53,21 @@ exports.addIngredient = async (req, res) => {
 
 	}
 	catch (err) {
-		renderView(res, "ingredientes", badRequest, { mensajeError: err.message, formData: {} });
+		const mensajeError = {};
+
+		if (err.message.toLowerCase().includes("nombre")) mensajeError.nombre = err.message;
+
+		if (err.message.toLowerCase().includes("unidad")) mensajeError.tipoUnidad = err.message;
+
+		if (err.message.toLowerCase().includes("cantidad")) mensajeError.cantidad = err.message;
+
+		if (Object.keys(mensajeError).length === 0) mensajeError.general = err.message;
+
+
+		renderView(res, "ingredientes", badRequest, {
+			mensajeError,
+			formData: req.body
+		});
 	}
 };
 

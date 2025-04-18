@@ -15,4 +15,10 @@
 			form.classList.add("was-validated");
 		}, false);
 	});
+
+
+	document.addEventListener("DOMContentLoaded", () => {
+		const modal = new bootstrap.Modal(document.getElementById("exitoModal"));
+		modal.show();
+	});
 })();
