@@ -20,10 +20,10 @@ describe("Rutas de recetas", () => {
 		await deleteRecipes();
 	  });
 
-	const baseRoute = `http://${baseUrl}:${port}/recipes/`;
+	const baseRoute = `http://${baseUrl}:${port}/recetas/`;
 
 	describe("Obtener recetas recomendadas", () => {
-		const route = `${baseRoute}recommended`;
+		const route = `${baseRoute}recomendaciones`;
 
 		it("Redirige correctamente", async () => { // TODO obtener lista recetas y comprobar que son iguales
 			const res = await fetch(route);

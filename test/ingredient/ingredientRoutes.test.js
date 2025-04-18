@@ -8,7 +8,7 @@ const UserService = require("../../services/userService"); // Asegúrate de que 
 
 
 describe("Rutas ingrediente", () => {
-	const baseRoute = `http://${baseUrl}:${port}/ingredients`;
+	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
 	before(testtingSession);
 	beforeEach(async () => {
 		await deleteIngredients();
@@ -22,7 +22,7 @@ describe("Rutas ingrediente", () => {
 	});
 
 	describe("Agregar ingrediente", () => {
-		const route = `${baseRoute}/add`;
+		const route = `${baseRoute}/anyadir`;
 
 		// CL_003_01: Añadir un nuevo ingrediente correctamente
 		it("Debe agregar un nuevo ingrediente correctamente a la despensa cuando se introduce un nombre, unidad y cantidad válidos", async () => {

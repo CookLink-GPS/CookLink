@@ -10,7 +10,7 @@ const { badRequest, ok, conflict } = require("../../config/httpcodes");
 describe("Rutas de usuario", () => {
 	before(deleteUsers);
 	afterEach(deleteUsers);
-	const baseRoute = `http://${baseUrl}:${port}/users/`;
+	const baseRoute = `http://${baseUrl}:${port}/usuarios/`;
 	describe("Registro", () => {
 		const route = `${baseRoute}/registro`;
 

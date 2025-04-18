@@ -5,7 +5,7 @@ const { insertIngredients, insertDummy, insertPantry, deleteIngredients, deleteU
 const db = require("../../config/database");
 
 describe("Rutas despensa", () => {
-	const baseRoute = `http://${baseUrl}:${port}/pantry`;
+	const baseRoute = `http://${baseUrl}:${port}/despensa`;
 
 	 /**
          * Prueba para verificar que la solicitud GET a la ruta de la despensa
@@ -50,7 +50,7 @@ describe("Rutas despensa", () => {
 
 
 		it("Debe devolver todos los ingredientes si no introduce nada", async () => {
-			const { ingredientes: appIngredients } = await fetch(`${baseRoute}/search`).then(res => res.json());
+			const { ingredientes: appIngredients } = await fetch(`${baseRoute}/buscar`).then(res => res.json());
 
 			let f = appIngredients.length !== ingredients.length;
 
@@ -66,7 +66,7 @@ describe("Rutas despensa", () => {
 
 
 		it("Debe devolver los ingredientes coincidentes", async () => {
-			const { ingredientes: appIngredients } = await fetch(`${baseRoute}/search/hari`).then(res => res.json());
+			const { ingredientes: appIngredients } = await fetch(`${baseRoute}/buscar/hari`).then(res => res.json());
 
 
 			const filteredIngredients = ingredients.filter(([ nombre ]) => nombre.startsWith("har"));

@@ -20,7 +20,7 @@ describe("Modelo usuario", () => {
 			let good = true;
 
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = false;
@@ -35,11 +35,11 @@ describe("Modelo usuario", () => {
 				password: "12345678"
 			};
 
-			await User.registro(usuario);
+			await User.register(usuario);
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -53,7 +53,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -67,7 +67,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -84,7 +84,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -101,7 +101,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -118,7 +118,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -135,7 +135,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -152,7 +152,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -169,7 +169,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
