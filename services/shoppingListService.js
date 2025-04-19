@@ -3,14 +3,12 @@ const Ingredient = require("../models/ingredientModel");
 const AppError = require("../utils/AppError");
 const { badRequest, internalServerError } = require("../config/httpcodes");
 
-const ALLOWED_UNITS = [ "kg", "g", "l", "ml", "unidad", "cucharada", "cucharadita" ];
-
 const ShoppingListService = {
 	/**
    * Añade un ingrediente manualmente.
-   * Valida CL_011_02 → CL_011_06.
+   * Valida los CA desde CL_011_02 hasta CL_011_06.
    */
-	async addIngredient(userId, name, quantity, unit) {
+	async addIngredient(userId, name, quantity, unit, validUnits) {
 		// CL_011_03: todos los campos
 		if (!userId || !name || quantity === null || !unit) throw new AppError("Hay que rellenar todos los campos.", badRequest);
 
@@ -19,7 +17,7 @@ const ShoppingListService = {
 		if (isNaN(q) || q <= 0) throw new AppError("La cantidad introducida no es válida.", badRequest);
 
 		// CL_011_05: unidad válida
-		if (!ALLOWED_UNITS.includes(unit)) throw new AppError("La unidad de medida no es válida.", badRequest);
+		if (!validUnits.includes(unit)) throw new AppError("La tipo de unidad no es valido.", badRequest);
 
 		try {
 			// Debe existir en tabla ingredientes

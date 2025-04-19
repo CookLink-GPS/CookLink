@@ -6,7 +6,7 @@ const { shoppingListRoutes } = require("../config/routes");
 // Formulario
 router.get(shoppingListRoutes.add, ShoppingListController.showAddForm);
 
-// Para ecibir datos para los CA
+// Para ecribir datos para los CA
 router.post(shoppingListRoutes.add, ShoppingListController.addIngredient);
 
 module.exports = router;

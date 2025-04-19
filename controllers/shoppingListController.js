@@ -1,3 +1,4 @@
+const UNITS = require("../config/units");
 const ShoppingListService = require("../services/shoppingListService");
 const { ok, badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
@@ -7,7 +8,7 @@ const { shoppingListRoutes } = require("../config/routes");
 const ShoppingListController = {
 	/** Muestra el formulario */
 	showAddForm(req, res) {
-		renderView(res, "shoppingListAdd", ok, { units: [ "kg", "g", "l", "ml", "unidad", "cucharada", "cucharadita" ] });
+		renderView(res, "shoppingListAdd", ok, { units: UNITS });
 	},
 
 	/** Procesa el POST de añadir ingrediente */
@@ -15,7 +16,7 @@ const ShoppingListController = {
 		try {
 			const userId = req.session.user.id;
 			const { nombre, cantidad, unidad } = req.body;
-			await ShoppingListService.addIngredient(userId, nombre, cantidad, unidad);
+			await ShoppingListService.addIngredient(userId, nombre, cantidad, unidad, UNITS);
 			res.redirect(shoppingListRoutes.default);
 		}
 		catch (err) {
@@ -23,7 +24,7 @@ const ShoppingListController = {
 			if (err instanceof AppError) return renderView(res, "shoppingListAdd", err.status, {
 				error: err.message,
 				old: req.body,
-				units: [ "kg", "g", "l", "ml", "unidad", "cucharada", "cucharadita" ]
+				units: UNITS
 			});
 
 			// Otros errores
