@@ -17,7 +17,7 @@ const ShoppingListService = {
 		if (isNaN(q) || q <= 0) throw new AppError("La cantidad introducida no es válida.", badRequest);
 
 		// CL_011_05: unidad válida
-		if (!validUnits.includes(unit)) throw new AppError("La tipo de unidad no es valido.", badRequest);
+		if (!validUnits.includes(unit)) throw new AppError("El tipo de unidad no es valido.", badRequest);
 
 		try {
 			// Debe existir en tabla ingredientes
