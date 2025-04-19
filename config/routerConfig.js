@@ -4,11 +4,10 @@ const recipeRouter = require("../routes/recipeRoutes");
 const ingredientRouter = require("../routes/ingredientRoutes");
 const homeRouter = require("../routes/homeRoutes");
 const pantryRouter = require("../routes/pantryRoutes");
+const shoppingListRouter = require("../routes/shoppingListRoutes");
 const { notFound } = require("./httpcodes");
 const { authMiddleware } = require("../middlewares/authMiddleware");
-const { userRoutes, recipeRoutes, pantryRoutes, homeRoutes, indexRoutes, ingredientRoutes } = require("./routes");
-const shoppingListRouter = require("../routes/shoppingListRoutes");
-const { shoppingListRoutes } = require("./routes");
+const { userRoutes, recipeRoutes, pantryRoutes, homeRoutes, indexRoutes, ingredientRoutes, shoppingListRoutes } = require("./routes");
 
 /**
  * Configura las rutas de la aplicación y el manejo de errores 404.
