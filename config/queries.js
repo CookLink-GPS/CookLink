@@ -39,3 +39,21 @@ module.exports.ingredientQueries = {
 };
 
 module.exports.containsQueries = { getFromRecipe: "SELECT i.id, i.nombre, c.unidades, i.tipoUnidad FROM contiene c JOIN ingredientes i ON i.id = id_ingrediente WHERE c.id_receta = ?;" };
+
+module.exports.shoppingListQueries = {
+	findItem: `
+	  SELECT id_lista_compra, cantidad
+	  FROM lista_compra
+	  WHERE id_usuario = ? AND id_ingrediente = ?
+	`,
+	addItem: `
+	  INSERT INTO lista_compra
+		(id_usuario, id_ingrediente, cantidad, unidad_medida)
+	  VALUES (?, ?, ?, ?)
+	`,
+	updateQuantity: `
+	  UPDATE lista_compra
+	  SET cantidad = ?
+	  WHERE id_lista_compra = ?
+	`
+};
