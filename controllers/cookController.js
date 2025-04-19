@@ -1,16 +1,35 @@
 const { ok, badRequest } = require("../config/httpcodes");
-const cookService = require("../services/cookService");
+// Const cookService = require("../services/cookService");
+const { renderView } = require("../middlewares/viewHelper");
+const recipeService = require("../services/recipeService");
+const recipeModel = require("../models/recipeModel");
 
 exports.cookRecipe = async (req, res) => {
 	const userId = req.session.user.id;
 	const recipeId = req.params.id;
 
 	try {
-		const result = await cookService.cookRecipe({ userId, recipeId });
+		const result = await recipeService.cookRecipe({ userId, recipeId });
+		const recipe = await recipeModel.getRecipeById(recipeId);
+		console.log("Resultado de cocinar receta:", result);
+		req.session.recipeData = result.recipe || null;
 
-		res.status(ok).json(result); // Devuelve los ingredientes usados o los que faltan
+		if (result.success) renderView(res, "recipe-info", ok, {
+			recipe,
+			usados: result.usados,
+			mensajeExito: result.message
+		});
+		else renderView(res, "recipe-info", ok, {
+			recipe,
+			faltantes: result.faltantes,
+			mensajeError: result.message
+		});
+
 	}
 	catch (error) {
-		res.status(badRequest).json({ error: error.message });
+		console.error("Error al intentar cocinar la receta:", error);
+		req.session.recipeData = null;
+		res.redirect(`/recetas/recomendadas?mensajeError=Hubo un error al intentar cocinar la receta.`);
 	}
+
 };
