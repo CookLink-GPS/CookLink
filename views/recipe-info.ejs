@@ -59,7 +59,7 @@
                                             </ul>
                                             </p>
                                             <!-- <a href="#" class="btn btn-custom btn-primary">Cocinar</a> -->
-                                            <div class="d-flex justify-content-between">
+                                            <<<<<<< HEAD <div class="d-flex justify-content-between">
                                                 <form id="cookForm" action="/recetas/cocinar/<%= recipe.id %>"
                                                     method="POST">
                                                     <button type="submit" class="btn btn-custom btn-primary">
@@ -69,73 +69,79 @@
 
                                                 <a href="/recetas/recomendadas"
                                                     class="btn btn-custom btn-primary">Volver</a>
-                                            </div>
-                                            <% } %>
-                                                <!-- Modal de éxito -->
-                                                <% if (mensajeExito) { %>
-                                                    <div class="exitoModal" id="exitoModal">
-                                                        <div class="exitoModal-content">
-                                                            <div class="exitoModal-header bg-success text-white">
-                                                                <h5 class="exitoModal-title" id="exitoModalLabel">
-                                                                    ¡Éxito!</h5>
-                                                            </div>
-                                                            <div class="exitoModal-body">
-                                                                <%= mensajeExito %>
-                                                                    <% if (usados.length> 0) { %>
-                                                                        <p><strong>Ingredientes usados:</strong></p>
-                                                                        <ul>
-                                                                            <% usados.forEach(f=> { %>
-                                                                                <li>
-                                                                                    <%= f.nombre %>: <%= f.unidades %>
-                                                                                </li>
-                                                                                <% }) %>
-                                                                        </ul>
-                                                                        <% } %>
-                                                            </div>
-                                                            <div class="exitoModal-footer">
-                                                                <a href="/recetas/recomendaciones"
-                                                                    class="btn btn-success">Aceptar</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <% } %>
-
-                                                        <!-- Modal de error -->
-                                                        <% if (mensajeError) { %>
-                                                            <div class="errorModal" id="errorModal">
-                                                                <div class="errorModal-content">
-                                                                    <div class="errorModal-header bg-danger text-white">
-                                                                        <h5 class="errorModal-title"
-                                                                            id="errorModalLabel">¡Error!</h5>
-                                                                    </div>
-                                                                    <div class="errorModal-body">
-                                                                        <%= mensajeError %>
-                                                                            <% if (faltantes.length> 0) { %>
-                                                                                <p><strong>Ingredientes
-                                                                                        faltantes:</strong></p>
-                                                                                <ul>
-                                                                                    <% faltantes.forEach(f=> { %>
-                                                                                        <li>
-                                                                                            <%= f.nombre %>: <%=
-                                                                                                    f.unidadesNecesarias
-                                                                                                    %>
-                                                                                        </li>
-                                                                                        <% }) %>
-                                                                                </ul>
-                                                                                <% } %>
-                                                                    </div>
-                                                                    <div class="errorModal-footer">
-                                                                        <a href="/recetas/recomendaciones"
-                                                                            class="btn btn-danger">Aceptar</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <% } %>
-
                     </div>
+                    =======
+                    <form id="cookForm" action="/recetas/cocinar/<%= recipe.id %>" method="POST">
+                        <button type="submit" class="btn btn-custom btn-primary">
+                            Cocinar
+                        </button>
+                    </form>
+
+                    <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
+                    >>>>>>> 364eb6d (vista creada)
+                    <% } %>
+                        <!-- Modal de éxito -->
+                        <% if (mensajeExito) { %>
+                            <div class="exitoModal" id="exitoModal">
+                                <div class="exitoModal-content">
+                                    <div class="exitoModal-header bg-success text-white">
+                                        <h5 class="exitoModal-title" id="exitoModalLabel">
+                                            ¡Éxito!</h5>
+                                    </div>
+                                    <div class="exitoModal-body">
+                                        <%= mensajeExito %>
+                                            <% if (usados.length> 0) { %>
+                                                <p><strong>Ingredientes usados:</strong></p>
+                                                <ul>
+                                                    <% usados.forEach(f=> { %>
+                                                        <li>
+                                                            <%= f.nombre %>: <%= f.unidades %>
+                                                        </li>
+                                                        <% }) %>
+                                                </ul>
+                                                <% } %>
+                                    </div>
+                                    <div class="exitoModal-footer">
+                                        <a href="/recetas/recomendaciones" class="btn btn-success">Aceptar</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+
+                                <!-- Modal de error -->
+                                <% if (mensajeError) { %>
+                                    <div class="errorModal" id="errorModal">
+                                        <div class="errorModal-content">
+                                            <div class="errorModal-header bg-danger text-white">
+                                                <h5 class="errorModal-title" id="errorModalLabel">¡Error!</h5>
+                                            </div>
+                                            <div class="errorModal-body">
+                                                <%= mensajeError %>
+                                                    <<<<<<< HEAD <% if (faltantes.length> 0) { %>
+                                                        <p><strong>Ingredientes
+                                                                faltantes:</strong></p>
+                                                        <ul>
+                                                            <% faltantes.forEach(f=> { %>
+                                                                <li>
+                                                                    <%= f.nombre %>: <%= f.unidadesNecesarias %>
+                                                                </li>
+                                                                <% }) %>
+                                                        </ul>
+                                                        <% } %>
+                                                            =======
+                                                            >>>>>>> 364eb6d (vista creada)
+                                            </div>
+                                            <div class="errorModal-footer">
+                                                <a href="/recetas/recomendaciones" class="btn btn-danger">Aceptar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <div>
