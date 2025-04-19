@@ -59,15 +59,17 @@
                                             </ul>
                                             </p>
                                             <!-- <a href="#" class="btn btn-custom btn-primary">Cocinar</a> -->
-                                            <form id="cookForm" action="/recetas/cocinar/<%= recipe.id %>"
-                                                method="POST">
-                                                <button type="submit" class="btn btn-custom btn-primary">
-                                                    Cocinar
-                                                </button>
-                                            </form>
+                                            <div class="d-flex justify-content-between">
+                                                <form id="cookForm" action="/recetas/cocinar/<%= recipe.id %>"
+                                                    method="POST">
+                                                    <button type="submit" class="btn btn-custom btn-primary">
+                                                        Cocinar
+                                                    </button>
+                                                </form>
 
-                                            <a href="/recetas/recomendadas"
-                                                class="btn btn-custom btn-primary">Volver</a>
+                                                <a href="/recetas/recomendadas"
+                                                    class="btn btn-custom btn-primary">Volver</a>
+                                            </div>
                                             <% } %>
                                                 <!-- Modal de éxito -->
                                                 <% if (mensajeExito) { %>
@@ -79,6 +81,16 @@
                                                             </div>
                                                             <div class="exitoModal-body">
                                                                 <%= mensajeExito %>
+                                                                    <% if (usados.length> 0) { %>
+                                                                        <p><strong>Ingredientes usados:</strong></p>
+                                                                        <ul>
+                                                                            <% usados.forEach(f=> { %>
+                                                                                <li>
+                                                                                    <%= f.nombre %>: <%= f.unidades %>
+                                                                                </li>
+                                                                                <% }) %>
+                                                                        </ul>
+                                                                        <% } %>
                                                             </div>
                                                             <div class="exitoModal-footer">
                                                                 <a href="/recetas/recomendaciones"
@@ -98,6 +110,19 @@
                                                                     </div>
                                                                     <div class="errorModal-body">
                                                                         <%= mensajeError %>
+                                                                            <% if (faltantes.length> 0) { %>
+                                                                                <p><strong>Ingredientes
+                                                                                        faltantes:</strong></p>
+                                                                                <ul>
+                                                                                    <% faltantes.forEach(f=> { %>
+                                                                                        <li>
+                                                                                            <%= f.nombre %>: <%=
+                                                                                                    f.unidadesNecesarias
+                                                                                                    %>
+                                                                                        </li>
+                                                                                        <% }) %>
+                                                                                </ul>
+                                                                                <% } %>
                                                                     </div>
                                                                     <div class="errorModal-footer">
                                                                         <a href="/recetas/recomendaciones"
