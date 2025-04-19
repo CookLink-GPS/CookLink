@@ -30,8 +30,10 @@ exports.cookRecipe = async (req, res) => {
 	}
 	catch (error) {
 		console.error("Error al intentar cocinar la receta:", error);
-		req.session.recipeData = null;
-		res.redirect(`/recetas/recomendadas?mensajeError=Hubo un error al intentar cocinar la receta.`);
+		renderView(res, "recipe-info", badRequest, {
+			recipe: null,
+			mensajeError: "Error al intentar cocinar la receta."
+		});
 	}
 
 };
