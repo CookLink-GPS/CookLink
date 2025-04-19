@@ -24,14 +24,16 @@
             <div class="mb-3 d-flex justify-content-center">
                 <div class="input-group" style="width: 80%;">
                     <span class="input-group-text bg-white border-0" style="z-index: 10;">
-                        <i class="bi bi-search text-dark fs-4"></i> 
+                        <i class="bi bi-search text-dark fs-4"></i>
                     </span>
-                    <input type="text" id="searchInput" class="form-control border-0" placeholder="Buscar ingrediente...">
-                    <button id="clearSearch" type="button" class="btn btn-link border-0 bg-white" style="z-index: 10;" disabled>
+                    <input type="text" id="searchInput" class="form-control border-0"
+                        placeholder="Buscar ingrediente...">
+                    <button id="clearSearch" type="button" class="btn btn-link border-0 bg-white" style="z-index: 10;"
+                        disabled>
                         <i id="clearIcon" class="bi bi-x-lg text-dark"></i>
                     </button>
                     <a href="/ingredientes" class="btn btn-custom d-flex align-items-center gap-1">
-                        <i class="bi bi-plus fs-3"></i> 
+                        <i class="bi bi-plus fs-3"></i>
                         Añadir ingrediente
                     </a>
                 </div>
@@ -46,18 +48,22 @@
                             <th>Remover</th>
                         </tr>
                     </thead>
-                    
+
                     <tbody id="ingredientList">
-                        <% if (ingredients && ingredients.length > 0) { %>
-                            <% ingredients.forEach(ingredient => { %>
+                        <% if (ingredients && ingredients.length> 0) { %>
+                            <% ingredients.forEach(ingredient=> { %>
                                 <tr>
-                                    <td><%= ingredient.nombre %></td>
-                                    <td class="ingredient-quantity"><%= ingredient.cantidad %></td>
-                                    <td class="tipo-unidad"><%= ingredient.tipoUnidad %></td>
                                     <td>
-                                        <button 
-                                            class="btn btn-danger btn-sm" 
-                                            data-bs-toggle="modal" 
+                                        <%= ingredient.nombre %>
+                                    </td>
+                                    <td class="ingredient-quantity">
+                                        <%= parseFloat(ingredient.cantidad).toFixed(3) %>
+                                    </td>
+                                    <td class="tipo-unidad">
+                                        <%= ingredient.tipoUnidad %>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#confirmDeleteModal"
                                             data-despensa-id="<%= ingredient.idDespensa %>"
                                             data-ingredient-quantity="<%= ingredient.cantidad %>">
@@ -65,12 +71,13 @@
                                         </button>
                                     </td>
                                 </tr>
-                            <% }) %>
-                        <% } else { %>
-                            <tr id="noIngredientsRow">
-                                <td colspan="4" class="text-center text-muted">No tienes ingredientes en la despensa</td>
-                            </tr>
-                        <% } %>
+                                <% }) %>
+                                    <% } else { %>
+                                        <tr id="noIngredientsRow">
+                                            <td colspan="4" class="text-center text-muted">No tienes ingredientes en la
+                                                despensa</td>
+                                        </tr>
+                                        <% } %>
                     </tbody>
                 </table>
             </div>

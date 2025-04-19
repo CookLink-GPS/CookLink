@@ -27,18 +27,22 @@ const IngredientService = {
 			// 1. Buscar el ingrediente en la tabla ingrediente
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
 
+			if (cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
+			if (cantidad > 100000) throw new AppError("La cantidad no puede ser mayor que 100.000", badRequest);
+
 			let ingredientId;
 			let existsInPantry;
 			let action = "";
 			if (ingredienteExistente) {
 				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}`, badRequest);
-
 				ingredientId = ingredienteExistente.id;
 
 				// 3. Verificar si ya está en la despensa
 				existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
 
 				if (existsInPantry) {
+					const cantidadActual = existsInPantry.cantidad;
+					cantidad = cantidadActual + cantidad;
 					await Pantry.updateIngredientQuantity(userId, ingredientId, cantidad);
 					action = "updated";
 					return {
