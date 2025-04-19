@@ -59,17 +59,64 @@
                                             </ul>
                                             </p>
                                             <!-- <a href="#" class="btn btn-custom btn-primary">Cocinar</a> -->
+                                            <form id="cookForm" action="/recetas/cocinar/<%= recipe.id %>"
+                                                method="POST">
+                                                <button type="submit" class="btn btn-custom btn-primary">
+                                                    Cocinar
+                                                </button>
+                                            </form>
+
                                             <a href="/recetas/recomendadas"
                                                 class="btn btn-custom btn-primary">Volver</a>
                                             <% } %>
+                                                <!-- Modal de éxito -->
+                                                <% if (mensajeExito) { %>
+                                                    <div class="exitoModal" id="exitoModal">
+                                                        <div class="exitoModal-content">
+                                                            <div class="exitoModal-header bg-success text-white">
+                                                                <h5 class="exitoModal-title" id="exitoModalLabel">
+                                                                    ¡Éxito!</h5>
+                                                            </div>
+                                                            <div class="exitoModal-body">
+                                                                <%= mensajeExito %>
+                                                            </div>
+                                                            <div class="exitoModal-footer">
+                                                                <a href="/recetas/recomendaciones"
+                                                                    class="btn btn-success">Aceptar</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+
+                                                        <!-- Modal de error -->
+                                                        <% if (mensajeError) { %>
+                                                            <div class="errorModal" id="errorModal">
+                                                                <div class="errorModal-content">
+                                                                    <div class="errorModal-header bg-danger text-white">
+                                                                        <h5 class="errorModal-title"
+                                                                            id="errorModalLabel">¡Error!</h5>
+                                                                    </div>
+                                                                    <div class="errorModal-body">
+                                                                        <%= mensajeError %>
+                                                                    </div>
+                                                                    <div class="errorModal-footer">
+                                                                        <a href="/recetas/recomendaciones"
+                                                                            class="btn btn-danger">Aceptar</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <% } %>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div>
         <%- include("fragments/footer") %>
     </div>
+    <script src="/js/recipeScript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
