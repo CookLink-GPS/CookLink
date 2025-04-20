@@ -10,10 +10,5 @@ if (exitoModal) {
 
 // Mostrar el modal de error
 const errorModal = document.getElementById("errorModal");
-if (errorModal) {
-	errorModal.style.display = "block";
-	errorModal.addEventListener("click", event => {
-		if (event.target === errorModal) errorModal.style.display = "none";
+if (errorModal) errorModal.style.display = "block";
 
-	});
-}
