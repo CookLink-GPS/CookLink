@@ -104,8 +104,7 @@ const deleteContains = async () => {
  * @returns {Promise<void>}
  */
 const insertContains = async contains => {
-	const insertPromises = contains.map(contain =>
-		db.query("INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES (?, ?, ?)", contain));
+	const insertPromises = contains.map(contain => db.query("INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES (?, ?, ?)", contain));
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
 };
 
