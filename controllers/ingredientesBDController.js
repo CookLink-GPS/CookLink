@@ -2,15 +2,14 @@ const { ok } = require("../config/httpcodes");
 const { renderView } = require("../middlewares/viewHelper");
 const ingredientesBDService = require("../services/ingredientesBDService");
 
-const userId = 1;
 
 /**
  *
  * @param {HTTPRequest} req
  * @param {HTTPResponse} res
- */
+*/
 exports.getIngredientsFromDatabase = async (req, res) => {
-	// Const userId = req.session?.user?.id;
+	const userId = req.session.user.id;
 
 	const ingredients = await ingredientesBDService.getAllIngredientsFromDatabase();
 	const pantryIngredients = await ingredientesBDService.getIngredientsFromUserPantry(userId);
@@ -25,8 +24,8 @@ exports.getIngredientsFromDatabase = async (req, res) => {
  * @param {HTTPResponse} res
  */
 exports.postIngredienteIntoPantry = async (req, res) => {
+	const userId = req.session.user.id;
 	try {
-		// Const userId = req.session?.user?.id;
 		const { ingredientes, cantidad } = req.body;
 
 		const renderWithError = async mensajeError => {
