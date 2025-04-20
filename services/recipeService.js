@@ -173,17 +173,18 @@ const RecipeService = {
 	 * @param {Number} params.recipeId - ID de la receta
 	 * @returns {Promise<Object>} - Ingredientes usados o error si faltan
 	 */
-	async cookRecipe({ userId, recipeId }) {
+	async cookRecipe({ userId, recipeId, suficientes }) {
 		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o de la receta", badRequest);
 
 		try {
-			const { suficientes, faltantes } = await this.checkRecipeRequirements(userId, recipeId);
-
-			if (faltantes.length > 0) throw new AppError("No tienes todos los ingredientes necesarios para cocinar", badRequest);
-
-
-			for (const { id, unidades } of suficientes) await Pantry.decreaseQuantity(userId, id, unidades);
-
+			for (const { id, unidades } of suficientes) {
+				const existe = await Pantry.getPantryItemByIngredient(userId, id);
+				if (existe) {
+					const cantidad = parseFloat(existe.cantidad - unidades);
+					if (cantidad <= 0) await Pantry.deleteIngredient(userId, id);
+					else await Pantry.decreaseQuantity(userId, id, unidades);
+				}
+			}
 
 			return {
 				success: true,
@@ -204,13 +205,19 @@ const RecipeService = {
 	 * @param {Number} recipeId - ID de la receta
 	 * @returns {Promise<Object>} - Ingredientes añadidos a la lista
 	 */
-	async addMissingToShoppingList(userId, recipeId) {
+	async addMissingToShoppingList(userId, recipeId, faltantes) {
 		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o receta", badRequest);
 
 		try {
-			const { faltantes } = await this.checkRecipeRequirements(userId, recipeId);
 
-			for (const { id, unidadesNecesarias, tipoUnidad } of faltantes) await ShoppingList.addItem(userId, id, unidadesNecesarias, tipoUnidad);
+			for (const { id, unidadesNecesarias, tipoUnidad } of faltantes) {
+				const existe = await ShoppingList.getItem(userId, id);
+				if (existe) {
+					const cantidad = parseFloat(existe.cantidad + unidadesNecesarias);
+					await ShoppingList.updateQuantity( existe.id_lista_compra, cantidad);
+				}
+				else await ShoppingList.addItem(userId, id, unidadesNecesarias, tipoUnidad);
+			}
 
 
 			return {
