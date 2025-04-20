@@ -93,6 +93,7 @@ const Pantry = {
      * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
 	 *                                          name and unit type of each ingredient in the pantry.
      */
+	// eslint-disable-next-line no-warning-comments
 	async getIngredientsDetails(userId) { // CHECK ESTA FUNC ES LA DE LA NUEVA QUERY
 		try {
 			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
