@@ -17,246 +17,229 @@
     <div class="container content py-5">
         <div class="row w-100 justify-content-center">
             <div class="col-12 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <% if (!recipe) { %>
-                            <div class="alert alert-danger" role="alert">
-                                No se encontró la receta.
-                            </div>
-                            <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
-                            <% } else if (!recipe.nombre) { %>
-                                <div class="alert alert-danger" role="alert">
-                                    La receta no tiene nombre.
-                                </div>
-                                <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
+                <% if (!recipe) { %>
+                    <% mensajeError="No se encontró la receta." ; %>
+                        <% } else if (!recipe.nombre) { %>
+                            <% mensajeError="La receta no tiene nombre." ; %>
                                 <% } else if (!recipe.descripcion) { %>
-                                    <div class="alert alert-danger" role="alert">
-                                        La receta no tiene descripción.
-                                    </div>
-                                    <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
-                                    <% } else if (!recipe.ingredients || recipe.ingredients.length===0) { %>
-                                        <div class="alert alert-danger" role="alert">
-                                            La receta no tiene ingredientes.
-                                        </div>
-                                        <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
-                                        <% } else { %>
-                                            <h4 class="card-title">
-                                                <%= recipe.nombre %>
-                                            </h4>
-                                            <p class="card-text">
-                                                <strong>Descripción:</strong>
-                                                <%= recipe.descripcion %>
-                                            </p>
-                                            <p class="card-text">
-                                            <h5>Ingredientes:</h5>
-                                            <ul>
-                                                <% recipe.ingredients.forEach(ingrediente=> { %>
-                                                    <li>
-                                                        <%= ingrediente.ingrediente %>: <%= ingrediente.unidades %>
-                                                                <%= ingrediente.tipoUnidad %>
-                                                    </li>
-                                                    <% }) %>
-                                            </ul>
-                                            </p>
-                                            <% if (!cocinar) { %>
-                                                <div class="alert alert-warning d-flex align-items-center" role="alert">
-                                                    <div>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                            fill="currentColor" class="bi bi-exclamation-triangle"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
-                                                            <path
-                                                                d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
-                                                        </svg>
-                                                        Te faltan ingredientes para esta receta.
-                                                        <ul>
-                                                            <% faltantes.forEach(ingrediente=> { %>
-                                                                <li>
-                                                                    <%= ingrediente.nombre %>: <%=
-                                                                            ingrediente.unidadesNecesarias %>
-                                                                </li>
-                                                                <% }) %>
-                                                        </ul>
-                                                        <p>¿Quieres añadirlos a la lista de compra?</p>
-                                                    </div>
-                                                </div>
-                                                <% } %>
-                                                    <!-- <a href="#" class="btn btn-custom btn-primary">Cocinar</a> -->
-                                                    <div class="d-flex justify-content-between">
-                                                        <% if (cocinar) { %>
-                                                            <form id="cookForm"
-                                                                action="/recetas/cocinar/<%= recipe.id %>"
-                                                                method="POST">
-                                                                <% usados.forEach(ingrediente=> { %>
-                                                                    <input type="hidden" name="usados[]"
-                                                                        value="<%= JSON.stringify(ingrediente) %>">
-                                                                    <% }); %>
+                                    <% mensajeError="La receta no tiene descripción." ; %>
+                                        <% } else if (!recipe.ingredients || recipe.ingredients.length===0) { %>
+                                            <% mensajeError="La receta no tiene ingredientes." ; %>
+                                                <% } else { %>
+                                                    <div class="card">
+                                                        <div class="card-body">
 
-                                                                        <button type="submit"
-                                                                            class="btn btn-custom btn-primary">
-                                                                            Cocinar
-                                                                        </button>
-                                                            </form>
-                                                            <% } else { %>
-                                                                <form id="cookForm"
-                                                                    action="/recetas/anyadir-a-lista/<%= recipe.id %>"
-                                                                    method="POST">
-                                                                    <% faltantes.forEach(ingrediente=> { %>
-                                                                        <input type="hidden" name="faltantes[]"
-                                                                            value="<%= JSON.stringify(ingrediente) %>">
-                                                                        <% }); %>
-
-                                                                            <button type="submit"
-                                                                                class="btn btn-custom btn-primary">
-                                                                                Añadir a la lista de compra
-                                                                            </button>
-                                                                </form>
+                                                            <h4 class="card-title">
+                                                                <%= recipe.nombre %>
+                                                            </h4>
+                                                            <p class="card-text">
+                                                                <strong>Descripción:</strong>
+                                                                <%= recipe.descripcion %>
+                                                            </p>
+                                                            <p class="card-text">
+                                                            <h5>Ingredientes:</h5>
+                                                            <ul>
+                                                                <% recipe.ingredients.forEach(ingrediente=>
+                                                                    { %>
+                                                                    <li>
+                                                                        <%= ingrediente.ingrediente %>: <%=
+                                                                                ingrediente.unidades %>
+                                                                                <%= ingrediente.tipoUnidad %>
+                                                                    </li>
+                                                                    <% }) %>
+                                                            </ul>
+                                                            </p>
+                                                            <% if (!cocinar) { %>
+                                                                <div class="alert alert-warning d-flex align-items-center"
+                                                                    role="alert">
+                                                                    <div>
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            width="16" height="16" fill="currentColor"
+                                                                            class="bi bi-exclamation-triangle"
+                                                                            viewBox="0 0 16 16">
+                                                                            <path
+                                                                                d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
+                                                                            <path
+                                                                                d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                                                                        </svg>
+                                                                        Te faltan
+                                                                        ingredientes
+                                                                        para esta
+                                                                        receta.
+                                                                        <ul>
+                                                                            <% faltantes.forEach(ingrediente=>
+                                                                                { %>
+                                                                                <li>
+                                                                                    <%= ingrediente.nombre %>
+                                                                                        :
+                                                                                        <%= ingrediente.unidadesNecesarias
+                                                                                            %>
+                                                                                </li>
+                                                                                <% }) %>
+                                                                        </ul>
+                                                                        <p>¿Quieres
+                                                                            añadirlos
+                                                                            a la
+                                                                            lista de
+                                                                            compra?
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
                                                                 <% } %>
+                                                                    <!-- <a href="#" class="btn btn-custom btn-primary">Cocinar</a> -->
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <% if (cocinar) { %>
+                                                                            <form id="cookForm"
+                                                                                action="/recetas/cocinar/<%= recipe.id %>"
+                                                                                method="POST">
+                                                                                <% usados.forEach(ingrediente=>
+                                                                                    {
+                                                                                    %>
+                                                                                    <input type="hidden" name="usados[]"
+                                                                                        value="<%= JSON.stringify(ingrediente) %>">
+                                                                                    <% }); %>
 
-                                                                    <a href="/recetas/recomendadas"
-                                                                        class="btn btn-custom btn-primary">Volver</a>
+                                                                                        <button type="submit"
+                                                                                            class="btn btn-custom btn-primary">
+                                                                                            Cocinar
+                                                                                        </button>
+                                                                            </form>
+                                                                            <% } else { %>
+                                                                                <form id="cookForm"
+                                                                                    action="/recetas/anyadir-a-lista/<%= recipe.id %>"
+                                                                                    method="POST">
+                                                                                    <% faltantes.forEach(ingrediente=>
+                                                                                        {
+                                                                                        %>
+                                                                                        <input type="hidden"
+                                                                                            name="faltantes[]"
+                                                                                            value="<%= JSON.stringify(ingrediente) %>">
+                                                                                        <% }); %>
+
+                                                                                            <button type="submit"
+                                                                                                class="btn btn-custom btn-primary">
+                                                                                                Añadir
+                                                                                                a
+                                                                                                la
+                                                                                                lista
+                                                                                                de
+                                                                                                compra
+                                                                                            </button>
+                                                                                </form>
+                                                                                <% } %>
+
+                                                                                    <a href="/recetas/recomendadas"
+                                                                                        class="btn btn-custom btn-primary">Volver</a>
+                                                                    </div>
+
+                                                                    <!-- Modal de éxito -->
+                                                                    <% if (mensajeExito) { %>
+                                                                        <div class="exitoModal" id="exitoModal">
+                                                                            <div class="exitoModal-content">
+                                                                                <div
+                                                                                    class="exitoModal-header bg-success text-white">
+                                                                                    <h5 class="exitoModal-title"
+                                                                                        id="exitoModalLabel">
+                                                                                        ¡Éxito!
+                                                                                    </h5>
+                                                                                </div>
+                                                                                <div class="exitoModal-body">
+                                                                                    <%= mensajeExito %>
+                                                                                        <% if(cocinar) { %>
+                                                                                            <% if (usados.length>
+                                                                                                0)
+                                                                                                {
+                                                                                                %>
+                                                                                                <p><strong>Ingredientes
+                                                                                                        usados:</strong>
+                                                                                                </p>
+                                                                                                <ul>
+                                                                                                    <%
+                                                                                                        usados.forEach(f=>
+                                                                                                        {
+                                                                                                        %>
+                                                                                                        <li>
+                                                                                                            <%= f.nombre
+                                                                                                                %>
+                                                                                                                :
+                                                                                                                <%= f.unidades
+                                                                                                                    %>
+                                                                                                        </li>
+                                                                                                        <% }) %>
+                                                                                                </ul>
+                                                                                                <% } %>
+                                                                                                    <% } else { %>
+                                                                                                        <p><strong>Ingredientes
+                                                                                                                faltantes:</strong>
+                                                                                                        </p>
+                                                                                                        <ul>
+                                                                                                            <%
+                                                                                                                faltantes.forEach(f=>
+                                                                                                                {
+                                                                                                                %>
+                                                                                                                <li>
+                                                                                                                    <%= f.nombre
+                                                                                                                        %>
+                                                                                                                        :
+                                                                                                                        <%= f.unidadesNecesarias
+                                                                                                                            %>
+                                                                                                                </li>
+                                                                                                                <% }) %>
+                                                                                                        </ul>
+                                                                                                        <% } %>
+                                                                                </div>
+                                                                                <div class="exitoModal-footer">
+                                                                                    <a href="/recetas/recomendaciones"
+                                                                                        class="btn btn-success">Aceptar</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <% } %>
+
+                                                                            <!-- Modal de error -->
+                                                                            <% if (mensajeError) { %>
+                                                                                <div class="errorModal" id="errorModal">
+                                                                                    <div class="errorModal-content">
+                                                                                        <div
+                                                                                            class="errorModal-header bg-danger text-white">
+                                                                                            <h5 class="errorModal-title"
+                                                                                                id="errorModalLabel">
+                                                                                                ¡Error!
+                                                                                            </h5>
+                                                                                        </div>
+                                                                                        <div class="errorModal-body">
+                                                                                            <%= mensajeError %>
+                                                                                        </div>
+                                                                                        <div class="errorModal-footer">
+                                                                                            <a href="/recetas/recomendaciones"
+                                                                                                class="btn btn-danger">Aceptar</a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <% } %>
+
+                                                        </div>
                                                     </div>
                                                     <% } %>
-                                                        <!-- Modal de éxito -->
-                                                        <% if (mensajeExito) { %>
-                                                            <div class="exitoModal" id="exitoModal">
-                                                                <div class="exitoModal-content">
-                                                                    <div
-                                                                        class="exitoModal-header bg-success text-white">
-                                                                        <h5 class="exitoModal-title"
-                                                                            id="exitoModalLabel">
-                                                                            ¡Éxito!</h5>
+                                                        <% if (mensajeError) { %>
+                                                            <div class="errorModal" id="errorModal">
+                                                                <div class="errorModal-content">
+                                                                    <div class="errorModal-header bg-danger text-white">
+                                                                        <h5 class="errorModal-title"
+                                                                            id="errorModalLabel">
+                                                                            ¡Error!
+                                                                        </h5>
                                                                     </div>
-                                                                    <div class="exitoModal-body">
-                                                                        <%= mensajeExito %>
-                                                                            <% if(cocinar) { %>
-                                                                                <% if (usados.length> 0) { %>
-                                                                                    <p><strong>Ingredientes
-                                                                                            usados:</strong></p>
-                                                                                    <ul>
-                                                                                        <% usados.forEach(f=> { %>
-                                                                                            <li>
-                                                                                                <%= f.nombre %>: <%=
-                                                                                                        f.unidades %>
-                                                                                            </li>
-                                                                                            <% }) %>
-                                                                                    </ul>
-                                                                                    <% } %>
-                                                                                        <% } else { %>
-                                                                                            <p><strong>Ingredientes
-                                                                                                    faltantes:</strong>
-                                                                                            </p>
-                                                                                            <ul>
-                                                                                                <% faltantes.forEach(f=>
-                                                                                                    { %>
-                                                                                                    <li>
-                                                                                                        <%= f.nombre %>:
-                                                                                                            <%= f.unidadesNecesarias
-                                                                                                                %>
-                                                                                                    </li>
-                                                                                                    <% }) %>
-                                                                                            </ul>
-                                                                                            <% } %>
+                                                                    <div class="errorModal-body">
+                                                                        <%= mensajeError %>
                                                                     </div>
-                                                                    <div class="exitoModal-footer">
+                                                                    <div class="errorModal-footer">
                                                                         <a href="/recetas/recomendaciones"
-                                                                            class="btn btn-success">Aceptar</a>
+                                                                            class="btn btn-danger">Aceptar</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <% } %>
-
-                                                                <!-- Modal de error -->
-                                                                <% if (mensajeError) { %>
-                                                                    <div class="errorModal" id="errorModal">
-                                                                        <div class="errorModal-content">
-                                                                            <div
-                                                                                class="errorModal-header bg-danger text-white">
-                                                                                <h5 class="errorModal-title"
-                                                                                    id="errorModalLabel">¡Error!</h5>
-                                                                            </div>
-                                                                            <div class="errorModal-body">
-                                                                                <%= mensajeError %>
-                                                                            </div>
-                                                                            <div class="errorModal-footer">
-                                                                                <a href="/recetas/recomendaciones"
-                                                                                    class="btn btn-danger">Aceptar</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <% } %>
-
-                    </div>
-                    =======
-                    <form id="cookForm" action="/recetas/cocinar/<%= recipe.id %>" method="POST">
-                        <button type="submit" class="btn btn-custom btn-primary">
-                            Cocinar
-                        </button>
-                    </form>
-
-                    <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
-                    >>>>>>> 364eb6d (vista creada)
-                    <% } %>
-                        <!-- Modal de éxito -->
-                        <% if (mensajeExito) { %>
-                            <div class="exitoModal" id="exitoModal">
-                                <div class="exitoModal-content">
-                                    <div class="exitoModal-header bg-success text-white">
-                                        <h5 class="exitoModal-title" id="exitoModalLabel">
-                                            ¡Éxito!</h5>
-                                    </div>
-                                    <div class="exitoModal-body">
-                                        <%= mensajeExito %>
-                                            <% if (usados.length> 0) { %>
-                                                <p><strong>Ingredientes usados:</strong></p>
-                                                <ul>
-                                                    <% usados.forEach(f=> { %>
-                                                        <li>
-                                                            <%= f.nombre %>: <%= f.unidades %>
-                                                        </li>
-                                                        <% }) %>
-                                                </ul>
-                                                <% } %>
-                                    </div>
-                                    <div class="exitoModal-footer">
-                                        <a href="/recetas/recomendaciones" class="btn btn-success">Aceptar</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <% } %>
-
-                                <!-- Modal de error -->
-                                <% if (mensajeError) { %>
-                                    <div class="errorModal" id="errorModal">
-                                        <div class="errorModal-content">
-                                            <div class="errorModal-header bg-danger text-white">
-                                                <h5 class="errorModal-title" id="errorModalLabel">¡Error!</h5>
-                                            </div>
-                                            <div class="errorModal-body">
-                                                <%= mensajeError %>
-                                                    <<<<<<< HEAD <% if (faltantes.length> 0) { %>
-                                                        <p><strong>Ingredientes
-                                                                faltantes:</strong></p>
-                                                        <ul>
-                                                            <% faltantes.forEach(f=> { %>
-                                                                <li>
-                                                                    <%= f.nombre %>: <%= f.unidadesNecesarias %>
-                                                                </li>
-                                                                <% }) %>
-                                                        </ul>
-                                                        <% } %>
-                                                            =======
-                                                            >>>>>>> 364eb6d (vista creada)
-                                            </div>
-                                            <div class="errorModal-footer">
-                                                <a href="/recetas/recomendaciones" class="btn btn-danger">Aceptar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <% } %>
-
-                </div>
             </div>
         </div>
     </div>
