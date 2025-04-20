@@ -1,5 +1,6 @@
 DROP TABLE contiene;
 DROP TABLE despensa;
+DROP TABLE lista_compra;
 DROP TABLE usuarios;
 DROP TABLE ingredientes;
 DROP TABLE recetas;
@@ -40,11 +41,13 @@ CREATE TABLE despensa (
   CONSTRAINT fk_usuario_despensa FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE listacompra (
-  id_lista int PRIMARY KEY AUTO_INCREMENT,
-  id_usuario int NOT NULL,
-  id_ingrediente int NOT NULL,
-  cantidad INT float NOT NULL CHECK (cantidad > 0),
-  CONSTRAINT fk_usuario_compra FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
-  CONSTRAINT fk_ingrediente_compra FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE lista_compra (
+    id_lista_compra INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_ingrediente INT NOT NULL,
+    cantidad DECIMAL(10,2) NOT NULL CHECK (cantidad > 0),
+    unidad_medida VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+    FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id),
+    UNIQUE (id_usuario, id_ingrediente)
+);

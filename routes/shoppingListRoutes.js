@@ -1,0 +1,12 @@
+const express = require("express");
+const router = express.Router();
+const ShoppingListController = require("../controllers/shoppingListController");
+const { shoppingListRoutes } = require("../config/routes");
+
+// Formulario
+router.get(shoppingListRoutes.add, ShoppingListController.showAddForm);
+
+// Para ecribir datos para los CA
+router.post(shoppingListRoutes.add, ShoppingListController.addIngredient);
+
+module.exports = router;

@@ -33,7 +33,11 @@ const Routes = {
 		default: "/",
 		index: "/",
 		favicon: "/favicon.ico"
-	}
+	},
+	shoppingListRoutes: {
+		default: "/lista-compra",
+		add: "/anyadir"
+	  }
 };
 
 module.exports = Routes;

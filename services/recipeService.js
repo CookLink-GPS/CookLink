@@ -128,11 +128,11 @@ const RecipeService = {
 		}
 	},
 	/**
-	 * Mira que ingredientes tiene el usuario y cuales le faltan
+	 * Mira qué ingredientes tienes y cuáles te faltan para la receta
 	 *
 	 * @param {Number} userId - ID del usuario
 	 * @param {Number} recipeId - ID de la receta
-	 * @returns {Promise<{ suficientes: RecipeIngredient[], faltantes: Object[] }>}
+	 * @returns {Promise<{suficientes: Object[], faltantes: Object[]}>}
 	 */
 	async checkRecipeRequirements(userId, recipeId) {
 		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o receta", badRequest);
@@ -149,7 +149,7 @@ const RecipeService = {
 				const disponibles = pantryMap.get(id) || 0;
 
 				if (disponibles >= unidades) suficientes.push({ id, nombre, unidades, tipoUnidad });
-					 else faltantes.push({
+				 else faltantes.push({
 					id,
 					nombre,
 					unidadesNecesarias: unidades - disponibles,
@@ -166,12 +166,13 @@ const RecipeService = {
 	},
 
 	/**
-		 * Cocina una receta restando ingredientes de la despensa
-		 *
-		 * @param {Number} userId - ID del usuario
-		 * @param {Number} recipeId - ID de la receta
-		 * @returns {Promise<Object>} - Ingredientes usados o error si faltan
-		 */
+	 * Cocina una receta restando ingredientes de la despensa
+	 *
+	 * @param {Object} params
+	 * @param {Number} params.userId - ID del usuario
+	 * @param {Number} params.recipeId - ID de la receta
+	 * @returns {Promise<Object>} - Ingredientes usados o error si faltan
+	 */
 	async cookRecipe({ userId, recipeId }) {
 		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o de la receta", badRequest);
 
@@ -195,13 +196,14 @@ const RecipeService = {
 			throw new AppError("Error interno al cocinar la receta", internalServerError);
 		}
 	},
+
 	/**
-		 * Añade a la lista de la compra los ingredientes que faltan
-		 *
-		 * @param {Number} userId - ID del usuario
-		 * @param {Number} recipeId - ID de la receta
-		 * @returns {Promise<Object>} - Ingredientes añadidos a la lista
-		 */
+	 * Añade a la lista de la compra los ingredientes que faltan
+	 *
+	 * @param {Number} userId - ID del usuario
+	 * @param {Number} recipeId - ID de la receta
+	 * @returns {Promise<Object>} - Ingredientes añadidos a la lista
+	 */
 	async addMissingToShoppingList(userId, recipeId) {
 		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o receta", badRequest);
 
@@ -222,6 +224,7 @@ const RecipeService = {
 			throw new AppError("Error al añadir ingredientes a la lista de la compra", internalServerError);
 		}
 	}
+
 
 };
 
