@@ -10,7 +10,7 @@ const ingredientesBDService = {
 
 	addIngredientIntoPantry: async (userId, ingredientId, cantidad) => {
 		try {
-			await PantryModel.addIngrediente(userId, ingredientId, cantidad);
+			await PantryModel.addIngredient(userId, ingredientId, cantidad);
 		}
 		catch (error) {
 			console.error("Error al añadir ingrediente en la despensa:", error);
@@ -19,7 +19,7 @@ const ingredientesBDService = {
 	},
 	getIngredientsFromUserPantry: async userId => {
 		try {
-			const userIngredients = await PantryModel.getPantryFromUserWithNameIngredient(userId);
+			const userIngredients = await PantryModel.getPantryFromUser(userId);
 			return userIngredients;
 		}
 		catch (error) {

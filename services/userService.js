@@ -1,6 +1,7 @@
-const { badRequest, conflict, internalServerError } = require("../config/httpcodes");
+const { badRequest, conflict, internalServerError, unauthorized } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
+const { compare } = require("bcrypt");
 
 /**
  *
@@ -26,7 +27,6 @@ const UserService = {
 			return User.getAll();
 		}
 		catch (error) {
-			console.error(error);
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
 	},
@@ -37,10 +37,10 @@ const UserService = {
 	 * @returns {Promise<Boolean>} True si se ha registrado correctamente
 	 * @throws {AppError} - Lanza un error si los datos son inválidos o el usuario ya existe
 	 */
-	registroUser: async user => {
+	register: async user => {
 		if (!user.username) throw new AppError("Falta el nombre de usuario", badRequest);
 		if (!user.password) throw new AppError("Falta la contraseña", badRequest);
-		if (!user.confirm_password) throw new AppError("Falta la contraseña", badRequest);
+		if (!user.confirm_password) throw new AppError("Falta confirmar la contraseña", badRequest);
 		if (/[\s\t]/.test(user.username)) throw new AppError("El nombre de usuario tiene espacios", badRequest);
 		if (/[\s\t]/.test(user.password)) throw new AppError("La contraseña tiene espacios", badRequest);
 
@@ -48,7 +48,7 @@ const UserService = {
 		const usuarioExistente = await User.getByUsername(user.username);
 		if (usuarioExistente) throw new AppError("El usuario ya existe", conflict);
 
-		const res = await User.registro(user);
+		const res = await User.register(user);
 
 		if (!res) throw new AppError("Error interno del servidor", internalServerError);
 
@@ -69,9 +69,21 @@ const UserService = {
 			return true;
 		}
 		catch (error) {
-			console.error(error);
 			throw new AppError("Error interno del servidor", internalServerError);
 		}
+	},
+	login: async ({ username, password }) => {
+		if (!username) throw new AppError("Falta el nombre de usuario", badRequest);
+		if (!password) throw new AppError("Falta la contraseña", badRequest);
+
+		const user = await User.getByUsername(username);
+
+		if (!user) throw new AppError("Usuario no encontrado", unauthorized);
+
+		const correctPassword = await compare(password, user.password);
+
+		if (!correctPassword) throw new AppError("Contraseña incorrecta", unauthorized);
+		return user;
 	}
 };
 

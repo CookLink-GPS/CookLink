@@ -2,13 +2,14 @@
 const db = require("../config/database");
 const bcrypt = require("bcrypt");
 const { saltRounds } = require("../config/config");
-const { userQuerys } = require("../config/queries");
+const { userQueries } = require("../config/queries");
 
 /**
  *
  * @typedef User
  * @property {Number} id
  * @property {String} username
+ * @property {String} password
  *
  */
 const User = {
@@ -21,11 +22,10 @@ const User = {
 	 */
 	getAll: async () => {
 		try {
-			const res = await db.query(userQuerys.getAllUsers);
+			const res = await db.query(userQueries.getAllUsers);
 			return res.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.log(error);
 			throw Error("Error al obtener todos los usuarios");
 		}
 	},
@@ -38,12 +38,11 @@ const User = {
 	 */
 	getByUsername: async username => {
 		try {
-			const [ res ] = await db.query(userQuerys.getByUsername, [ username ]);
+			const [ res ] = await db.query(userQueries.getByUsername, [ username ]);
 
 			return res && { ...res }; // Si no hay resultado, devuelve null
 		}
 		catch (error) {
-			console.log(error);
 			throw new Error("Error al buscar usuario");
 		}
 	},
@@ -54,18 +53,17 @@ const User = {
 	 * @returns {Promise<Boolean>} Devuelve el resultado de la inserción en la base de datos.
 	 * @throws {Error} Lanza un error si ocurre un problema en la inserción.
 	 */
-	registro: async ({ username, password }) => {
+	register: async ({ username, password }) => {
 		try {
 			if (username === "" || /[\s\t]/.test(username)) throw new Error();
 			if (password === "" || /[\s\t]/.test(password)) throw new Error();
 
 			const hashedPassword = await bcrypt.hash(password, saltRounds);
-			const res = await db.query(userQuerys.insertUser, [ username, hashedPassword ]);
+			const res = await db.query(userQueries.insertUser, [ username, hashedPassword ]);
 
 			return !!res.affectedRows; // Si es 0, devuelve false, true en otro caso
 		}
 		catch (error) {
-			console.log(error.message);
 			throw new Error("registro Error al crear el usuario");
 		}
 	},
@@ -78,11 +76,10 @@ const User = {
 	 */
 	delete: async id => {
 		try {
-			const res = await db.query(userQuerys.deleteUser, [ id ]);
+			const res = await db.query(userQueries.deleteUser, [ id ]);
 			return !!res.affectedRows;
 		}
 		catch (error) {
-			console.log(error);
 			throw new Error("Error al eliminar el usuario");
 		}
 	}

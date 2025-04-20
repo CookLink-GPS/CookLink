@@ -1,5 +1,5 @@
 const db = require("../config/database");
-const nombreTabla = "ingredientes";
+const { ingredientQueries } = require("../config/queries");
 
 /**
  *
@@ -10,62 +10,83 @@ const nombreTabla = "ingredientes";
  *
  */
 const Ingredient = {
-
-	add: ingredient => {
+	/**
+	 * Busca un ingrediente por nombre
+	 *
+	 * @param {string} name - Nombre del ingrediente a buscar
+	 * @returns {Promise<Object|null>} - Objeto con id y nombre o null si no existe
+	 */
+	async findByName(name) {
 		try {
-			const sql = `INSERT INTO ${nombreTabla} (nombre) VALUES (?)`;
-			return db.query(sql, [ ingredient ]);
+			const [ result ] = await db.query(
+				ingredientQueries.findByName,
+				[ name ]
+			);
+
+			return result;
 		}
 		catch (error) {
-			console.log(error);
-			throw Error("Error al agregar ingrediente");
+			throw Error("Error al encontrar ingrediente");
 		}
-
 	},
 
 	/**
-	 * Description placeholder
+	 * Returns all ingredients
 	 *
 	 * @async
 	 * @returns {Promise<Ingredient[]>}
 	 */
 	async getAllIngredients() {
 		try {
-			const sql = `SELECT * FROM ${nombreTabla}`;
-			const res = await db.query(sql);
-
+			const res = await db.query(ingredientQueries.getAll);
 			return res.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.log(error);
 			throw Error("Error al obtener los ingredientes");
 		}
 	},
 
+	/**
+	 * Elimina un ingrediente por su ID
+	 *
+	 * @param {number} id - ID del ingrediente a eliminar
+	 * @returns {Promise<boolean>} - True si se eliminó correctamente, false si no se encontró
+	 */
 	async getIngredient(id) {
 		try {
-			const sql = `SELECT * FROM ${nombreTabla} WHERE id = ?`;
-			const [ rows ] = await db.promise().query(sql, [ id ]);
-			let ingredient;
-			// eslint-disable-next-line no-magic-numbers
-			if (rows.length > 0) ingredient = rows[0];
+			const [ ingredient ] = await db.query(ingredientQueries.getById, [ id ]);
 			return ingredient;
 		}
 		catch (error) {
-			console.log("Error");
+			console.error(error.message);
 			throw new Error(`Error obteniendo el ingrediente ${id}`);
+		}
+	},
+
+	/**
+     * Crea un nuevo ingrediente (versión corregida)
+	 *
+     * @param {string} name - Nombre del ingrediente
+     * @param {string} unit - Tipo de unidad
+     * @returns {Promise<{id: number, nombre: string, tipoUnidad: string}>}
+     */
+	async create(name, unit) {
+		try {
+			if (!name || name.trim() === "") throw new Error("El nombre del ingrediente no puede estar vacío");
+			if (!unit || unit.trim() === "") throw new Error("El tipo de unidad no puede estar vacío");
+
+			const result = await db.query(
+				ingredientQueries.create,
+				[ name, unit ]
+			);
+			return result.insertId;
+		}
+		catch (error) {
+			console.error(error.message);
+			if (error.code === "ER_DUP_ENTRY") throw new Error("Este ingrediente ya existe");
+			throw new Error("Error al crear ingrediente");
 		}
 	}
 };
 
 module.exports = Ingredient;
-
-// Tabla base datos
-// CREATE TABLE ingredientes (
-//     Id INT AUTO_INCREMENT PRIMARY KEY,       -- Identificador único
-//     Nombre VARCHAR(100) NOT NULL,            -- Nombre del ingrediente
-//     Calorias INT NOT NULL,                   -- Cantidad de calorías
-//     Categoria VARCHAR(50) NOT NULL,          -- Categoría del ingrediente
-//     TipoUnidad VARCHAR(50) NOT NULL          -- Tipo de unidad (gramos, ml, etc.)
-// );
-

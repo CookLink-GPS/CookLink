@@ -1,15 +1,15 @@
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const { deleteUsers } = require("./testUtils");
-const User = require("../models/userModel");
+const { deleteUsers } = require("../testUtils");
+const User = require("../../models/userModel");
 
 describe("Modelo usuario", () => {
-	before(deleteUsers); // Antes de todos los test
-	beforeEach(deleteUsers); // Despues de cada test
+
 
 	describe("Registro", () => {
-
+		before(deleteUsers); // Antes de todos los test
+		beforeEach(deleteUsers); // Despues de cada test
 
 		it("Debe registrar correctamente un usuario nuevo con contraseña correcta", async () => {
 			const usuario = {
@@ -20,7 +20,7 @@ describe("Modelo usuario", () => {
 			let good = true;
 
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = false;
@@ -35,14 +35,13 @@ describe("Modelo usuario", () => {
 				password: "12345678"
 			};
 
-			await User.registro(usuario);
+			await User.register(usuario);
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
-				console.log(err.code);
 				good = true;
 			}
 
@@ -54,7 +53,7 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
 				good = true;
@@ -68,10 +67,9 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -86,10 +84,9 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -104,10 +101,9 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -122,10 +118,9 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -140,10 +135,9 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -158,10 +152,9 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 
@@ -176,10 +169,9 @@ describe("Modelo usuario", () => {
 
 			let good = false;
 			try {
-				await User.registro(usuario);
+				await User.register(usuario);
 			}
 			catch (err) {
-				console.log(err);
 				good = true;
 			}
 

@@ -1,104 +1,125 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario</title>
+    <title>Registro de ingrediente</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css" >
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/img/Logo.ico" type="image/x-icon">
 </head>
+
 <body class="bg-light">
     <div>
         <%- include("fragments/nav") %>
     </div>
-        
-    
+
     <div class="container content py-5">
-        <% if (mensajeError) { %>
-            <div class="alert alert-danger row justify-content-center">
-                <%= mensajeError %>
-            </div>
-        <% } %>
-        
-        <% if (mensajeExito) { %>
-            <div class="alert alert-success"><%= mensajeExito %></div>
-        <% } %>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow-lg">
                     <div class="card-header text-center bg-primary text-white">
-                        <h4>Añadir Ingrediente</h4>
+                        <h4>Añadir Ingrediente a despensa</h4>
                     </div>
                     <div class="card-body">
 
-                        
-                        <form action="ingredientes/add" method="POST" class="needs-validation" novalidate>
+                        <form action="/ingredientes/anyadir" method="POST" class="needs-validation" novalidate>
                             <div class="mb-3">
-                                <label for="ingrediente" class="form-label">Ingrediente</label>
-                                <input type="text" name="ingrediente" id="ingrediente" class="form-control" placeholder="Introduce un ingrediente" required>
+                                <label for="nombre" class="form-label">Ingrediente</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control"
+                                    placeholder="Introduce un ingrediente" required
+                                    value="<%= formData?.nombre || '' %>">
                                 <div class="invalid-feedback">El ingrediente es obligatorio</div>
-                                
+                                <% if (mensajeError?.nombre) { %>
+                                    <div class="invalid-feedback d-block">
+                                        <%= mensajeError.nombre %>
+                                    </div>
+                                    <% } %>
                             </div>
-                            <div class="mb-3">
-                                <label for="calorias" class="form-label">Calorias</label>
-                                <input type="text" name="calorias" id="calorias" class="form-control" placeholder="Calorias" required>
-                                <div class="invalid-feedback">Las Calorias son obligatorias</div>
-                                
-                            </div>
-                            <div class="mb-3">
-                                <label for="categoria" class="form-label">Categoria</label>
-                                <input type="text" name="categoria" id="categoria" class="form-control" placeholder="Categoria" required>
-                                <div class="invalid-feedback">La Categoria es obligatoria</div>
-                                
-                            </div>
+
                             <div class="mb-3">
                                 <label for="tipoUnidad" class="form-label">Tipo de Unidad</label>
-                                <input type="text" name="tipoUnidad" id="tipoUnidad" class="form-control" placeholder="Tipo de unidad (gramos, ml, etc.)" required>
-                                <div class="invalid-feedback">El tipo de unidad es obligatoria</div>
-                                
+                                <select name="tipoUnidad" id="tipoUnidad" class="form-select" required>
+                                    <option value="" disabled <%=!formData?.tipoUnidad ? "selected" : "" %>>Selecciona
+                                        una unidad</option>
+                                    <option value="gramos" <%=formData?.tipoUnidad==="gramos" ? "selected" : "" %>
+                                        >Gramos (g)</option>
+                                    <option value="kilogramos" <%=formData?.tipoUnidad==="kilogramos" ? "selected" : ""
+                                        %>>Kilogramos (kg)</option>
+                                    <option value="mililitros" <%=formData?.tipoUnidad==="mililitros" ? "selected" : ""
+                                        %>>Mililitros (ml)</option>
+                                    <option value="litros" <%=formData?.tipoUnidad==="litros" ? "selected" : "" %>
+                                        >Litros (l)</option>
+                                    <option value="unidades" <%=formData?.tipoUnidad==="unidades" ? "selected" : "" %>
+                                        >Unidades (ud)</option>
+                                    <option value="cucharada" <%=formData?.tipoUnidad==="cucharada" ? "selected" : "" %>
+                                        >Cucharadas (cda)</option>
+                                    <option value="cucharadita" <%=formData?.tipoUnidad==="cucharadita" ? "selected"
+                                        : "" %>>Cucharaditas (cdta)</option>
+                                    <option value="tazas" <%=formData?.tipoUnidad==="tazas" ? "selected" : "" %>>Tazas
+                                        (tz)</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona un tipo de unidad</div>
+                                <% if (mensajeError?.tipoUnidad) { %>
+                                    <div class="invalid-feedback d-block">
+                                        <%= mensajeError.tipoUnidad %>
+                                    </div>
+                                    <% } %>
                             </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-custom">Registrarse</button>
+
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad</label>
+                                <input type="number" name="cantidad" id="cantidad" class="form-control" min="0.01"
+                                    step="0.01" required value="<%= formData?.cantidad || '' %>">
+                                <div class="invalid-feedback">La cantidad debe ser mayor que cero</div>
+                                <% if (mensajeError?.cantidad) { %>
+                                    <div class="invalid-feedback d-block">
+                                        <%= mensajeError.cantidad %>
+                                    </div>
+                                    <% } %>
                             </div>
+
+                            <% if (mensajeError?.general) { %>
+                                <div class="alert alert-danger">
+                                    <%= mensajeError.general %>
+                                </div>
+                                <% } %>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-custom">Añadir</button>
+                                    </div>
                         </form>
                     </div>
                 </div>
+                <a href="/despensa" class="btn btn-custom btn-lg m-2">Volver</a>
             </div>
         </div>
+
+        <% if (mensajeExito) { %>
+            <div class="exitoModal" id="exitoModal">
+                <div class="exitoModal-content">
+                    <div class="exitoModal-header bg-success text-green">
+                        <h5 class="exitoModal-title" id="exitoModalLabel">¡Éxito!</h5>
+                    </div>
+                    <div class="exitoModal-body">
+                        <%= mensajeExito %>
+                    </div>
+                    <div class="exitoModal-footer">
+                        <a href="/despensa" class="btn btn-success">Aceptar</a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
     </div>
 
-    
-
-    
-
-    <script>
-            (() => {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-
-            form.classList.add('was-validated')
-            }, false)
-        })
-        })()
-    </script>
-
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/ingredientsScript.js"></script>
+
     <div>
         <%- include("fragments/footer") %>
     </div>
 </body>
+
 </html>

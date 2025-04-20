@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 const db = require("../config/database");
 const { pantryQueries } = require("../config/queries");
 
@@ -7,7 +6,6 @@ const { pantryQueries } = require("../config/queries");
  * @typedef PantryIngredient
  * @property {Number} id_ingrediente
  * @property {Number} cantidad
- * @property {String} caducidad
  *
  */
 const Pantry = {
@@ -16,7 +14,7 @@ const Pantry = {
      *
      * @async
      * @param {Number} userId - User ID.
-     * @returns {Promise<PantryIngredient[]>} - Array containing the id, amount, and expiration date
+     * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
      *                                           of each ingredient in the pantry.
      */
 	async getPantryFromUser(userId) {
@@ -25,31 +23,9 @@ const Pantry = {
 			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
-			console.log("Error");
 			throw new Error(`Error fetching pantry for user ${userId}`);
 		}
 	},
-
-	/**
-     * Retrieves all ingredients with their name and unit type
-     * from a user's pantry.
-     *
-     * @async
-     * @param {Number} userId - User ID.
-     * @returns {Promise<PantryIngredient[]>} - Array containing the id, amount, expiration date,
-	 *                                          name and unit type of each ingredient in the pantry.
-     */
-	async getIngredientsDetails(userId) {
-		try {
-			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
-			return result.map(row => ({ ...row }));
-		}
-		catch (error) {
-			console.log("Error");
-			throw new Error(`Error fetching pantry for user ${userId}`);
-		}
-	},
-
 	/**
      * Deletes an ingredient from a user's pantry.
      *
@@ -64,58 +40,139 @@ const Pantry = {
 			await db.query(pantryQueries.deleteIngredient, [ userId, ingredientId ]);
 		}
 		catch (error) {
-			console.log("Error");
 			throw new Error(`Error deleting ingredient ${ingredientId} from user ${userId}'s pantry`);
 		}
 	},
-
 	/**
-     * Add an ingredient into user's pantry.
+     * Updates the quantity of an ingredient in the pantry.
      *
      * @async
-     * @param {Number} userId - User ID.
-     * @param {Number} ingredientId - Ingredient ID to add.
-     * @param {Number} cantidad - Cantidad ID to add.
+     * @param {Number} idDespensa - Pantry item ID.
+     * @param {Number} newQuantity - New quantity to set.
      * @returns {Promise<void>}
-     * @throws {Error} - If an error occurs while adding the ingredient.
+     * @throws {Error} - If an error occurs while updating the quantity.
      */
-	async addIngrediente(userId, ingredientId, cantidad) {
+	async updateIngredientQuantity(userId, ingredientId, newQuantity) {
 		try {
-			const exists = await db.query(
-				"SELECT * FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
-				[ userId, ingredientId ]
+			await db.query(
+				pantryQueries.updateIngredientQuantity,
+				[ newQuantity, userId, ingredientId ]
 			);
-
-			if (exists.length > 0) await db.query(
-				"UPDATE despensa SET cantidad = cantidad + ? WHERE id_usuario = ? AND id_ingrediente = ?",
-				[ cantidad, userId, ingredientId ]
-			);
-			else await db.query(
-				pantryQueries.addIngrediente,
-				[ userId, ingredientId, cantidad ]
-			);
-
 		}
 		catch (error) {
-			throw new Error(`Error adding ingredient ${ingredientId}, cantidad ${cantidad} into user ${userId}'s pantry`);
+			throw new Error(`Error al actualizar la cantidad del ingrediente ${ingredientId} en la despensa del usuario ${userId}`);
+		}
+	},
+	/**
+     * Retrieves a pantry item by its ID.
+     *
+     * @async
+     * @param {Number} idDespensa - Pantry item ID.
+     * @returns {Promise<Object>} - Pantry item details.
+     * @throws {Error} - If an error occurs while retrieving the item.
+     */
+	async getPantryItemById(idDespensa) {
+		try {
+			const [ result ] = await db.query(
+				pantryQueries.getPantryItemById,
+				[ idDespensa ]
+			);
+			return result;
+		}
+		catch (error) {
+			throw new Error(`Error getting pantry item ${idDespensa}`);
 		}
 	},
 
 	/**
-     * Get an user pantry with name ingredient.
+     * Retrieves all ingredients with their name and unit type
+     * from a user's pantry.
      *
      * @async
      * @param {Number} userId - User ID.
-     * @returns {Promise<PantryIngredient[]>}
-     * @throws {Error} - If an error occurs while fetching pantry for userId.
+     * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
+	 *                                          name and unit type of each ingredient in the pantry.
      */
-	async getPantryFromUserWithNameIngredient(userId) {
+	async getIngredientsDetails(userId) { // CHECK ESTA FUNC ES LA DE LA NUEVA QUERY
 		try {
-			const result = await db.query(pantryQueries.getPantryFromUserWithNameIngredient, [ userId ]);
-			return result.map(row => ({ ...row }));
+			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
+			return result.map(row => ({
+				idDespensa: row.id_despensa,
+				idIngrediente: row.id_ingrediente,
+				nombre: row.nombre_ingrediente,
+				cantidad: row.cantidad,
+				tipoUnidad: row.tipoUnidad
+			}));
 		}
 		catch (error) {
 			throw new Error(`Error fetching pantry for user ${userId}`);
+		}
+	},
+
+	/**
+     * Finds a pantry item by user and ingredient IDs
+     * @async
+     * @function getPantryItemByIngredient
+     * @memberof PantryModel
+     * @param {Number} userId - ID of the user
+     * @param {Number} ingredientId - ID of the ingredient
+     * @returns {Promise<Object|null>} Pantry item or null if not found
+     * @throws {Error} When database query fails
+     */
+	async getPantryItemByIngredient(userId, ingredientId) {
+		try {
+			const [ result ] = await db.query(
+				pantryQueries.getPantryItemByIngredient,
+				[ userId, ingredientId ]
+			);
+			return result;
+		}
+		catch (error) {
+			throw new Error(`Error getting pantry item for user ${userId} and ingredient ${ingredientId}`);
+		}
+	},
+
+	/**
+     * Adds a new ingredient to user's pantry
+     * @async
+     * @function addIngredient
+     * @memberof PantryModel
+     * @param {Number} userId - ID of the user
+     * @param {Number} ingredientId - ID of the ingredient to add
+     * @param {Number} quantity - Initial quantity
+     * @returns {Promise<void>}
+     * @throws {Error} When database query fails
+     */
+	async addIngredient(userId, ingredientId, quantity) {
+		try {
+			await db.query(
+				pantryQueries.addingredient,
+				[ userId, ingredientId, quantity ]
+			);
+		}
+		catch (error) {
+			throw new Error(`Error adding ingredient ${ingredientId} to user ${userId}'s pantry`);
+		}
+	},
+	/**
+	 * Verifica si un ingrediente ya está en la despensa
+	 *
+	 * @param {number} userId - ID del usuario
+	 * @param {number} ingredientId - ID del ingrediente
+	 * @returns {Promise<boolean>} - true si existe, false si no
+	 */
+	async findItem(userId, ingredientId) {
+		try {
+			console.log(`[Model] Recibido:`, userId, ingredientId);
+			const rows = await db.query(
+				`SELECT id_ingrediente, cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? LIMIT 1`,
+				[ userId, ingredientId ]
+			);
+			return rows.length > 0 ? rows[0] : null;
+		}
+		catch (error) {
+			console.error("[Model pantry] Error al buscar en la despensa:", error);
+			return false;
 		}
 	}
 };

@@ -19,7 +19,6 @@ export default [
 			"no-extra-bind": "warn",
 			"no-invalid-this": "error",
 			"no-loop-func": "error",
-			"no-magic-numbers": [ "error", { "ignoreArrayIndexes": true } ],
 			"no-multi-spaces": "error",
 			"no-new-wrappers": "error",
 			"no-redeclare": "error",

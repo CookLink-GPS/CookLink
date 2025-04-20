@@ -1,16 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const ingredientController = require("../controllers/ingredientController");
-// Const { check } = require("express-validator");
-// Const AppError = require("../utils/AppError");
-// Const { badRequest } = require("../config/httpcodes");
+const { ingredientRoutes } = require("../config/routes");
+const ingredientesBD = require("../controllers/ingredientesBDController");
 
+router.get(ingredientRoutes.toIngredient, ingredientController.toIngredient);
 
-router.get("/", ingredientController.toIngredient);
+router.post(ingredientRoutes.add, ingredientController.addIngredient);
 
-router.post("/add", ingredientController.addIngredient);
+router.get(ingredientRoutes.bd, ingredientesBD.getIngredientsFromDatabase);
+router.post(ingredientRoutes.ingredientesBD, ingredientesBD.postIngredienteIntoPantry);
 
-router.get("/filter/", ingredientController.filterIngredients);
-router.get("/filter/:filter", ingredientController.filterIngredients);
+// CHECK igual podemos usarlo en un futuro
+// Router.get("/filter", ingredientController.filterIngredients);
+// Router.get("/filter/:filter", ingredientController.filterIngredients);
 
 module.exports = router;
