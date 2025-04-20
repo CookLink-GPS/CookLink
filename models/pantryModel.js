@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 const db = require("../config/database");
 const { pantryQueries } = require("../config/queries");
 
@@ -89,7 +90,7 @@ const Pantry = {
 				"UPDATE despensa SET cantidad = cantidad + ? WHERE id_usuario = ? AND id_ingrediente = ?",
 				[ cantidad, userId, ingredientId ]
 			);
-			 else await db.query(
+			else await db.query(
 				pantryQueries.addIngrediente,
 				[ userId, ingredientId, cantidad ]
 			);
