@@ -18,6 +18,7 @@ const IngredientService = {
      */
 	async processIngredient({ ingrediente, cantidad, userId }) {
 		try {
+			console.log("Procesando ingrediente:", ingrediente, cantidad, userId);
 			// La cantidad es obligatoria y debe ser mayor que 0
 			if (!cantidad || cantidad < 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
 			// Validar que el nombre del ingrediente solo contenga letras
@@ -26,6 +27,7 @@ const IngredientService = {
 
 			// 1. Buscar el ingrediente en la tabla ingrediente
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
+			console.log("Ingrediente existente:", ingredienteExistente);
 
 			if (cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
 			if (cantidad > 100000) throw new AppError("La cantidad no puede ser mayor que 100.000", badRequest);
@@ -97,15 +99,6 @@ const IngredientService = {
 		return ingredients;
 	},
 
-	async addIngredientIntoPantry(userId, ingredientId, cantidad) {
-		try {
-			await Pantry.addIngredient(userId, ingredientId, cantidad);
-		}
-		catch (error) {
-			console.error("Error al añadir ingrediente en la despensa:", error);
-			throw error;
-		}
-	},
 	async getIngredientsFromUserPantry(userId) {
 		try {
 			const userIngredients = await Pantry.getPantryFromUser(userId);
@@ -113,6 +106,17 @@ const IngredientService = {
 		}
 		catch (error) {
 			console.error("Error usuario:", error);
+			throw error;
+		}
+	},
+
+	async getIngredientById(id) {
+		try {
+			const ingredient = await Ingredient.getIngredient(id);
+			return ingredient;
+		}
+		catch (error) {
+			console.error("Error al obtener el ingrediente:", error);
 			throw error;
 		}
 	}

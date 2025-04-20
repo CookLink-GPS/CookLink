@@ -22,7 +22,6 @@ const Ingredient = {
 				ingredientQueries.findByName,
 				[ name ]
 			);
-
 			return result;
 		}
 		catch (error) {
