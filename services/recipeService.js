@@ -181,19 +181,25 @@ const RecipeService = {
 		}
 	},
 	/**
-		 * Añade a la lista de la compra los ingredientes que faltan
-		 *
-		 * @param {Number} userId - ID del usuario
-		 * @param {Number} recipeId - ID de la receta
-		 * @returns {Promise<Object>} - Ingredientes añadidos a la lista
-		 */
-	async addMissingToShoppingList(userId, recipeId) {
+	 * Añade a la lista de la compra los ingredientes que faltan
+	 *
+	 * @param {Number} userId - ID del usuario
+	 * @param {Number} recipeId - ID de la receta
+	 * @returns {Promise<Object>} - Ingredientes añadidos a la lista
+	 */
+	async addMissingToShoppingList(userId, recipeId, faltantes) {
 		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o receta", badRequest);
 
 		try {
-			const { faltantes } = await this.checkRecipeRequirements(userId, recipeId);
 
-			for (const { id, unidadesNecesarias, tipoUnidad } of faltantes) await ShoppingList.addItem(userId, id, unidadesNecesarias, tipoUnidad);
+			for (const { id, unidadesNecesarias, tipoUnidad } of faltantes) {
+				const existe = await ShoppingList.getItem(userId, id);
+				if (existe) {
+					const cantidad = parseFloat(existe.cantidad + unidadesNecesarias);
+					await ShoppingList.updateQuantity( existe.id_lista_compra, cantidad);
+				}
+				else await ShoppingList.addItem(userId, id, unidadesNecesarias, tipoUnidad);
+			}
 
 
 			return {

@@ -6,25 +6,27 @@ const recipeService = require("../services/recipeService");
 exports.cookRecipe = async (req, res) => {
 	const userId = req.session.user.id;
 	const recipeId = req.params.id;
+	const usados = req.body.usados.map(ingredienteStr => {
+		try {
+			return JSON.parse(ingredienteStr);
+		}
+		catch (error) {
+			console.error("Error parsing ingredient:", error);
+			return null;
+		}
+	}).filter(ingrediente => ingrediente !== null);
 
 	try {
-		const result = await recipeService.cookRecipe({ userId, recipeId });
+		const result = await recipeService.cookRecipe({ userId, recipeId, suficientes: usados });
 		const recipe = await recipeService.getRecipeById(recipeId);
 		const ingredients = await recipeService.getIngredients(recipeId);
 		recipe.ingredients = ingredients;
-		console.log("Resultado de cocinar receta:", result);
-		console.log("Receta:", recipe);
-		req.session.recipeData = result.recipe || null;
 
-		if (result.success) renderView(res, "recipe-info", ok, {
+		renderView(res, "recipe-info", ok, {
 			recipe,
+			cocinar: true,
 			usados: result.usados,
 			mensajeExito: result.message
-		});
-		else renderView(res, "recipe-info", ok, {
-			recipe,
-			faltantes: result.faltantes,
-			mensajeError: result.message
 		});
 
 	}
@@ -36,4 +38,36 @@ exports.cookRecipe = async (req, res) => {
 		});
 	}
 
+};
+
+exports.addMissingToShoppingList = async (req, res) => {
+	const userId = req.session.user.id;
+	const recipeId = req.params.id;
+	const faltantes = req.body.faltantes.map(ingredienteStr => {
+		try {
+			return JSON.parse(ingredienteStr);
+		}
+		catch (error) {
+			console.error("Error parsing ingredient:", error);
+			return null;
+		}
+	}).filter(ingrediente => ingrediente !== null);
+
+	try {
+		const result = await recipeService.addMissingToShoppingList(userId, recipeId, faltantes);
+		const recipe = await recipeService.getRecipeById(recipeId);
+		const ingredients = await recipeService.getIngredients(recipeId);
+		recipe.ingredients = ingredients;
+		console.log("Receta:", result.faltantes);
+		renderView(res, "recipe-info", ok, {
+			recipe,
+			cocinar: false,
+			faltantes: result.faltantes,
+			mensajeExito: result.message
+		});
+	}
+	catch (error) {
+		console.error("Error al intentar añadir ingredientes a la lista de la compra:", error);
+		renderView(res, "recipe-info", badRequest, { mensajeError: "Error al intentar añadir ingredientes a la lista de la compra." });
+	}
 };

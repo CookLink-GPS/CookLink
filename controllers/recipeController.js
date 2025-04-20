@@ -1,4 +1,4 @@
-const { ok } = require("../config/httpcodes");
+const { ok, badRequest } = require("../config/httpcodes");
 const { renderView } = require("../middlewares/viewHelper");
 const recipeService = require("../services/recipeService");
 
@@ -32,8 +32,34 @@ exports.getRecommendations = async (req, res) => {
  */
 exports.getRecipeInfo = async (req, res) => {
 	const { id } = req.params;
-	const recipe = await recipeService.getRecipeById(id);
-	const listIngredients = await recipeService.getIngredients(id);
-	recipe.ingredients = listIngredients;
-	renderView(res, "recipe-info", ok, { recipe });
+	const userId = req.session.user.id;
+	try {
+		const result = await recipeService.checkRecipeRequirements( userId, id );
+		const recipe = await recipeService.getRecipeById(id);
+		const listIngredients = await recipeService.getIngredients(id);
+		recipe.ingredients = listIngredients;
+		if (result.faltantes.length === 0) renderView(res, "recipe-info", ok, {
+			recipe,
+			success: true,
+			cocinar: true,
+			mensajeExito: result.message,
+			usados: result.suficientes
+		});
+		else renderView(res, "recipe-info", ok, {
+			recipe,
+			success: true,
+			cocinar: false,
+			faltantes: result.faltantes,
+			mensajeError: result.message
+		});
+	}
+	catch (error) {
+		console.error("Error al intentar verificar la receta:", error);
+		renderView(res, "recipe-info", badRequest, {
+			recipe: null,
+			success: false,
+			cocinar: false,
+			mensajeError: "Error al intentar verificar la receta."
+		});
+	}
 };

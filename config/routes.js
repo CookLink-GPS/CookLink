@@ -10,8 +10,9 @@ const Routes = {
 		default: "/recetas",
 		recommendations: "/recomendaciones",
 		recipeInfo: "/:id",
-		cook: "/cocinar/:id"
-
+		cook: "/cocinar/:id",
+		check: "/comprobar/:id",
+		addToShoppingList: "/anyadir-a-lista/:id"
 	},
 	ingredientRoutes: {
 		default: "/ingredientes",
