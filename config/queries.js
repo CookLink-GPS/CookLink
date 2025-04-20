@@ -42,10 +42,11 @@ module.exports.containsQueries = { getFromRecipe: "SELECT i.id, i.nombre, c.unid
 
 module.exports.shoppingListQueries = {
 	findItem: `
-	  SELECT id_lista_compra, cantidad
-	  FROM lista_compra
-	  WHERE id_usuario = ? AND id_ingrediente = ?
-	`,
+		SELECT id_lista_compra, cantidad, unidad_medida
+		FROM lista_compra
+		WHERE id_usuario = ? AND id_ingrediente = ?
+  `,
+
 	addItem: `
 	  INSERT INTO lista_compra
 		(id_usuario, id_ingrediente, cantidad, unidad_medida)
