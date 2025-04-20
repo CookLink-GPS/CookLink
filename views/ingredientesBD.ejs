@@ -37,7 +37,7 @@
                                         <h4>Añadir ingredientes</h4>
                                     </div>
                                     <div class="card-body">
-                                        <form action="/ingredientesBD" method="POST" class="needs-validation"
+                                        <form action="/ingredientes/anyadirBD" method="POST" class="needs-validation"
                                             novalidate>
                                             <!-- Ingredientes -->
                                             <div>
@@ -95,7 +95,7 @@
                                             </thead>
                                             <tbody class="table-group-divider">
                                                 <% if (pantryIngredients && pantryIngredients.length> 0) { %>
-                                                    <% pantryIngredients.forEach(item=> { %>
+                                                    <% pantryIngredients.forEach(item => { %>
                                                         <tr>
                                                             <td>
                                                                 <%= item.nombre %>

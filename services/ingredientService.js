@@ -89,8 +89,33 @@ const IngredientService = {
 		});
 
 		return res;
-	}
+	},
 
+	async getAllIngredientsFromDatabase() {
+		const ingredients = await Ingredient.getAllIngredients();
+
+		return ingredients;
+	},
+
+	async addIngredientIntoPantry(userId, ingredientId, cantidad) {
+		try {
+			await Pantry.addIngredient(userId, ingredientId, cantidad);
+		}
+		catch (error) {
+			console.error("Error al añadir ingrediente en la despensa:", error);
+			throw error;
+		}
+	},
+	async getIngredientsFromUserPantry(userId) {
+		try {
+			const userIngredients = await Pantry.getPantryFromUser(userId);
+			return userIngredients;
+		}
+		catch (error) {
+			console.error("Error usuario:", error);
+			throw error;
+		}
+	}
 };
 
 

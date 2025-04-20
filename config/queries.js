@@ -1,7 +1,8 @@
 module.exports.pantryQueries = {
 	addingredient: "INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)",
 	getPantryFromUser: `
-        SELECT d.id_despensa, d.id_ingrediente, i.nombre AS nombre_ingrediente, d.cantidad,  i.tipoUnidad
+        SELECT d.id_despensa, d.id_ingrediente, i.nombre
+		AS nombre_ingrediente, d.cantidad, i.tipoUnidad
         FROM despensa d
         JOIN ingredientes i ON d.id_ingrediente = i.id
         WHERE d.id_usuario = ?
@@ -16,7 +17,12 @@ module.exports.pantryQueries = {
 		JOIN ingredientes i ON d.id_ingrediente = i.id
 		WHERE d.id_usuario = ?
 	`,
-	getPantryFromUserWithNameIngredient: "SELECT d.id_ingrediente, i.nombre, d.cantidad FROM despensa d JOIN ingredientes i ON d.id_ingrediente = i.id WHERE d.id_usuario = ? ORDER BY i.nombre"
+	getPantryFromUserWithNameIngredient: `
+		SELECT d.id_ingrediente, i.nombre, d.cantidad, i.tipoUnidad
+		FROM despensa d
+		JOIN ingredientes i ON d.id_ingrediente = i.id
+		WHERE d.id_usuario = ? ORDER BY i.nombre
+	`
 };
 
 module.exports.userQueries = {

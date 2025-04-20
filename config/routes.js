@@ -15,8 +15,8 @@ const Routes = {
 		default: "/ingredientes",
 		toIngredient: "/",
 		add: "/anyadir",
-		bd: "/anyadir/bd",
-		ingredientesBD: "/ingredientesBD"
+		addBD: "/anyadirBD",
+		ingredientesBD: "anyadirBD/ok"
 	},
 	pantryRoutes: {
 		default: "/despensa",
