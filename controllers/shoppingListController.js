@@ -3,8 +3,6 @@ const ShoppingListService = require("../services/shoppingListService");
 const { ok, badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const { renderView } = require("../middlewares/viewHelper");
-const { validationResult } = require("express-validator");
-
 const { shoppingListRoutes } = require("../config/routes");
 
 const ShoppingListController = {
@@ -15,14 +13,6 @@ const ShoppingListController = {
 
 	/** Procesa el POST de añadir ingrediente */
 	async addIngredient(req, res) {
-		// Const errors = validationResult(req);
-		// If (errors) return renderView(res, "shoppingListAdd", badRequest, {
-		// 	MensajeError: errors.msg,
-		// 	Old: req.body,
-		// 	Units: UNITS,
-		// 	FormData: req.body
-		// });
-
 		try {
 			const userId = req.session.user.id;
 			const { nombre, cantidad, unidad } = req.body;
