@@ -3,33 +3,57 @@ const ShoppingListService = require("../services/shoppingListService");
 const { ok, badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const { renderView } = require("../middlewares/viewHelper");
+const { validationResult } = require("express-validator");
+
 const { shoppingListRoutes } = require("../config/routes");
 
 const ShoppingListController = {
 	/** Muestra el formulario */
 	showAddForm(req, res) {
-		renderView(res, "shoppingListAdd", ok, { units: UNITS });
+		renderView(res, "shoppingListAdd", ok, { units: UNITS, formData: {} });
 	},
 
 	/** Procesa el POST de añadir ingrediente */
 	async addIngredient(req, res) {
+		// Const errors = validationResult(req);
+		// If (errors) return renderView(res, "shoppingListAdd", badRequest, {
+		// 	MensajeError: errors.msg,
+		// 	Old: req.body,
+		// 	Units: UNITS,
+		// 	FormData: req.body
+		// });
+
 		try {
 			const userId = req.session.user.id;
 			const { nombre, cantidad, unidad } = req.body;
 			await ShoppingListService.addIngredient(userId, nombre, cantidad, unidad, UNITS);
-			res.redirect(shoppingListRoutes.default);
+			// Res.redirect(shoppingListRoutes.default);
+			renderView(res, "shoppingListAdd", ok, {
+				mensajeExito: `Ingrediente "${nombre}" añadido a la lista de la compra: ${cantidad} ${unidad}`,
+				formData: {}
+			});
 		}
 		catch (err) {
+			const mensajeError = {};
+
+			if (err.message.toLowerCase().includes("ingrediente")) mensajeError.nombre = err.message;
+
+			if (err.message.toLowerCase().includes("unidad")) mensajeError.unidad = err.message;
+			if (err.message.toLowerCase().includes("cantidad")) mensajeError.cantidad = err.message;
+
+			if (Object.keys(mensajeError).length === 0) mensajeError.general = err.message;
+
 			// Si es error de validación, mostramos el formulario con mensaje
 			if (err instanceof AppError) return renderView(res, "shoppingListAdd", err.status, {
-				error: err.message,
+				mensajeError,
 				old: req.body,
-				units: UNITS
+				units: UNITS,
+				formData: req.body
 			});
 
 			// Otros errores
 			console.error(err);
-			renderView(res, "error", badRequest, { error: "Error al procesar la petición." });
+			renderView(res, "error", badRequest, { mensajeError: "Error al procesar la petición.", formData: req.body });
 		}
 	}
 };

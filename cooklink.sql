@@ -55,7 +55,7 @@ CREATE TABLE lista_compra (
     id_ingrediente INT NOT NULL,
     cantidad DECIMAL(10,2) NOT NULL CHECK (cantidad > 0),
     unidad_medida VARCHAR(50) NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-    FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_ingrediente) REFERENCES ingredientes(id) ON DELETE CASCADE,
     UNIQUE (id_usuario, id_ingrediente)
 );

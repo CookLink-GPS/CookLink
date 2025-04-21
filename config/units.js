@@ -1,2 +1,2 @@
 // Config/units.js
-module.exports = [ "kg", "g", "l", "ml", "unidad", "cucharada", "cucharadita" ];
+module.exports = [ "kg", "kilogramos", "g", "gramos", "l", "litros", "ml", "mililitros", "ud", "unidades", "cda", "cucharada", "cdta", "cucharadita" ];
