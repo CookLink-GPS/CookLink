@@ -8,6 +8,9 @@ const bcrypt = require("bcrypt");
  * @returns {Promise<void>} - No devuelve ningún valor.
  */
 const deleteUsers = async () => {
+	await db.query("DELETE FROM lista_compra");
+	await db.query("DELETE FROM despensa");
+	await db.query("DELETE FROM contiene");
 	await db.query("DELETE FROM usuarios");
 };
 
@@ -128,6 +131,9 @@ const createTestUsers = async () => {
 };
 
 const testtingSession = async () => {
+	await db.query("DELETE FROM lista_compra");
+	await db.query("DELETE FROM despensa");
+	await db.query("DELETE FROM contiene");
 	await db.query("DELETE FROM usuarios");
 	const password = await bcrypt.hash("12345678", saltRounds);
 
@@ -143,6 +149,16 @@ const testtingSession = async () => {
 	]);
 };
 
+const deleteShoppingList = async () => {
+	await db.query("DELETE FROM lista_compra");
+};
+
+const insertShoppigList = async lista => {
+	const insertPromises = lista.map(list =>
+		db.query("INSERT INTO lista_compra (id_usuario, id_ingrediente, cantidad, unidad_medida) VALUES (?, ?, ?, ?)", list));
+	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+};
+
 module.exports = {
 	deleteUsers,
 	deleteIngredients,
@@ -156,5 +172,7 @@ module.exports = {
 	insertDummy,
 	createuser,
 	createTestUsers,
-	testtingSession
+	testtingSession,
+	deleteShoppingList,
+	insertShoppigList
 };

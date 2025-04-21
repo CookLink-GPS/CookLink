@@ -1,7 +1,7 @@
 const ShoppingList = require("../models/shoppingListModel");
 const Ingredient = require("../models/ingredientModel");
 const AppError = require("../utils/AppError");
-const { badRequest, internalServerError } = require("../config/httpcodes");
+const { badRequest } = require("../config/httpcodes");
 
 const ShoppingListService = {
 	/**
@@ -18,26 +18,37 @@ const ShoppingListService = {
 
 		// CL_011_05: unidad válida
 		if (!validUnits.includes(unit)) throw new AppError("El tipo de unidad no es valido.", badRequest);
-
 		try {
 			// Debe existir en tabla ingredientes
 			const ingredient = await Ingredient.findByName(name);
 			if (!ingredient) throw new AppError("El ingrediente no existe.", badRequest);
 
 			const ingredientId = ingredient.id;
+			if (ingredient.tipoUnidad.trim().toLowerCase() !== unit.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredient.tipoUnidad}`, badRequest);
 
 			// CL_011_06: si ya existe, sumar; si no, insertar
 			const existing = await ShoppingList.getItem(userId, ingredientId);
 			if (existing) {
 				const newQty = parseFloat(existing.cantidad) + q;
 				await ShoppingList.updateQuantity(existing.id_lista_compra, newQty);
+				return {
+					action: "updated",
+					ingredientId,
+					q: newQty
+				};
 			}
-			else await ShoppingList.addItem(userId, ingredientId, q, unit);
+
+			await ShoppingList.addItem(userId, ingredientId, q, unit);
+			return {
+				action: "added",
+				ingredientId,
+				q
+			};
+
 
 		}
 		catch (err) {
-			if (err.isAppError) throw err;
-			throw new AppError("Error al añadir el ingrediente.", internalServerError);
+			throw new AppError(err, badRequest);
 		}
 	}
 };
