@@ -20,8 +20,12 @@ const ShoppingListService = {
 		if (!validUnits.includes(unit)) throw new AppError("El tipo de unidad no es valido.", badRequest);
 		try {
 			// Debe existir en tabla ingredientes
-			const ingredient = await Ingredient.findByName(name);
-			if (!ingredient) throw new AppError("El ingrediente no existe.", badRequest);
+			let ingredient = await Ingredient.findByName(name);
+			if (!ingredient) {
+				// Si no existe, lo damos de alta en la tabla ingredientes
+				const newIngredientId = await Ingredient.create(name, unit);
+				ingredient = { id: newIngredientId, tipoUnidad: unit };
+			}
 
 			const ingredientId = ingredient.id;
 			if (ingredient.tipoUnidad.trim().toLowerCase() !== unit.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredient.tipoUnidad}`, badRequest);
