@@ -112,7 +112,7 @@ describe("Modelo ingrediente", () => {
 			assert.strictEqual(res.tipoUnidad, ingredientes[0][1]);
 		});
 
-		it("Debe devolver un error si no selecciona ningun ingrediente de la base de datos", async () => {
+		it("Debe devolver un error si no selecciona ningún ingrediente de la base de datos", async () => {
 			await insertIngredients(ingredientes);
 			const all = await Ingredient.getAllIngredients();
 			const maxId = all.reduce((m, r) => r.id > m ? r.id : m, 0);

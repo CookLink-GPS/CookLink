@@ -46,10 +46,10 @@ const Ingredient = {
 	},
 
 	/**
-	 * Elimina un ingrediente por su ID
+	 * Devuelve un ingrediente por su ID
 	 *
-	 * @param {number} id - ID del ingrediente a eliminar
-	 * @returns {Promise<boolean>} - True si se eliminó correctamente, false si no se encontró
+	 * @param {number} id - ID del ingrediente a buscar
+	 * @returns {Promise<Object|null>} - Devuelve el ingrediente encontrado o null si no existe
 	 */
 	async getIngredient(id) {
 		try {
