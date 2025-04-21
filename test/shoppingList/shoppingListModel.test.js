@@ -32,7 +32,6 @@ describe("Modelo lista_compra", () => {
 		// Insertamos en la lista
 		await ShoppingList.addItem(1, 200, 150, "gramos");
 
-		// Obtenemos lo que insertamos
 		const result = await ShoppingList.getItem(1, 200);
 
 		// Comprobamos que se insertó correctamente
