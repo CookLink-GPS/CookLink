@@ -167,23 +167,19 @@ describe("Servicio Lista de Compra", () => {
 			assert.ok(good);
 		});
 
-		it("Debe lanzar un error si el ingrediente no existe", async () => {
+		it("Debe lanzar dar de alta si el ingrediente no existe y añadirlo a la lista de la compra", async () => {
 			const data = { userId: 1, name: "NoExist", quantity: 2, unit: "kg", validUnits: [ "kg", "gramos" ] };
 
-			let good = false;
-			try {
-				await ShoppingListService.addIngredient(
-					data.userId,
-					data.name,
-					data.quantity,
-					data.unit,
-					data.validUnits
-				);
-			}
-			catch (error) {
-				good = true;
-			}
-			assert.ok(good);
+
+			const res =	await ShoppingListService.addIngredient(
+				data.userId,
+				data.name,
+				data.quantity,
+				data.unit,
+				data.validUnits
+			);
+
+			assert.equal(res.action, "added");
 		});
 
 		it("Debe lanzar un error si el ingrediente ya existe pero las unidades no coinciden", async () => {

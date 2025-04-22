@@ -179,7 +179,7 @@ describe("Rutas lista de la compra", () => {
 			assert.equal(res.status, ok);
 		});
 
-		it("Debe lanzar un error si el ingrediente no existe", async () => {
+		it("Debe lanzar dar de alta si el ingrediente no existe y añadirlo a la lista de la compra", async () => {
 
 			const ingrediente = {
 				nombre: "TomateInexistente",
@@ -191,7 +191,7 @@ describe("Rutas lista de la compra", () => {
 				body: JSON.stringify(ingrediente),
 				headers: { "Content-Type": "application/json" }
 			});
-			assert.equal(res.status, badRequest);
+			assert.equal(res.status, ok);
 		});
 
 		it("Debe lanzar un error si el ingrediente ya existe pero las unidades no coinciden", async () => {
