@@ -108,6 +108,16 @@ const insertContains = async contains => {
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
 };
 
+const insertListaCompra = async ingredientes => {
+	const insertPromises = ingredientes.map( ingrediente =>
+		db.query("INSERT INTO lista_compra (id_usuario, id_ingrediente, cantidad, unidad_medida) VALUES (?, ?, ?, ?)", ingrediente));
+	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+};
+
+const deleteListaCompra = async () => {
+	await db.query("DELETE FROM lista_compra");
+};
+
 const insertDummy = async () => {
 	await db.query(`INSERT INTO usuarios VALUES (1, "dummy", "dummy")`);
 };
@@ -152,6 +162,8 @@ module.exports = {
 	insertRecetas,
 	deleteContains,
 	insertContains,
+	insertListaCompra,
+	deleteListaCompra,
 	insertDummy,
 	createuser,
 	createTestUsers,
