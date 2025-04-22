@@ -167,7 +167,7 @@ describe("Servicio Lista de Compra", () => {
 			assert.ok(good);
 		});
 
-		it("Debe lanzar dar de alta si el ingrediente no existe y añadirlo a la lista de la compra", async () => {
+		it("Debe dar de alta el ingrediente si no existe y añadirlo a la lista de la compra", async () => {
 			const data = { userId: 1, name: "NoExist", quantity: 2, unit: "kg", validUnits: [ "kg", "gramos" ] };
 
 
