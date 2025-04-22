@@ -3,7 +3,6 @@ const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
 const { removeAccents } = require("../utils/stringFunctions");
 const Pantry = require("../models/pantryModel");
-const { addIngredient } = require("./pantryService");
 
 
 const IngredientService = {
@@ -114,10 +113,11 @@ const IngredientService = {
 	async addIngredientToPantry(userId, ingredientId, quantity) {
 		try {
 			const existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
-
+			console.log("Cantidad actual", existsInPantry.cantidad);
 			if (existsInPantry) {
 				const cantidadActual = existsInPantry.cantidad;
 				quantity = cantidadActual + quantity;
+				console.log("Nueva cantidad", quantity);
 				await Pantry.updateIngredientQuantity(userId, ingredientId, quantity);
 			}
 			else await Pantry.addIngredient(userId, ingredientId, quantity);

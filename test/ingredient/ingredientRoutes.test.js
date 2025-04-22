@@ -2,23 +2,23 @@
 
 const assert = require("node:assert");
 const { baseUrl, port } = require("../../config/config");
-const { deleteIngredients, deletePantry, deleteUsers, testtingSession, getPantryQuantity, insertIngredients, insertPantry, insertDummy } = require("../testUtils");
+const { deleteIngredients, deletePantry, deleteUsers, testtingSession, getPantryQuantity, insertIngredients, insertPantryAddIngredient, insertDummy } = require("../testUtils");
 const { badRequest, ok } = require("../../config/httpcodes");
 const UserService = require("../../services/userService"); // Asegúrate de que el path es correcto
 
 describe("Rutas ingrediente", () => {
 	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
-	before(testtingSession);
-	beforeEach(async () => {
-		await deleteIngredients();
-		await deletePantry();
-	});
+	// Before(testtingSession);
+	// BeforeEach(async () => {
+	// 	Await deleteIngredients();
+	// 	Await deletePantry();
+	// });
 
-	after(async () => {
-		await deleteIngredients();
-		await deletePantry();
-		await deleteUsers();
-	});
+	// After(async () => {
+	// 	Await deleteIngredients();
+	// 	Await deletePantry();
+	// 	Await deleteUsers();
+	// });
 
 	describe("Agregar ingrediente", () => {
 		const route = `${baseRoute}/anyadir`;
@@ -190,21 +190,15 @@ describe("CL_009 Agregar ingrediente a la BD", () => {
 	before(insertDummy);
 
 	beforeEach(async () => {
-		// Await deletePantry();
-		// Await deleteIngredients();
-
-
 		// Crea el usuario
 
 		idUsuario = 1; // O donde se devuelva el id
 
 		// Inserta un ingrediente
-		const ingredientes = [ [ "Tomate", "kg" ] ];
+		const ingredientes = [ [ "Potato", "kg" ] ];
 		const insertedIngredients = await insertIngredients(ingredientes);
+		console.log("Ingredientes insertados:", insertedIngredients);
 		idIngrediente = insertedIngredients[0].id;
-		console.log("ID Ingrediente:", idIngrediente);
-		// Si quieres que el ingrediente ya esté en la despensa para algunos tests:
-		// Await insertPantry([[idUsuario, idIngrediente, 5]]);
 	});
 
 	// CL_009_01
@@ -213,7 +207,13 @@ describe("CL_009 Agregar ingrediente a la BD", () => {
 		const cantidadExtra = 3;
 
 		// Inserta previamente el ingrediente en la despensa
-		await insertPantry([ [ idUsuario, idIngrediente, cantidadInicial ] ]);
+		const ingredientPantry = [ [ idUsuario, idIngrediente, cantidadInicial ] ];
+		const pantryItems = await insertPantryAddIngredient(ingredientPantry);
+		console.log("Items en la despensa antes de la petición:", pantryItems);
+
+		// Verifica la cantidad inicial en la despensa
+		const cantidadEnPantryAntes = await getPantryQuantity(idUsuario, idIngrediente);
+		console.log("Cantidad antes de la actualización:", cantidadEnPantryAntes); // Aquí deberías ver 5
 
 		// Simula el envío del mismo ingrediente desde el formulario
 		const body = {
@@ -229,10 +229,12 @@ describe("CL_009 Agregar ingrediente a la BD", () => {
 
 		assert.equal(res.status, ok);
 
+		// Verifica la cantidad después de la actualización
 		const nuevaCantidad = await getPantryQuantity(idUsuario, idIngrediente);
-		console.log("Nueva cantidad:", nuevaCantidad);
-		assert.equal(nuevaCantidad, cantidadInicial + cantidadExtra);
+		console.log("Nueva cantidad después de la actualización:", nuevaCantidad); // Aquí deberías ver cantidadInicial + cantidadExtra
 
-
+		// Verifica que la cantidad final sea correcta
+		assert.equal(nuevaCantidad, cantidadInicial + cantidadExtra); // Verifica si la cantidad total es 8
 	});
 });
+
