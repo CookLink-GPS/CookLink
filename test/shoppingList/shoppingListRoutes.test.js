@@ -89,7 +89,7 @@ describe("Rutas lista de la compra", () => {
 		});
 
 		// CL_011_04: Error si la cantidad no es numérica
-		it("No debe agregar el ingrediente si la cantidad es menor que cero", async () => {
+		it("No debe agregar el ingrediente si la cantidad no es numérica", async () => {
 			const ingrediente = {
 				nombre: "Tomate",
 				unidad: "kg",
@@ -179,7 +179,7 @@ describe("Rutas lista de la compra", () => {
 			assert.equal(res.status, ok);
 		});
 
-		it("Debe lanzar dar de alta si el ingrediente no existe y añadirlo a la lista de la compra", async () => {
+		it("Debe dar de alta el ingrediente si no existe y añadirlo a la lista de la compra", async () => {
 
 			const ingrediente = {
 				nombre: "TomateInexistente",
