@@ -135,6 +135,10 @@ exports.postIngredienteIntoPantry = async (req, res) => {
 
 		const ingredients = await ingredientService.getAllIngredientsFromDatabase();
 		const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);
+		console.log("ingredientes", ingredients);
+
+		console.log("pantryIngredients", pantryIngredients);
+		console.log("cantidad", cantidad);
 
 		renderView(res, "ingredientesBD", ok, {
 			ingredients,

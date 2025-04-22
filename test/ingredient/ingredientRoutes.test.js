@@ -2,10 +2,9 @@
 
 const assert = require("node:assert");
 const { baseUrl, port } = require("../../config/config");
-const { deleteIngredients, deletePantry, deleteUsers, testtingSession } = require("../testUtils");
+const { deleteIngredients, deletePantry, deleteUsers, testtingSession, getPantryQuantity, insertIngredients, insertPantry, insertDummy } = require("../testUtils");
 const { badRequest, ok } = require("../../config/httpcodes");
 const UserService = require("../../services/userService"); // Asegúrate de que el path es correcto
-
 
 describe("Rutas ingrediente", () => {
 	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
@@ -179,5 +178,61 @@ describe("Rutas ingrediente", () => {
 			assert.equal(res1.status, ok);
 			assert.equal(res2.status, badRequest);
 		});
+	});
+
+
+});
+
+describe("CL_009 Agregar ingrediente a la BD", () => {
+	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
+	const route = `${baseRoute}/anyadirBD`;
+
+	before(insertDummy);
+
+	beforeEach(async () => {
+		// Await deletePantry();
+		// Await deleteIngredients();
+
+
+		// Crea el usuario
+
+		idUsuario = 1; // O donde se devuelva el id
+
+		// Inserta un ingrediente
+		const ingredientes = [ [ "Tomate", "kg" ] ];
+		const insertedIngredients = await insertIngredients(ingredientes);
+		idIngrediente = insertedIngredients[0].id;
+		console.log("ID Ingrediente:", idIngrediente);
+		// Si quieres que el ingrediente ya esté en la despensa para algunos tests:
+		// Await insertPantry([[idUsuario, idIngrediente, 5]]);
+	});
+
+	// CL_009_01
+	it("CL_009_01 Debe permitir modificar la cantidad al seleccionar un ingrediente", async () => {
+		const cantidadInicial = 5;
+		const cantidadExtra = 3;
+
+		// Inserta previamente el ingrediente en la despensa
+		await insertPantry([ [ idUsuario, idIngrediente, cantidadInicial ] ]);
+
+		// Simula el envío del mismo ingrediente desde el formulario
+		const body = {
+			idIngredienteBD: idIngrediente,
+			cantidad: cantidadExtra
+		};
+		console.log("Ruta:", route);
+		const res = await fetch(route, {
+			method: "POST",
+			body: JSON.stringify(body),
+			headers: { "Content-Type": "application/json" }
+		});
+
+		assert.equal(res.status, ok);
+
+		const nuevaCantidad = await getPantryQuantity(idUsuario, idIngrediente);
+		console.log("Nueva cantidad:", nuevaCantidad);
+		assert.equal(nuevaCantidad, cantidadInicial + cantidadExtra);
+
+
 	});
 });

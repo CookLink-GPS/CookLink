@@ -143,6 +143,14 @@ const testtingSession = async () => {
 	]);
 };
 
+const getPantryQuantity = async (idUsuario, idIngrediente) => {
+	const [ result ] = await db.query(
+		`SELECT cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?`,
+		[ idUsuario, idIngrediente ]
+	);
+	return result?.cantidad ?? 0; // Devuelve 0 si no hay resultado
+};
+
 module.exports = {
 	deleteUsers,
 	deleteIngredients,
@@ -156,5 +164,6 @@ module.exports = {
 	insertDummy,
 	createuser,
 	createTestUsers,
-	testtingSession
+	testtingSession,
+	getPantryQuantity
 };
