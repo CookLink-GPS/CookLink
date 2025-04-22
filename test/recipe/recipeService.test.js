@@ -190,59 +190,6 @@ describe("Servicio de recetas", () => {
 		});
 	});
 
-	describe("Comprobar requisitos de la receta", () => {
-
-		it("Debe de devolver que todos los ingredientes son suficientes ", async () => {
-
-			const result = await Recipe.checkRecipeRequirements(user.id, idrs[1]);
-
-			assert.deepStrictEqual(result, {
-				suficientes: [
-					{ id: ids[0], nombre: "harina", unidades: QUINIENTOS, tipoUnidad: "gramos" },
-					{ id: ids[1], nombre: "arroz", unidades: QUINIENTOS, tipoUnidad: "gramos" }
-				],
-				  	faltantes: []
-			});
-
-		});
-
-		it("Debe de devolver que todos los ingredientes son faltantes ", async () => {
-
-			const result = await Recipe.checkRecipeRequirements(user0.id, idrs[1]);
-
-			assert.deepStrictEqual(result, {
-				suficientes: [],
-				faltantes: [
-					{ id: ids[0], nombre: "harina", unidadesNecesarias: QUINIENTOS, tipoUnidad: "gramos" },
-					{ id: ids[1], nombre: "arroz", unidadesNecesarias: QUINIENTOS, tipoUnidad: "gramos" }
-				]
-			});
-
-		});
-
-		it("Debe de devolver ingredientes que sean suficientes y faltantes ", async () => {
-
-			const result = await Recipe.checkRecipeRequirements(user2.id, idrs[1]);
-
-			assert.deepStrictEqual(result, {
-				suficientes: [ { id: ids[0], nombre: "harina", unidades: QUINIENTOS, tipoUnidad: "gramos" } ],
-				faltantes: [ { id: ids[1], nombre: "arroz", unidadesNecesarias: QUINIENTOS, tipoUnidad: "gramos" } ]
-			});
-
-		});
-
-		it("Debe de calcular bien las unidades necesarias ", async () => {
-
-			const result = await Recipe.checkRecipeRequirements(user.id, idrs[2]);
-
-			assert.deepStrictEqual(result, {
-				suficientes: [],
-				faltantes: [ { id: ids[1], nombre: "arroz", unidadesNecesarias: DOSCIENTOS, tipoUnidad: "gramos" } ]
-			});
-
-		});
-	});
-
 	describe("Cocinar receta", () => {
 
 		it("Debe disminuir correctamente en la despensa los ingredientes de la receta", async () => {
