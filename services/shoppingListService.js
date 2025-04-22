@@ -54,7 +54,24 @@ const ShoppingListService = {
 		catch (err) {
 			throw new AppError(err, badRequest);
 		}
-	}
+	},
+
+
+	/**
+   * Recupera la lista de compra de un usuario.
+   * CL_012_01 y CL_012_02.
+   */
+	async getList(userId) {
+		if (!userId) throw new AppError("Se requiere el ID del usuario", badRequest);
+
+		try {
+		  const items = await ShoppingList.getItems(userId);
+		  return items;
+		}
+		catch (err) {
+		  throw new AppError(err, badRequest);
+		}
+	  }
 };
 
 module.exports = ShoppingListService;

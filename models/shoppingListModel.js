@@ -31,6 +31,23 @@ const ShoppingList = {
    */
 	async updateQuantity(listId, newQuantity) {
 		await db.query(shoppingListQueries.updateQuantity, [ newQuantity, listId ]);
+	},
+
+
+	/**
+   * Obtiene todos los ítems de la lista de compra de un usuario
+   * en orden alfabético por nombre de ingrediente.
+   * @param {Number} userId
+   * @returns {Promise<Array<{idListaCompra, nombre, cantidad, unidad}>>}
+   */
+	async getItems(userId) {
+		const rows = await db.query(shoppingListQueries.getList, [ userId ]);
+		return rows.map(r => ({
+			idListaCompra: r.id_lista_compra,
+			nombre: r.nombre,
+			cantidad: r.cantidad,
+			unidad: r.unidad_medida
+		}));
 	}
 };
 

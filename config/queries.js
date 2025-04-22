@@ -56,5 +56,16 @@ module.exports.shoppingListQueries = {
 	  UPDATE lista_compra
 	  SET cantidad = ?
 	  WHERE id_lista_compra = ?
-	`
+	`,
+	getList: `
+    SELECT 
+      li.id_lista_compra, 
+      i.nombre, 
+      li.cantidad, 
+      li.unidad_medida
+    FROM lista_compra li
+    JOIN ingredientes i ON li.id_ingrediente = i.id
+    WHERE li.id_usuario = ?
+    ORDER BY i.nombre ASC
+  `
 };

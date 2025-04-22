@@ -45,7 +45,26 @@ const ShoppingListController = {
 			console.error(err);
 			renderView(res, "error", badRequest, { mensajeError: "Error al procesar la petición.", formData: req.body });
 		}
-	}
+	},
+
+	 /**
+   * CL_012_01 y CL_012_02:
+   * Muestra la lista de compra, o mensaje si está vacía.
+   */
+	 async showList(req, res) {
+		try {
+		  const userId = req.session.user.id;
+		  const items = await ShoppingListService.getList(userId);
+		  renderView(res, "shoppingList", ok, {
+				items,
+				shoppingListRoutes
+		  });
+		}
+		catch (err) {
+		  console.error(err);
+		  renderView(res, "error", badRequest, { error: err instanceof AppError ? err.message : "Error al cargar la lista" });
+		}
+	  }
 };
 
 module.exports = ShoppingListController;

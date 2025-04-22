@@ -3,6 +3,9 @@ const router = express.Router();
 const ShoppingListController = require("../controllers/shoppingListController");
 const { shoppingListRoutes } = require("../config/routes");
 
+// Mostrar listado completo
+router.get("/", ShoppingListController.showList);
+
 // Formulario
 router.get(shoppingListRoutes.add, ShoppingListController.showAddForm);
 
