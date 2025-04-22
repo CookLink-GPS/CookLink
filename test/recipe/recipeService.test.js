@@ -2,7 +2,7 @@
 
 const assert = require("assert");
 const Recipe = require("../../services/recipeService");
-const { deleteIngredients, insertIngredients, insertPantry, deletePantry, deleteUsers, insertRecetas, deleteRecipes, insertContains, deleteContains, insertListaCompra, deleteListaCompra, } = require("../testUtils");
+const { deleteIngredients, insertIngredients, insertPantry, deletePantry, deleteUsers, insertRecetas, deleteRecipes, insertContains, deleteContains, insertListaCompra, deleteListaCompra } = require("../testUtils");
 const User = require("../../models/userModel");
 const db = require("../../config/database");
 const CERO = 0;
@@ -125,33 +125,16 @@ describe("Servicio de recetas", () => {
 		});
 	});
 
-	// eslint-disable-next-line capitalized-comments, spaced-comment
-	/*describe("Obtener los datos de una receta por su id", () => {
-		beforeEach(async () => {
-			await deleteContains();
-			await deleteIngredients();
-			await deleteRecipes();
-		  });
-
-		  after(async () => {
-			await deleteContains();
-			await deleteIngredients();
-			await deleteRecipes();
-		  });
-
-	  	const recipe = [ [ "Nombre", "Descripcion" ] ];
+	describe("Obtener los datos de una receta por su id", () => {
 
 		it("Debe devolver la receta correcta segun su id", async () => {
-			const ids = await insertRecetas(recipe);
-			const result = await Recipe.getRecipeById(ids[0].id);
-
-			assert.deepEqual([ [ result.nombre, result.descripcion ] ], recipe);
+			const result = await Recipe.getRecipeById(idrs[0]);
+			assert.deepEqual([ result.nombre, result.descripcion ], [ "receta1", "descripcion1" ]);
 		});
 
 		it("No debe devolver una receta por falta de id", async () => {
 			try {
 				await Recipe.getRecipeById();
-
 				assert.fail("Se esperaba un error");
 			}
 			catch (error) {
@@ -162,10 +145,7 @@ describe("Servicio de recetas", () => {
 		it("No debe devolver una receta que no econtrada", async () => {
 			try {
 				const errorId = -1;
-
-			    await insertRecetas(recipe);
 			    await Recipe.getRecipeById(errorId);
-
 				assert.fail("Se esperaba un error");
 			}
 			catch (error) {
@@ -175,40 +155,15 @@ describe("Servicio de recetas", () => {
 	});
 
 	describe("Obtener los ingredientes de una receta por su id", () => {
-		beforeEach(async () => {
-			await deleteContains();
-			await deleteIngredients();
-			await deleteRecipes();
-		  });
-
-		  after(async () => {
-			await deleteContains();
-			await deleteIngredients();
-			await deleteRecipes();
-		  });
-
-		const recipe = [ [ "Nombre", "Descripcion" ] ];
-		const ingredients = [
-			[ "Ingrediente1", "TipoUnidad1" ],
-			[ "Ingrediente2", "TipoUnidad2" ]
-		];
 
 		it("Debe devolver los ingredientes correctos de una receta por su id", async () => {
 
-			const recipeIds = await insertRecetas(recipe);
-			const ingredientsIds = await insertIngredients(ingredients);
-			const contains = [
-				[ recipeIds[0].id, ingredientsIds[0].id, 100 ],
-				[ recipeIds[0].id, ingredientsIds[1].id, 200 ]
-			];
-			await insertContains(contains);
-
-			const result = await Recipe.getIngredients(recipeIds[0].id);
+			const result = await Recipe.getIngredients(idrs[1]);
 			assert.deepEqual(
 				result,
 				[
-					{ ingrediente: ingredientsIds[0].nombre, tipoUnidad: ingredientsIds[0].tipoUnidad, unidades: contains[0][2] },
-					{ ingrediente: ingredientsIds[1].nombre, tipoUnidad: ingredientsIds[1].tipoUnidad, unidades: contains[1][2] }
+					{ ingrediente: "harina", tipoUnidad: "gramos", unidades: QUINIENTOS },
+					{ ingrediente: "arroz", tipoUnidad: "gramos", unidades: QUINIENTOS }
 				]
 			);
 		});
@@ -226,16 +181,6 @@ describe("Servicio de recetas", () => {
 		it("No debe devolver ingredientes por receta no encontrada", async () => {
 			try {
 				const errorId = -1;
-
-				const recipeIds = await insertRecetas(recipe);
-				const ingredientsIds = await insertIngredients(ingredients);
-
-				const contains = [
-					[ recipeIds[0].id, ingredientsIds[0].id, 100 ],
-					[ recipeIds[0].id, ingredientsIds[1].id, 200 ]
-				];
-				await insertContains(contains);
-
 			    await Recipe.getIngredients(errorId);
 				assert.fail("Se esperaba un error");
 			}
@@ -243,7 +188,7 @@ describe("Servicio de recetas", () => {
 				assert.strictEqual(error.message, "No hay ingredientes");
 			}
 		});
-	});*/
+	});
 
 	describe("Comprobar requisitos de la receta", () => {
 
