@@ -125,13 +125,8 @@ exports.postIngredienteIntoPantry = async (req, res) => {
 
 		if (!cantidad || isNaN(cantidad) || Number(cantidad) <= 0) return await renderWithError("¡Seleccione una cantidad válida!");
 
-		const ingrediente = await ingredientService.getIngredientById(ingredientes);
-
-		await ingredientService.processIngredient({
-			ingrediente,
-			cantidad: parseFloat(cantidad),
-			userId
-		});
+		const floatQuantity = parseFloat(cantidad);
+		await ingredientService.addIngredientToPantry(userId, ingredientes, floatQuantity);
 
 		const ingredients = await ingredientService.getAllIngredientsFromDatabase();
 		const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);

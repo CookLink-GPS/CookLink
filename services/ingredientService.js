@@ -3,6 +3,7 @@ const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
 const { removeAccents } = require("../utils/stringFunctions");
 const Pantry = require("../models/pantryModel");
+const { addIngredient } = require("./pantryService");
 
 
 const IngredientService = {
@@ -110,17 +111,22 @@ const IngredientService = {
 		}
 	},
 
-	async getIngredientById(id) {
+	async addIngredientToPantry(userId, ingredientId, quantity) {
 		try {
-			const ingredient = await Ingredient.getIngredient(id);
-			return ingredient;
+			const existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
+
+			if (existsInPantry) {
+				const cantidadActual = existsInPantry.cantidad;
+				quantity = cantidadActual + quantity;
+				await Pantry.updateIngredientQuantity(userId, ingredientId, quantity);
+			}
+			else await Pantry.addIngredient(userId, ingredientId, quantity);
 		}
 		catch (error) {
-			console.error("Error al obtener el ingrediente:", error);
+			console.error("Error al añadir el ingrediente a la despensa:", error);
 			throw error;
 		}
 	}
 };
-
 
 module.exports = IngredientService;
