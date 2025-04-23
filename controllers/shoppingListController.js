@@ -3,7 +3,7 @@ const ShoppingListService = require("../services/shoppingListService");
 const { ok, badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const { renderView } = require("../middlewares/viewHelper");
-const { shoppingListRoutes } = require("../config/routes");
+// Const { shoppingListRoutes } = require("../config/routes");
 
 const ShoppingListController = {
 	/** Muestra el formulario */
@@ -17,7 +17,7 @@ const ShoppingListController = {
 			const userId = req.session.user.id;
 			const { nombre, cantidad, unidad } = req.body;
 			await ShoppingListService.addIngredient(userId, nombre, cantidad, unidad, UNITS);
-			// Res.redirect(shoppingListRoutes.default);
+
 			renderView(res, "shoppingListAdd", ok, {
 				mensajeExito: `Ingrediente "${nombre}" añadido a la lista de la compra: ${cantidad} ${unidad}`,
 				formData: {}
@@ -55,15 +55,18 @@ const ShoppingListController = {
 		try {
 		  const userId = req.session.user.id;
 		  const items = await ShoppingListService.getList(userId);
-		  renderView(res, "shoppingList", ok, {
-				items,
-				shoppingListRoutes
-		  });
+		  renderView(res, "shoppingList", ok, { items });
 		}
 		catch (err) {
-		  console.error(err);
-		  renderView(res, "error", badRequest, { error: err instanceof AppError ? err.message : "Error al cargar la lista" });
-		}
+			const mensajeError = {};
+
+			if (err.message.toLowerCase().includes("usuario")) mensajeError.usuario = err.message;
+			else mensajeError.general = err.message;
+
+			// Otros errores
+			console.error(err);
+			renderView(res, "error", badRequest, { mensajeError });
+		  }
 	  }
 };
 
