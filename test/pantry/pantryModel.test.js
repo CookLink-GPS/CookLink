@@ -4,6 +4,7 @@
 const assert = require("assert");
 const Pantry = require("../../models/pantryModel");
 const db = require("../../config/database");
+const { deletePantry, deleteIngredients, deleteUsers, insertDummy } = require("../testUtils");
 
 /**
    * Hook que se ejecuta antes de las pruebas
@@ -12,12 +13,12 @@ const db = require("../../config/database");
 describe("Modelo despensa", () => {
 	before(async () => {
 		// Eliminar datos previos en las tablas relevantes
-		await db.query("DELETE FROM despensa");
-		await db.query("DELETE FROM ingredientes");
-		await db.query("DELETE FROM usuarios");
+		await deletePantry();
+		await deleteIngredients();
+		await deleteUsers();
 
 		// Insertar un usuario de prueba
-		await db.query("INSERT INTO usuarios (id, username, password) VALUES (1, \"test_user\", \"testpass\")");
+		await insertDummy();
 
 		 // Insertar ingredientes de prueba
 		await db.query(`
@@ -40,9 +41,9 @@ describe("Modelo despensa", () => {
 	 * Limpia la base de datos eliminando los datos insertados en la prueba
 	 */
 	after(async () => {
-		await db.query("DELETE FROM despensa");
-		await db.query("DELETE FROM ingredientes");
-		await db.query("DELETE FROM usuarios");
+		await deletePantry();
+		await deleteIngredients();
+		await deleteUsers();
 	});
 
 	/**
