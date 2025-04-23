@@ -8,7 +8,7 @@ module.exports.pantryQueries = {
         WHERE d.id_usuario = ?
     `,
 	deleteIngredient: "DELETE FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
-	getPantryItemByIngredient: "SELECT * FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
+	getPantryItemByIngredient: "SELECT id_usuario, id_ingrediente, cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?",
 	updateIngredientQuantity: "UPDATE despensa SET cantidad = ? WHERE id_usuario = ? AND id_ingrediente = ?",
 	getPantryItemById: "SELECT * FROM despensa WHERE id_despensa = ?",
 	getIngredientsDetails: `

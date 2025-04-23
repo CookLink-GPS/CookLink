@@ -2,23 +2,23 @@
 
 const assert = require("node:assert");
 const { baseUrl, port } = require("../../config/config");
-const { deleteIngredients, deletePantry, deleteUsers, testtingSession, getPantryQuantity, insertIngredients, insertPantryAddIngredient, insertDummy } = require("../testUtils");
+const { deleteIngredients, deletePantry, deleteUsers, testtingSession, insertIngredients, insertPantryAddIngredient, getPantryQuantity } = require("../testUtils");
 const { badRequest, ok } = require("../../config/httpcodes");
 const UserService = require("../../services/userService"); // Asegúrate de que el path es correcto
 
 describe("Rutas ingrediente", () => {
 	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
-	// Before(testtingSession);
-	// BeforeEach(async () => {
-	// 	Await deleteIngredients();
-	// 	Await deletePantry();
-	// });
+	before(testtingSession);
+	beforeEach(async () => {
+		await deleteIngredients();
+		await deletePantry();
+	});
 
-	// After(async () => {
-	// 	Await deleteIngredients();
-	// 	Await deletePantry();
-	// 	Await deleteUsers();
-	// });
+	after(async () => {
+		await deleteIngredients();
+		await deletePantry();
+		await deleteUsers();
+	});
 
 	describe("Agregar ingrediente", () => {
 		const route = `${baseRoute}/anyadir`;
@@ -180,61 +180,90 @@ describe("Rutas ingrediente", () => {
 		});
 	});
 
+	describe("CL_009 Agregar ingrediente a la BD", () => {
+		const route = `${baseRoute}/anyadirBD`;
 
-});
+		it("CL_009_01 Debe permitir modificar la cantidad al seleccionar un ingrediente", async () => {
+			const idUsuario = 1; // O donde se devuelva el id
 
-describe("CL_009 Agregar ingrediente a la BD", () => {
-	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
-	const route = `${baseRoute}/anyadirBD`;
 
-	before(insertDummy);
+			// Inserta un ingrediente
+			const ingredientes = [ [ "Potato", "kg" ] ];
+			const insertedIngredients = await insertIngredients(ingredientes);
+			console.log("Ingredientes insertados:", insertedIngredients);
+			const idIngrediente = insertedIngredients[0].id;
 
-	beforeEach(async () => {
-		// Crea el usuario
+			const cantidadInicial = 5;
+			const cantidadExtra = 3;
 
-		idUsuario = 1; // O donde se devuelva el id
+			// Inserta previamente el ingrediente en la despensa
+			const ingredientPantry = [ [ idUsuario, idIngrediente, cantidadInicial ] ];
+			const pantryItems = await insertPantryAddIngredient(ingredientPantry);
+			console.log("Items en la despensa antes de la petición:", pantryItems);
 
-		// Inserta un ingrediente
-		const ingredientes = [ [ "Potato", "kg" ] ];
-		const insertedIngredients = await insertIngredients(ingredientes);
-		console.log("Ingredientes insertados:", insertedIngredients);
-		idIngrediente = insertedIngredients[0].id;
-	});
+			// Verifica la cantidad inicial en la despensa
+			const cantidadEnPantryAntes = await getPantryQuantity(idUsuario, idIngrediente);
+			console.log("Cantidad antes de la actualización:", cantidadEnPantryAntes); // Aquí deberías ver 5
 
-	// CL_009_01
-	it("CL_009_01 Debe permitir modificar la cantidad al seleccionar un ingrediente", async () => {
-		const cantidadInicial = 5;
-		const cantidadExtra = 3;
+			// Simula el envío del mismo ingrediente desde el formulario
+			const body = {
+				ingredientes: idIngrediente,
+				cantidad: cantidadExtra
+			};
 
-		// Inserta previamente el ingrediente en la despensa
-		const ingredientPantry = [ [ idUsuario, idIngrediente, cantidadInicial ] ];
-		const pantryItems = await insertPantryAddIngredient(ingredientPantry);
-		console.log("Items en la despensa antes de la petición:", pantryItems);
+			console.log("Ruta:", route);
+			const res = await fetch(route, {
+				method: "POST",
+				body: JSON.stringify(body),
+				headers: { "Content-Type": "application/json" }
+			});
 
-		// Verifica la cantidad inicial en la despensa
-		const cantidadEnPantryAntes = await getPantryQuantity(idUsuario, idIngrediente);
-		console.log("Cantidad antes de la actualización:", cantidadEnPantryAntes); // Aquí deberías ver 5
+			assert.equal(res.status, ok);
 
-		// Simula el envío del mismo ingrediente desde el formulario
-		const body = {
-			idIngredienteBD: idIngrediente,
-			cantidad: cantidadExtra
-		};
-		console.log("Ruta:", route);
-		const res = await fetch(route, {
-			method: "POST",
-			body: JSON.stringify(body),
-			headers: { "Content-Type": "application/json" }
+			// Verifica la cantidad después de la actualización
+			const nuevaCantidad = await getPantryQuantity(idUsuario, idIngrediente);
+			console.log("Nueva cantidad después de la actualización:", nuevaCantidad); // Aquí deberías ver cantidadInicial + cantidadExtra
+
+			// Verifica que la cantidad final sea correcta
+			assert.equal(nuevaCantidad, cantidadInicial + cantidadExtra); // Verifica si la cantidad total es 8
+
 		});
 
-		assert.equal(res.status, ok);
+		it("CL_009_02 - Debe añadir ingrediente a la despensa si no está aún", async () => {
+			const idUsuario = 1;
+			const ingredientes = [ [ "Torrezno", "kg" ] ];
+			const insertedIngredients = await insertIngredients(ingredientes);
+			console.log("Ingredientes insertados 009_02:", insertedIngredients);
+			const idIngrediente = insertedIngredients[0].id;
+			const cantidadBD = 5;
 
-		// Verifica la cantidad después de la actualización
-		const nuevaCantidad = await getPantryQuantity(idUsuario, idIngrediente);
-		console.log("Nueva cantidad después de la actualización:", nuevaCantidad); // Aquí deberías ver cantidadInicial + cantidadExtra
+			const body = {
+				ingredientes: idIngrediente,
+				cantidad: cantidadBD
+			};
+			const res = await fetch(route, {
+				method: "POST",
+				body: JSON.stringify(body),
+				headers: { "Content-Type": "application/json" }
+			});
+			assert.equal(res.status, ok);
 
-		// Verifica que la cantidad final sea correcta
-		assert.equal(nuevaCantidad, cantidadInicial + cantidadExtra); // Verifica si la cantidad total es 8
+			const cantidadLeida = await getPantryQuantity(idUsuario, idIngrediente);
+			console.log("Cantidad ingrediente :", cantidadLeida);
+			assert.equal(cantidadLeida, cantidadBD);
+		});
+
+		it("CL_009_03 - No debe añadir si falta el ingrediente", async () => {
+			const res = await fetch(route, {
+				method: "POST",
+				body: JSON.stringify({ cantidad: 1 }),
+				headers: { "Content-Type": "application/json" }
+			});
+			assert.equal(res.status, ok);
+			const text = await res.text();
+			assert.include(text, "¡Seleccione un ingrediente válido!");
+		});
 	});
-});
 
+
+});

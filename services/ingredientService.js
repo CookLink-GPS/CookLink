@@ -113,7 +113,7 @@ const IngredientService = {
 	async addIngredientToPantry(userId, ingredientId, quantity) {
 		try {
 			const existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
-			console.log("Cantidad actual", existsInPantry.cantidad);
+			// Console.log("Cantidad actual", existsInPantry.cantidad);
 			if (existsInPantry) {
 				const cantidadActual = existsInPantry.cantidad;
 				quantity = cantidadActual + quantity;
