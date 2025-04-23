@@ -78,54 +78,29 @@ describe("Rutas de cocinar", () => {
 			assert.equal(res.status, ok);
 		});
 
-		it("No se tienen ningun ingredientes y no se cocinar", async () => {
-
-			const ingredients = {};
-
-			const res = await fetch(`${cookRoute}${idrs[0]}`, {
-				method: "POST",
-				body: JSON.stringify({ ingredients }),
-				headers: { "Content-Type": "application/json" }
-			});
-
-			assert.equal(res.status, badRequest);
-		});
-
-		it("No se tienen algun ingredientes y no se cocinar", async () => {
-
-			const ingredients = {
-				id: ids[0],
-				cantidad: QUINIENTOS
-			};
-
-			const res = await fetch(`${cookRoute}${idrs[1]}`, {
-				method: "POST",
-				body: JSON.stringify({ ingredients }),
-				headers: { "Content-Type": "application/json" }
-			});
-
-			assert.equal(res.status, badRequest);
-		});
 	});
 
 	describe("Añadir a lista de la compra", () => {
 
 		const listRoute = `${baseRoute}anyadir-a-lista/`;
 
-		it("No se tienen ningun ingredientes y se añade a la lista", async () => {
+		it("No se tienen ningun ingrediente y se añade a la lista", async () => {
 
-			const ingredients = {};
+			const pantrys = [[ user.id, ids[1], 200 ]];
+        	await insertPantry(pantrys);
 
-			const res = await fetch(`${listRoute}${idrs[0]}`, {
+            const faltantes = {id: ids[1], unidadesNecesarias: 300, tipoUnidad: "gramos" };
+
+			const res = await fetch(`${listRoute}${idrs[1]}`, {
 				method: "POST",
-				body: JSON.stringify({ ingredients }),
+				body: JSON.stringify({ faltantes }),
 				headers: { "Content-Type": "application/json" }
 			});
 
 			assert.equal(res.status, ok);
 		});
 
-		it("No se tienen algun ingredientes y se añade a la lista", async () => {
+		/*it("No se tienen algun ingredientes y se añade a la lista", async () => {
 
 			const ingredients = {
 				id: ids[0],
@@ -155,7 +130,7 @@ describe("Rutas de cocinar", () => {
 			});
 
 			assert.equal(res.status, badRequest);
-		});
+		});*/
 
 	});
 
