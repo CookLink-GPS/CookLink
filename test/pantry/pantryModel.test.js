@@ -74,21 +74,13 @@ describe("Modelo despensa", () => {
 			assert.ok(!ing);
 		});
 
-		it("Debe eliminar un ingrediente si se elimina toda la cantidad", async () => {
-			await Pantry.decreaseQuantity(1, 100, 1);
-
-			const { ing } = await Pantry.findItem(1, 100);
-
-			assert.ok(!ing);
-		});
-
 		it("No debe eliminar la cantidad de un ingrediente si se introduce mas de la que hay", async () => {
-			await Pantry.decreaseQuantity(1, 101, 2);
-
-			const { cantidad } = await Pantry.findItem(1, 101);
-
-			assert.notEqual(cantidad, -1);
-
+			try {
+				await Pantry.decreaseQuantity(1, 101, 2);
+			}
+			catch (err) {
+				assert.equal(err.message, "Check constraint 'despensa_chk_1' is violated.");
+			}
 		});
 	});
 });

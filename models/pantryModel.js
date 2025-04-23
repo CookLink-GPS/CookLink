@@ -190,9 +190,13 @@ const Pantry = {
 				"UPDATE despensa SET cantidad = cantidad - ? WHERE id_usuario = ? AND id_ingrediente = ?",
 				[ cantidad, userId, ingredientId ]
 			);
+			await db.query(
+				"DELETE FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? AND cantidad <= 0;",
+				[ userId, ingredientId ]
+			);
 		}
 		catch (error) {
-			throw new Error(`Error al restar ${cantidad} del ingrediente ${ingredientId} para el usuario ${userId}`);
+			throw new Error(error.sqlMessage);
 		}
 	}
 
