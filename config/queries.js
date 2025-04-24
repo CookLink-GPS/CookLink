@@ -67,5 +67,14 @@ module.exports.shoppingListQueries = {
     JOIN ingredientes i ON li.id_ingrediente = i.id
     WHERE li.id_usuario = ?
     ORDER BY i.nombre ASC
-  `
+  `,
+	getById: `
+	SELECT id_lista_compra, id_usuario, id_ingrediente, cantidad
+	FROM lista_compra
+	WHERE id_lista_compra = ?
+	`,
+	deleteItem: `
+	DELETE FROM lista_compra
+	WHERE id_lista_compra = ?
+	`
 };

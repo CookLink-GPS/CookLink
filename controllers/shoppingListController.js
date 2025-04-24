@@ -67,7 +67,33 @@ const ShoppingListController = {
 			console.error(err);
 			renderView(res, "error", badRequest, { mensajeError });
 		  }
-	  }
+	  },
+
+	/**
+   * CL_015_01: Marca un ingrediente como comprado, moviéndolo a la despensa.
+   */
+	async markAsBought(req, res) {
+		try {
+			const userId = req.session.user.id;
+			const listId = parseInt(req.params.id, 10);
+			await ShoppingListService.markAsBought(userId, listId);
+
+			const items = await ShoppingListService.getList(userId);
+			return renderView(res, "shoppingList", ok, {
+				items,
+				mensajeExito: "Ingrediente marcado como comprado y movido a la despensa."
+			});
+		}
+		catch (err) {
+			const mensajeError = {};
+			if (err.message.toLowerCase().includes("usuario")) mensajeError.usuario = err.message;
+			else mensajeError.general = err.message;
+
+			// Otros errores
+			console.error(err);
+			renderView(res, "error", badRequest, { mensajeError });
+		}
+	}
 };
 
 module.exports = ShoppingListController;

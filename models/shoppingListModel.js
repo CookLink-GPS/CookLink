@@ -48,6 +48,31 @@ const ShoppingList = {
 			cantidad: r.cantidad,
 			unidad: r.unidad_medida
 		}));
+	},
+
+
+	/**
+   * Recupera un ítem de la lista por su ID.
+   * @param {Number} listId
+   * @returns {Promise<{ id_lista_compra, id_usuario, id_ingrediente, cantidad }|null>}
+   */
+	async getById(listId) {
+		const [ row ] = await db.query(
+		  shoppingListQueries.getById,
+		  [ listId ]
+		);
+		return row || null;
+	  },
+
+	/**
+	  * Elimina un ítem de la lista de compra.
+	  * @param {Number} listId
+   	  */
+	async deleteItem(listId) {
+		await db.query(
+	  shoppingListQueries.deleteItem,
+	  [ listId ]
+		);
 	}
 };
 
