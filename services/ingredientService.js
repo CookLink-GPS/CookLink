@@ -117,7 +117,7 @@ const IngredientService = {
 			if (existsInPantry) {
 				const cantidadActual = existsInPantry.cantidad;
 				quantity = cantidadActual + quantity;
-				console.log("Nueva cantidad", quantity);
+				// Console.log("Nueva cantidad", quantity);
 				await Pantry.updateIngredientQuantity(userId, ingredientId, quantity);
 			}
 			else await Pantry.addIngredient(userId, ingredientId, quantity);

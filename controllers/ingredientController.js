@@ -114,7 +114,7 @@ exports.postIngredienteIntoPantry = async (req, res) => {
 			const ingredients = await ingredientService.getAllIngredientsFromDatabase();
 			const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);
 
-			return renderView(res, "ingredientesBD", ok, {
+			return renderView(res, "ingredientesBD", badRequest, {
 				ingredients,
 				pantryIngredients,
 				mensajeError
@@ -130,10 +130,10 @@ exports.postIngredienteIntoPantry = async (req, res) => {
 
 		const ingredients = await ingredientService.getAllIngredientsFromDatabase();
 		const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);
-		console.log("ingredientes", ingredients);
+		// Console.log("ingredientes", ingredients);
 
-		console.log("pantryIngredients", pantryIngredients);
-		console.log("cantidad", cantidad);
+		// Console.log("pantryIngredients", pantryIngredients);
+		// Console.log("cantidad", cantidad);
 
 		renderView(res, "ingredientesBD", ok, {
 			ingredients,
@@ -145,7 +145,7 @@ exports.postIngredienteIntoPantry = async (req, res) => {
 		const ingredients = await ingredientService.getAllIngredientsFromDatabase();
 		const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);
 
-		renderView(res, "ingredientesBD", ok, {
+		renderView(res, "ingredientesBD", badRequest, {
 			ingredients,
 			pantryIngredients,
 			mensajeError: "Error al añadir ingrediente a la despensa."

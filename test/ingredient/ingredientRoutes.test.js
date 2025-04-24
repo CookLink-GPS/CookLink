@@ -185,25 +185,24 @@ describe("Rutas ingrediente", () => {
 
 		it("CL_009_01 Debe permitir modificar la cantidad al seleccionar un ingrediente", async () => {
 			const idUsuario = 1; // O donde se devuelva el id
-
+			const cantidadInicial = 5;
+			const cantidadExtra = 3;
 
 			// Inserta un ingrediente
 			const ingredientes = [ [ "Potato", "kg" ] ];
 			const insertedIngredients = await insertIngredients(ingredientes);
-			console.log("Ingredientes insertados:", insertedIngredients);
+			// Console.log("Ingredientes insertados:", insertedIngredients);
 			const idIngrediente = insertedIngredients[0].id;
 
-			const cantidadInicial = 5;
-			const cantidadExtra = 3;
 
 			// Inserta previamente el ingrediente en la despensa
 			const ingredientPantry = [ [ idUsuario, idIngrediente, cantidadInicial ] ];
-			const pantryItems = await insertPantryAddIngredient(ingredientPantry);
-			console.log("Items en la despensa antes de la petición:", pantryItems);
+			await insertPantryAddIngredient(ingredientPantry);
+			// Console.log("Items en la despensa antes de la petición:", pantryItems);
 
 			// Verifica la cantidad inicial en la despensa
-			const cantidadEnPantryAntes = await getPantryQuantity(idUsuario, idIngrediente);
-			console.log("Cantidad antes de la actualización:", cantidadEnPantryAntes); // Aquí deberías ver 5
+			await getPantryQuantity(idUsuario, idIngrediente);
+			// Console.log("Cantidad antes de la actualización:", cantidadEnPantryAntes); // Aquí deberías ver 5
 
 			// Simula el envío del mismo ingrediente desde el formulario
 			const body = {
@@ -211,7 +210,7 @@ describe("Rutas ingrediente", () => {
 				cantidad: cantidadExtra
 			};
 
-			console.log("Ruta:", route);
+			// Console.log("Ruta:", route);
 			const res = await fetch(route, {
 				method: "POST",
 				body: JSON.stringify(body),
@@ -222,7 +221,7 @@ describe("Rutas ingrediente", () => {
 
 			// Verifica la cantidad después de la actualización
 			const nuevaCantidad = await getPantryQuantity(idUsuario, idIngrediente);
-			console.log("Nueva cantidad después de la actualización:", nuevaCantidad); // Aquí deberías ver cantidadInicial + cantidadExtra
+			// Console.log("Nueva cantidad después de la actualización:", nuevaCantidad); // Aquí deberías ver cantidadInicial + cantidadExtra
 
 			// Verifica que la cantidad final sea correcta
 			assert.equal(nuevaCantidad, cantidadInicial + cantidadExtra); // Verifica si la cantidad total es 8
@@ -233,7 +232,7 @@ describe("Rutas ingrediente", () => {
 			const idUsuario = 1;
 			const ingredientes = [ [ "Torrezno", "kg" ] ];
 			const insertedIngredients = await insertIngredients(ingredientes);
-			console.log("Ingredientes insertados 009_02:", insertedIngredients);
+			// Console.log("Ingredientes insertados 009_02:", insertedIngredients);
 			const idIngrediente = insertedIngredients[0].id;
 			const cantidadBD = 5;
 
@@ -249,7 +248,7 @@ describe("Rutas ingrediente", () => {
 			assert.equal(res.status, ok);
 
 			const cantidadLeida = await getPantryQuantity(idUsuario, idIngrediente);
-			console.log("Cantidad ingrediente :", cantidadLeida);
+			// Console.log("Cantidad ingrediente :", cantidadLeida);
 			assert.equal(cantidadLeida, cantidadBD);
 		});
 
@@ -259,9 +258,39 @@ describe("Rutas ingrediente", () => {
 				body: JSON.stringify({ cantidad: 1 }),
 				headers: { "Content-Type": "application/json" }
 			});
-			assert.equal(res.status, ok);
-			const text = await res.text();
-			assert.include(text, "¡Seleccione un ingrediente válido!");
+			assert.equal(res.status, badRequest);
+			console.log("Respuesta res status:", res.status);
+
+
+		});
+
+		it("CL_009_04 - No debe añadir si falta la cantidad", async () => {
+			const ingredientes = [ [ "Onion", "kg" ] ];
+			const inserted = await insertIngredients(ingredientes);
+			const idIngrediente = inserted[0].id;
+
+			const res = await fetch(route, {
+				method: "POST",
+				body: JSON.stringify({ ingredientes: idIngrediente }),
+				headers: { "Content-Type": "application/json" }
+			});
+			assert.equal(res.status, badRequest);
+
+
+		});
+
+		it("CL_009_05 - No debe añadir si la cantidad es <= 0", async () => {
+			const ingredientes = [ [ "Carrot", "kg" ] ];
+			const inserted = await insertIngredients(ingredientes);
+			const idIngrediente = inserted[0].id;
+
+			const res = await fetch(route, {
+				method: "POST",
+				body: JSON.stringify({ ingredientes: idIngrediente, cantidad: 0 }),
+				headers: { "Content-Type": "application/json" }
+			});
+			assert.equal(res.status, badRequest);
+
 		});
 	});
 
