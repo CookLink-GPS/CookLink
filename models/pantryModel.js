@@ -166,7 +166,7 @@ const Pantry = {
 		try {
 			console.log(`[Model] Recibido:`, userId, ingredientId);
 			const rows = await db.query(
-				`SELECT id_ingrediente, cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? LIMIT 1`,
+				pantryQueries.findItem,
 				[ userId, ingredientId ]
 			);
 			return rows.length > 0 ? rows[0] : null;
@@ -187,12 +187,8 @@ const Pantry = {
 	async decreaseQuantity(userId, ingredientId, cantidad) {
 		try {
 			await db.query(
-				"UPDATE despensa SET cantidad = cantidad - ? WHERE id_usuario = ? AND id_ingrediente = ?",
+				pantryQueries.decreaseQuantity,
 				[ cantidad, userId, ingredientId ]
-			);
-			await db.query(
-				"DELETE FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? AND cantidad <= 0;",
-				[ userId, ingredientId ]
 			);
 		}
 		catch (error) {

@@ -22,7 +22,9 @@ module.exports.pantryQueries = {
 		FROM despensa d
 		JOIN ingredientes i ON d.id_ingrediente = i.id
 		WHERE d.id_usuario = ? ORDER BY i.nombre
-	`
+	`,
+	decreaseQuantity: "UPDATE despensa SET cantidad = cantidad - ? WHERE id_usuario = ? AND id_ingrediente = ?",
+	findItem: "SELECT id_ingrediente, cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? LIMIT 1"
 };
 
 module.exports.userQueries = {
