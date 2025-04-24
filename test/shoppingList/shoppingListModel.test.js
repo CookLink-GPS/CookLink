@@ -38,4 +38,25 @@ describe("Modelo lista_compra", () => {
 		assert.strictEqual(result.cantidad, 150);
 		assert.strictEqual(result.unidad_medida, "gramos");
 	});
+
+	describe("Actualizar cantidad de ingredientes", () => {
+		it("Debe actualizar correctamente la cantidad", async () => {
+			let existe = await ShoppingList.getItem(1, 200);
+			await ShoppingList.updateQuantity(existe.id_lista_compra, 100);
+
+			existe = await ShoppingList.getItem(1, 200);
+
+			assert.equal(existe.cantidad, 100);
+		});
+
+		it("No debe permitir una cantidad negativa", async () => {
+			try {
+				const existe = await ShoppingList.getItem(1, 200);
+				await ShoppingList.updateQuantity(existe.id_lista_compra, -1);
+			}
+			catch (err) {
+				console.log(err.message);
+			}
+		});
+	});
 });
