@@ -58,7 +58,7 @@ exports.addMissingToShoppingList = async (req, res) => {
 		const recipe = await recipeService.getRecipeById(recipeId);
 		const ingredients = await recipeService.getIngredients(recipeId);
 		recipe.ingredients = ingredients;
-		console.log("Receta:", result.faltantes);
+
 		renderView(res, "recipe-info", ok, {
 			recipe,
 			cocinar: false,

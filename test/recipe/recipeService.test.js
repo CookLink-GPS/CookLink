@@ -189,8 +189,9 @@ describe("Servicio de recetas", () => {
 			}
 		});
 	});
+
 	describe("Comprobar requisitos de la receta", () => {
- 
+
 		it("Debe de devolver que todos los ingredientes son suficientes ", async () => {
 
 			const result = await Recipe.checkRecipeRequirements(user.id, idrs[1]);
