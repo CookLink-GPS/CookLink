@@ -218,7 +218,8 @@ describe("Servicio Lista de Compra", () => {
 			await ShoppingListService.addIngredient(1, "Leche", 1, "litros", [ "litros", "gramos", "kg" ]);
 			await ShoppingListService.addIngredient(1, "Arroz", 500, "gramos", [ "litros", "gramos", "kg" ]);
 
-			const lista = await ShoppingListService.getUserShoppingList(1);
+			const lista = await ShoppingListService.getList(1);
+
 
 			assert.ok(Array.isArray(lista));
 			assert.equal(lista.length, 2);
@@ -229,8 +230,9 @@ describe("Servicio Lista de Compra", () => {
 		it("Debe devolver un mensaje si la lista de la compra está vacía", async () => {
 			await deleteShoppingList();
 
-			const lista = await ShoppingListService.getUserShoppingList(1);
-			assert.deepStrictEqual(lista, { mensaje: "No hay ningún ingrediente en la lista de la compra." });
+			const lista = await ShoppingListService.getList(1);
+			assert.deepStrictEqual(lista, []);
+
 		});
 	});
 
