@@ -92,12 +92,9 @@ exports.filterIngredients = async (req, res) => {
  * @param {HTTPResponse} res
 */
 exports.getIngredientsFromDatabase = async (req, res) => {
-	const userId = req.session.user.id;
-
 	const ingredients = await ingredientService.getAllIngredientsFromDatabase();
-	const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);
 
-	renderView(res, "ingredientesBD", ok, { ingredients, pantryIngredients });
+	renderView(res, "ingredientesBD", ok, { ingredients, formData: {} });
 };
 
 /**
@@ -126,29 +123,31 @@ exports.postIngredienteIntoPantry = async (req, res) => {
 		if (!cantidad || isNaN(cantidad) || Number(cantidad) <= 0) return await renderWithError("¡Seleccione una cantidad válida!");
 
 		const floatQuantity = parseFloat(cantidad);
-		await ingredientService.addIngredientToPantry(userId, ingredientes, floatQuantity);
+		const result = await ingredientService.addIngredientToPantry(userId, ingredientes, floatQuantity);
 
+		const message = result.action === "updated"
+			? `Cantidad actualizada a tu despensa de ${result.nombre}: ${result.quantity} ${normalizarUnidad(result.tipoUnidad)}`
+			: `Nuevo ingrediente: "${result.nombre}" añadido a tu despensa: ${floatQuantity} ${normalizarUnidad(result.tipoUnidad)}`;
 		const ingredients = await ingredientService.getAllIngredientsFromDatabase();
-		const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);
-		// Console.log("ingredientes", ingredients);
-
-		// Console.log("pantryIngredients", pantryIngredients);
-		// Console.log("cantidad", cantidad);
 
 		renderView(res, "ingredientesBD", ok, {
 			ingredients,
-			pantryIngredients,
-			mensajeExito: "Ingrediente añadido con éxito!"
+			formData: {},
+			mensajeExito: message
 		});
 	}
-	catch (error) {
+	catch (err) {
 		const ingredients = await ingredientService.getAllIngredientsFromDatabase();
-		const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);
+		const mensajeError = {};
+
+		if (err.message.toLowerCase().includes("cantidad")) mensajeError.cantidad = err.message;
+
+		if (Object.keys(mensajeError).length === 0) mensajeError.general = err.message;
 
 		renderView(res, "ingredientesBD", badRequest, {
 			ingredients,
-			pantryIngredients,
-			mensajeError: "Error al añadir ingrediente a la despensa."
+			mensajeError,
+			formData: req.body
 		});
 	}
 };

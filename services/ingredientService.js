@@ -3,6 +3,7 @@ const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
 const { removeAccents } = require("../utils/stringFunctions");
 const Pantry = require("../models/pantryModel");
+const e = require("express");
 
 
 const IngredientService = {
@@ -18,7 +19,6 @@ const IngredientService = {
      */
 	async processIngredient({ ingrediente, cantidad, userId }) {
 		try {
-			console.log("Procesando ingrediente:", ingrediente, cantidad, userId);
 			// La cantidad es obligatoria y debe ser mayor que 0
 			if (!cantidad || cantidad < 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
 			// Validar que el nombre del ingrediente solo contenga letras
@@ -27,7 +27,6 @@ const IngredientService = {
 
 			// 1. Buscar el ingrediente en la tabla ingrediente
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
-			console.log("Ingrediente existente:", ingredienteExistente);
 
 			if (cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
 			if (cantidad > 100000) throw new AppError("La cantidad no puede ser mayor que 100.000", badRequest);
@@ -113,14 +112,33 @@ const IngredientService = {
 	async addIngredientToPantry(userId, ingredientId, quantity) {
 		try {
 			const existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
-			// Console.log("Cantidad actual", existsInPantry.cantidad);
+			let action = "";
+			if (quantity <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
+			if (quantity > 100000) throw new AppError("La cantidad no puede ser mayor que 100.000", badRequest);
 			if (existsInPantry) {
+				const ingredient = await Ingredient.getIngredient(ingredientId);
 				const cantidadActual = existsInPantry.cantidad;
 				quantity = cantidadActual + quantity;
-				// Console.log("Nueva cantidad", quantity);
 				await Pantry.updateIngredientQuantity(userId, ingredientId, quantity);
+				action = "updated";
+				return {
+					action,
+					nombre: ingredient.nombre,
+					tipoUnidad: ingredient.tipoUnidad,
+					quantity
+				};
 			}
-			else await Pantry.addIngredient(userId, ingredientId, quantity);
+
+			action = "added";
+			await Pantry.addIngredient(userId, ingredientId, quantity);
+			const ingredient = await Ingredient.getIngredient(ingredientId);
+			return {
+				action,
+				nombre: ingredient.nombre,
+				tipoUnidad: ingredient.tipoUnidad,
+				quantity
+			};
+
 		}
 		catch (error) {
 			console.error("Error al añadir el ingrediente a la despensa:", error);
