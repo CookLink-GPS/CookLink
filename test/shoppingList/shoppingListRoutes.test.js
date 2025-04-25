@@ -3,6 +3,10 @@ const assert = require("node:assert");
 const { baseUrl, port } = require("../../config/config");
 const { deleteIngredients, deletePantry, deleteUsers, testtingSession, deleteShoppingList, insertIngredients } = require("../testUtils");
 const { badRequest, ok } = require("../../config/httpcodes");
+require("dotenv").config({ path: ".env.test" });
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_PASS:", process.env.DB_PASS);
+
 // Const UserService = require("../../services/userService");
 
 describe("Rutas lista de la compra", () => {
@@ -227,10 +231,26 @@ describe("Rutas lista de la compra", () => {
 	describe("Ver ingredientes de la lista de la compra", () => {
 		const route = `${baseRoute}/ver`;
 
+		beforeEach(async () => {
+			await deleteShoppingList();
+			await deletePantry();
+			await deleteIngredients();
+			await insertIngredients([
+				[ "Tomate", "kg" ],
+				[ "Arroz", "gramos" ],
+				[ "Leche", "litros" ]
+			]);
+		});
+
+		after(async () => {
+			await deleteShoppingList();
+			await deleteIngredients();
+			await deletePantry();
+
+		});
+
 		it("Debe devolver un listado de ingredientes ordenado alfabéticamente si hay elementos en la lista", async () => {
-			// Insertamos manualmente ingredientes a la lista de la compra para probar
-			await fetch(`${baseRoute}/a
-				nyadir`, {
+			await fetch(`${baseRoute}/anyadir`, {
 				method: "POST",
 				body: JSON.stringify({ nombre: "Leche", unidad: "litros", cantidad: 2 }),
 				headers: { "Content-Type": "application/json" }
