@@ -3,7 +3,7 @@ const assert = require("node:assert");
 const { baseUrl, port } = require("../../config/config");
 const { deleteIngredients, deletePantry, deleteUsers, testtingSession, deleteShoppingList, insertIngredients } = require("../testUtils");
 const { badRequest, ok } = require("../../config/httpcodes");
-const UserService = require("../../services/userService");
+// Const UserService = require("../../services/userService");
 
 describe("Rutas lista de la compra", () => {
 	const baseRoute = `http://${baseUrl}:${port}/lista-compra`;
@@ -223,5 +223,44 @@ describe("Rutas lista de la compra", () => {
 			assert.equal(res2.status, badRequest);
 		});
 	});
+	// TEST DE INTEGRACION HU_012 VER INGREDIENTES EN LA LISTA DE COMPRAS
+	describe("Ver ingredientes de la lista de la compra", () => {
+		const route = `${baseRoute}/ver`;
+
+		it("Debe devolver un listado de ingredientes ordenado alfabéticamente si hay elementos en la lista", async () => {
+			// Insertamos manualmente ingredientes a la lista de la compra para probar
+			await fetch(`${baseRoute}/a
+				nyadir`, {
+				method: "POST",
+				body: JSON.stringify({ nombre: "Leche", unidad: "litros", cantidad: 2 }),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			await fetch(`${baseRoute}/anyadir`, {
+				method: "POST",
+				body: JSON.stringify({ nombre: "Arroz", unidad: "gramos", cantidad: 500 }),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			const res = await fetch(route);
+			const data = await res.json();
+
+			assert.equal(res.status, 200);
+			assert.ok(Array.isArray(data));
+			assert.equal(data.length, 2);
+			assert.deepStrictEqual(data.map(i => i.nombre), [ "Arroz", "Leche" ]);
+		});
+
+		it("Debe devolver un mensaje si la lista de la compra está vacía", async () => {
+			await deleteShoppingList();
+
+			const res = await fetch(route);
+			const data = await res.json();
+
+			assert.equal(res.status, 200);
+			assert.deepEqual(data, { mensaje: "No hay ningún ingrediente en la lista de la compra." });
+		});
+	});
+
 
 });
