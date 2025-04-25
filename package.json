@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bootstrap-icons": "^1.11.3",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
@@ -21,7 +22,7 @@
     "nodemon": "^3.1.9"
   },
   "scripts": {
-    "test": "mocha --require test/onExit.js test/*.test.js --exit --timeout 5000",
+    "test": "mocha --require test/onExit.js test/**/*.test.js --exit --timeout 5000",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "eslint ."

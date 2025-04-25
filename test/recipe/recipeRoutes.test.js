@@ -1,10 +1,9 @@
-/* eslint-disable no-magic-numbers */
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, deleteContains, insertContains } = require("./testUtils");
-const { baseUrl, port } = require("../config/config");
-const { ok } = require("../config/httpcodes");
+const { deleteIngredients, insertIngredients, deleteRecipes, insertRecetas, deleteContains, insertContains } = require("../testUtils");
+const { baseUrl, port } = require("../../config/config");
+const { ok } = require("../../config/httpcodes");
 
 
 describe("Rutas de recetas", () => {
@@ -21,10 +20,10 @@ describe("Rutas de recetas", () => {
 		await deleteRecipes();
 	  });
 
-	const baseRoute = `http://${baseUrl}:${port}/recipes/`;
+	const baseRoute = `http://${baseUrl}:${port}/recetas/`;
 
 	describe("Obtener recetas recomendadas", () => {
-		const route = `${baseRoute}recommended`;
+		const route = `${baseRoute}recomendaciones`;
 
 		it("Redirige correctamente", async () => { // TODO obtener lista recetas y comprobar que son iguales
 			const res = await fetch(route);

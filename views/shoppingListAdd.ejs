@@ -20,11 +20,11 @@
             <div class="col-md-6">
                 <div class="card shadow-lg">
                     <div class="card-header text-center bg-primary text-white">
-                        <h4>Añadir Ingrediente a despensa</h4>
+                        <h4>Añadir Ingrediente a Lista de Compras</h4>
                     </div>
                     <div class="card-body">
 
-                        <form action="/ingredientes/anyadir" method="POST" class="needs-validation" novalidate>
+                        <form action="/lista-compra/anyadir" method="POST" class="needs-validation" novalidate>
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Ingrediente</label>
                                 <input type="text" name="nombre" id="nombre" class="form-control"
@@ -39,31 +39,31 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="tipoUnidad" class="form-label">Tipo de Unidad</label>
-                                <select name="tipoUnidad" id="tipoUnidad" class="form-select" required>
-                                    <option value="" disabled <%=!formData?.tipoUnidad ? "selected" : "" %>>Selecciona
+                                <label for="unidad" class="form-label">Tipo de Unidad</label>
+                                <select name="unidad" id="unidad" class="form-select" required>
+                                    <option value="" disabled <%=!formData?.unidad ? "selected" : "" %>>Selecciona
                                         una unidad</option>
-                                    <option value="gramos" <%=formData?.tipoUnidad==="gramos" ? "selected" : "" %>
+                                    <option value="gramos" <%=formData?.unidad==="gramos" ? "selected" : "" %>
                                         >Gramos (g)</option>
-                                    <option value="kilogramos" <%=formData?.tipoUnidad==="kilogramos" ? "selected" : ""
-                                        %>>Kilogramos (kg)</option>
-                                    <option value="mililitros" <%=formData?.tipoUnidad==="mililitros" ? "selected" : ""
-                                        %>>Mililitros (ml)</option>
-                                    <option value="litros" <%=formData?.tipoUnidad==="litros" ? "selected" : "" %>
+                                    <option value="kilogramos" <%=formData?.unidad==="kilogramos" ? "selected" : "" %>
+                                        >Kilogramos (kg)</option>
+                                    <option value="mililitros" <%=formData?.unidad==="mililitros" ? "selected" : "" %>
+                                        >Mililitros (ml)</option>
+                                    <option value="litros" <%=formData?.unidad==="litros" ? "selected" : "" %>
                                         >Litros (l)</option>
-                                    <option value="unidades" <%=formData?.tipoUnidad==="unidades" ? "selected" : "" %>
+                                    <option value="unidades" <%=formData?.unidad==="unidades" ? "selected" : "" %>
                                         >Unidades (ud)</option>
-                                    <option value="cucharada" <%=formData?.tipoUnidad==="cucharada" ? "selected" : "" %>
+                                    <option value="cucharada" <%=formData?.unidad==="cucharada" ? "selected" : "" %>
                                         >Cucharadas (cda)</option>
-                                    <option value="cucharadita" <%=formData?.tipoUnidad==="cucharadita" ? "selected"
-                                        : "" %>>Cucharaditas (cdta)</option>
-                                    <option value="tazas" <%=formData?.tipoUnidad==="tazas" ? "selected" : "" %>>Tazas
+                                    <option value="cucharadita" <%=formData?.unidad==="cucharadita" ? "selected" : "" %>
+                                        >Cucharaditas (cdta)</option>
+                                    <option value="tazas" <%=formData?.unidad==="tazas" ? "selected" : "" %>>Tazas
                                         (tz)</option>
                                 </select>
                                 <div class="invalid-feedback">Por favor selecciona un tipo de unidad</div>
-                                <% if (mensajeError?.tipoUnidad) { %>
+                                <% if (mensajeError?.unidad) { %>
                                     <div class="invalid-feedback d-block">
-                                        <%= mensajeError.tipoUnidad %>
+                                        <%= mensajeError.unidad %>
                                     </div>
                                     <% } %>
                             </div>
@@ -92,7 +92,7 @@
                         </form>
                     </div>
                 </div>
-                <a href="/despensa" class="btn btn-custom btn-lg m-2">Volver</a>
+                <a href="/inicio" class="btn btn-custom btn-lg m-2">Volver</a>
             </div>
         </div>
 
@@ -106,7 +106,7 @@
                         <%= mensajeExito %>
                     </div>
                     <div class="exitoModal-footer">
-                        <a href="/despensa" class="btn btn-success">Aceptar</a>
+                        <a href="/inicio" class="btn btn-success">Aceptar</a>
                     </div>
                 </div>
             </div>
@@ -114,8 +114,8 @@
 
     </div>
 
+    <script src="/js/shoppingListScript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/ingredientsScript.js"></script>
 
     <div>
         <%- include("fragments/footer") %>

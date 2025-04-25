@@ -1,11 +1,10 @@
-/* eslint-disable no-magic-numbers */
 /* eslint-disable no-undef */
 const assert = require("assert");
-const db = require("../config/database");
-const PantryService = require("../services/pantryService");
-const Pantry = require("../models/pantryModel");
-const AppError = require("../utils/AppError");
-const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients, insertDummy } = require("./testUtils");
+const db = require("../../config/database");
+const PantryService = require("../../services/pantryService");
+const Pantry = require("../../models/pantryModel");
+const AppError = require("../../utils/AppError");
+const { deletePantry, insertPantry, deleteUsers, insertIngredients, deleteIngredients, insertDummy } = require("../testUtils");
 
 describe("Servicio de Despensa", () => {
 	/**

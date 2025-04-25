@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const UserService = require("../services/userService"); // Asegúrate de que el path es correcto
-const { deleteUsers, testtingSession } = require("./testUtils");
+const UserService = require("../../services/userService"); // Asegúrate de que el path es correcto
+const { deleteUsers, testtingSession } = require("../testUtils");
 
 describe("[Service] Servicio de usuario", () => {
 

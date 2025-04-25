@@ -17,7 +17,7 @@ const Contains = {
      * @param {Number} recipeId
      * @returns {Promise<RecipeIngredient[]>}
      */
-	async getFromRecipe(recipeId) {
+	async getIngredientsFromRecipe(recipeId) {
 		try {
 			const result = await db.query(containsQueries.getFromRecipe, [ recipeId ]);
 

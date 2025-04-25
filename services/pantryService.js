@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 const Pantry = require("../models/pantryModel");
 const Ingredient = require("../models/ingredientModel");
 const { badRequest, internalServerError, forbidden } = require("../config/httpcodes");

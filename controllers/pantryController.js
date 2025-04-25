@@ -3,6 +3,7 @@ const { badRequest, internalServerError, forbidden } = require("../config/httpco
 const AppError = require("../utils/AppError");
 const { ok } = require("../config/httpcodes");
 const { renderView } = require("../middlewares/viewHelper");
+const { pantryRoutes } = require("../config/routes");
 
 const PantryController = {
 	/**
@@ -21,7 +22,6 @@ const PantryController = {
 			renderView(res, "error", internalServerError, { error: "Error fetching pantry", status: internalServerError });
 		}
 	},
-
 	/**
      * Deletes an ingredient from the user's pantry.
      *
@@ -35,7 +35,7 @@ const PantryController = {
 			const quantityToDelete = parseFloat(req.body.quantity, 10);
 
 			await PantryService.deleteIngredient(userId, pantryId, quantityToDelete);
-			res.redirect("/pantry");
+			res.redirect(pantryRoutes.default);
 		}
 		catch (error) {
 			renderView(res, "error", error.status || badRequest, { message: error.message || "Error deleting ingredient" });
@@ -51,7 +51,6 @@ const PantryController = {
 		try {
 			if (!req.session.user.id) throw new AppError("Usuario no autenticado", forbidden);
 			const ingredientes = await PantryService.searchIngredients(req.params.filter || "", req.session.user.id);
-
 			res.json({ ingredientes });
 		}
 		catch (err) {
@@ -59,16 +58,6 @@ const PantryController = {
 			if (err.status === forbidden) res.status(forbidden).json({ mensajeError: err.message });
 			else res.status(badRequest).json({ mensajeError: "Error al filtrar los ingredientes" });
 		}
-	},
-	/**
-	 * Renderiza una vista con todos los ingredientes de la despensa del usuario
-	 *
-	 * @param {Request} req
-	 * @param {Response} res
-	 */
-	async getDespensa(req, res) {
-		const ingredients = await PantryService.getIngredientsDetails(req.session.user.id);
-		renderView(res, "despensa", ok, { ingredients });
 	}
 };
 

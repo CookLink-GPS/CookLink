@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 const { badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
@@ -20,7 +19,7 @@ const IngredientService = {
 	async processIngredient({ ingrediente, cantidad, userId }) {
 		try {
 			// La cantidad es obligatoria y debe ser mayor que 0
-			if (cantidad === undefined || cantidad === null || cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
+			if (!cantidad || cantidad < 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
 			// Validar que el nombre del ingrediente solo contenga letras
 			const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 			if (!soloLetras.test(ingrediente.nombre)) throw new AppError("El nombre del ingrediente solo puede contener letras y espacios", badRequest);
@@ -28,19 +27,23 @@ const IngredientService = {
 			// 1. Buscar el ingrediente en la tabla ingrediente
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
 
+			if (cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
+			if (cantidad > 100000) throw new AppError("La cantidad no puede ser mayor que 100.000", badRequest);
+
 			let ingredientId;
 			let existsInPantry;
 			let action = "";
 			if (ingredienteExistente) {
-				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}, Recibido: ${ingrediente.tipoUnidad}`, badRequest);
-
+				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}`, badRequest);
 				ingredientId = ingredienteExistente.id;
 
 				// 3. Verificar si ya está en la despensa
-				existsInPantry = await Pantry.findItem(userId, ingredientId);
+				existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
 
 				if (existsInPantry) {
-					await Pantry.updateItem(userId, ingredientId, cantidad);
+					const cantidadActual = existsInPantry.cantidad;
+					cantidad = cantidadActual + cantidad;
+					await Pantry.updateIngredientQuantity(userId, ingredientId, cantidad);
 					action = "updated";
 					return {
 						action,
@@ -49,7 +52,7 @@ const IngredientService = {
 					};
 				}
 				// 4. Si no está en la despensa, añadirlo
-				await Pantry.addItem(userId, ingredientId, cantidad);
+				await Pantry.addIngredient(userId, ingredientId, cantidad);
 				action = "added";
 				return {
 					action,
@@ -60,7 +63,7 @@ const IngredientService = {
 
 			// 2. Si no existe en la tabla ingrediente, crearlo
 			ingredientId = await Ingredient.create(ingrediente.nombre, ingrediente.tipoUnidad);
-			await Pantry.addItem(userId, ingredientId, cantidad);
+			await Pantry.addIngredient(userId, ingredientId, cantidad);
 			action = "added";
 			return {
 				action,

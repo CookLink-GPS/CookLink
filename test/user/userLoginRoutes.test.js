@@ -2,17 +2,17 @@
 
 
 const assert = require("assert");
-const { deleteUsers, testtingSession } = require("./testUtils");
-const { baseUrl, port } = require("../config/config");
-const { ok, badRequest, unauthorized } = require("../config/httpcodes");
+const { deleteUsers, testtingSession } = require("../testUtils");
+const { baseUrl, port } = require("../../config/config");
+const { ok, badRequest, unauthorized } = require("../../config/httpcodes");
 
 
 describe("[ROUTE2] Rutas de usuario", () => {
 	before(testtingSession);
 	after(deleteUsers);
-	const baseRoute = `http://${baseUrl}:${port}/users/`;
+	const baseRoute = `http://${baseUrl}:${port}/usuarios/`;
 	describe(" [ROUTE2] Login", () => {
-		const route = `${baseRoute}login`;
+		const route = `${baseRoute}inicio`;
 
 		it("[ROUTE2] ✅ Debe iniciar correctamente un usuario", async () => {
 			const usuario = { username: "user1", password: "12345678" };

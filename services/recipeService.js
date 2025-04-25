@@ -60,7 +60,7 @@ const RecipeService = {
 			const pantryMap = new Map(pantry.map(({ id_ingrediente: ingredientId, cantidad }) => [ ingredientId, { cantidad } ]));
 
 			const recipesWithIngredients = await Promise.all(allRecipes.map(async ({ id: recipeId, nombre, descripcion }) => {
-				const ingredients = await Contains.getFromRecipe(recipeId);
+				const ingredients = await Contains.getIngredientsFromRecipe(recipeId);
 				return { id: recipeId, nombre, descripcion, ingredientes: ingredients };
 			}));
 

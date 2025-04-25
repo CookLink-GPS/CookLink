@@ -1,14 +1,14 @@
 /* eslint-disable no-undef */
 
 const assert = require("node:assert");
-const { baseUrl, port } = require("../config/config");
-const { deleteIngredients, deletePantry, deleteUsers, testtingSession } = require("./testUtils");
-const { badRequest, ok } = require("../config/httpcodes");
-const UserService = require("../services/userService"); // Asegúrate de que el path es correcto
+const { baseUrl, port } = require("../../config/config");
+const { deleteIngredients, deletePantry, deleteUsers, testtingSession } = require("../testUtils");
+const { badRequest, ok } = require("../../config/httpcodes");
+const UserService = require("../../services/userService"); // Asegúrate de que el path es correcto
 
 
 describe("Rutas ingrediente", () => {
-	const baseRoute = `http://${baseUrl}:${port}/ingredients`;
+	const baseRoute = `http://${baseUrl}:${port}/ingredientes`;
 	before(testtingSession);
 	beforeEach(async () => {
 		await deleteIngredients();
@@ -22,7 +22,7 @@ describe("Rutas ingrediente", () => {
 	});
 
 	describe("Agregar ingrediente", () => {
-		const route = `${baseRoute}/add`;
+		const route = `${baseRoute}/anyadir`;
 
 		// CL_003_01: Añadir un nuevo ingrediente correctamente
 		it("Debe agregar un nuevo ingrediente correctamente a la despensa cuando se introduce un nombre, unidad y cantidad válidos", async () => {
@@ -31,7 +31,8 @@ describe("Rutas ingrediente", () => {
 			await UserService.login(usuario);
 			const ingrediente = {
 				nombre: "Tomate",
-				tipoUnidad: "kg"
+				tipoUnidad: "kg",
+				cantidad: 10
 			};
 
 			const res = await fetch(route, {

@@ -23,22 +23,22 @@
                             <div class="alert alert-danger" role="alert">
                                 No se encontró la receta.
                             </div>
-                            <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                            <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
                             <% } else if (!recipe.nombre) { %>
                                 <div class="alert alert-danger" role="alert">
                                     La receta no tiene nombre.
                                 </div>
-                                <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                                <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
                                 <% } else if (!recipe.descripcion) { %>
                                     <div class="alert alert-danger" role="alert">
                                         La receta no tiene descripción.
                                     </div>
-                                    <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                                    <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
                                     <% } else if (!recipe.ingredients || recipe.ingredients.length===0) { %>
                                         <div class="alert alert-danger" role="alert">
                                             La receta no tiene ingredientes.
                                         </div>
-                                        <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                                        <a href="/recetas/recomendadas" class="btn btn-custom btn-primary">Volver</a>
                                         <% } else { %>
                                             <h4 class="card-title">
                                                 <%= recipe.nombre %>
@@ -59,7 +59,8 @@
                                             </ul>
                                             </p>
                                             <!-- <a href="#" class="btn btn-custom btn-primary">Cocinar</a> -->
-                                            <a href="/recipes/recommended" class="btn btn-custom btn-primary">Volver</a>
+                                            <a href="/recetas/recomendaciones"
+                                                class="btn btn-custom btn-primary">Volver</a>
                                             <% } %>
                     </div>
                 </div>

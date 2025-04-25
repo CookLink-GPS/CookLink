@@ -1,9 +1,9 @@
 /* eslint-env mocha */
 /* eslint-disable no-undef */
-/* eslint-disable no-magic-numbers */
+
 const assert = require("assert");
-const Pantry = require("../models/pantryModel");
-const db = require("../config/database");
+const Pantry = require("../../models/pantryModel");
+const db = require("../../config/database");
 
 /**
    * Hook que se ejecuta antes de las pruebas
