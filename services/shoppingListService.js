@@ -14,7 +14,9 @@ const ShoppingListService = {
 
 		// CL_011_04: cantidad numérica > 0
 		const q = parseFloat(quantity);
-		if (isNaN(q) || q <= 0) throw new AppError("La cantidad introducida no es válida.", badRequest);
+		if (isNaN(q)) throw new AppError("La cantidad introducida no es válida.", badRequest);
+		if (q <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
+		if (q > 100000) throw new AppError("La cantidad no puede ser mayor que 100.000", badRequest);
 
 		// CL_011_05: unidad válida
 		if (!validUnits.includes(unit)) throw new AppError("El tipo de unidad no es valido.", badRequest);

@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const registerLink = document.getElementById("registerLink");
 	const pantryLink = document.getElementById("pantryLink");
 	const recommendationsLink = document.getElementById("recommendationsLink");
+	const shoppingListLink = document.getElementById("shoppingListLink");
 
 	if (path === "/" || path === "/usuarios/inicio" || path === "/usuarios/registro") {
 		navbarBrand.href = "/";
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		registerLink.style.display = "block";
 		pantryLink.style.display = "none";
 		recommendationsLink.style.display = "none";
+		shoppingListLink.style.display = "none";
 	}
 	else {
 		navbarBrand.href = "/inicio";
@@ -20,5 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		registerLink.style.display = "none";
 		pantryLink.style.display = "block";
 		recommendationsLink.style.display = "block";
+		shoppingListLink.style.display = "block";
 	}
 });
