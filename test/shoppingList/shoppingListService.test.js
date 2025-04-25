@@ -210,4 +210,28 @@ describe("Servicio Lista de Compra", () => {
 			assert.ok(good);
 		});
 	});
+	// VER LISTA DE COMPRAS
+	describe("Ver ingredientes de la lista de la compra", () => {
+
+		// CL_012_01
+		it("Debe devolver un listado de ingredientes ordenado alfabéticamente si hay elementos en la lista", async () => {
+			await ShoppingListService.addIngredient(1, "Leche", 1, "litros", [ "litros", "gramos", "kg" ]);
+			await ShoppingListService.addIngredient(1, "Arroz", 500, "gramos", [ "litros", "gramos", "kg" ]);
+
+			const lista = await ShoppingListService.getUserShoppingList(1);
+
+			assert.ok(Array.isArray(lista));
+			assert.equal(lista.length, 2);
+			assert.deepStrictEqual(lista.map(i => i.nombre), [ "Arroz", "Leche" ]);
+		});
+
+		// CL_012_02
+		it("Debe devolver un mensaje si la lista de la compra está vacía", async () => {
+			await deleteShoppingList();
+
+			const lista = await ShoppingListService.getUserShoppingList(1);
+			assert.deepStrictEqual(lista, { mensaje: "No hay ningún ingrediente en la lista de la compra." });
+		});
+	});
+
 });
