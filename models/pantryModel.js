@@ -19,7 +19,7 @@ const Pantry = {
      */
 	async getPantryFromUser(userId) {
 		try {
-			const result = await db.query(pantryQueries.getPantryFromUser, [ userId ]);
+			const result = await db.query(pantryQueries.getPantryFromUserWithNameIngredient, [ userId ]);
 			return result.map(row => ({ ...row }));
 		}
 		catch (error) {
@@ -93,7 +93,8 @@ const Pantry = {
      * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
 	 *                                          name and unit type of each ingredient in the pantry.
      */
-	async getIngredientsDetails(userId) {
+	// eslint-disable-next-line no-warning-comments
+	async getIngredientsDetails(userId) { // CHECK ESTA FUNC ES LA DE LA NUEVA QUERY
 		try {
 			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
 			return result.map(row => ({
@@ -121,9 +122,10 @@ const Pantry = {
      */
 	async getPantryItemByIngredient(userId, ingredientId) {
 		try {
+			let cantidad;
 			const [ result ] = await db.query(
 				pantryQueries.getPantryItemByIngredient,
-				[ userId, ingredientId ]
+				[ userId, ingredientId, cantidad ]
 			);
 			return result;
 		}

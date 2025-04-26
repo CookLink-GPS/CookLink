@@ -69,6 +69,13 @@ const insertPantry = async pantrys => {
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
 };
 
+const insertPantryAddIngredient = async pantrys => {
+	const insertPromises = pantrys.map(pantry =>
+		db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)", pantry));
+	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+	return db.query("SELECT id_usuario, id_ingrediente, cantidad FROM despensa");
+};
+
 /**
  * Elimina todas las recetas de la base de datos.
  *
@@ -159,6 +166,14 @@ const insertShoppigList = async lista => {
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
 };
 
+const getPantryQuantity = async (idUsuario, idIngrediente) => {
+	const [ result ] = await db.query(
+		`SELECT cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?`,
+		[ idUsuario, idIngrediente ]
+	);
+	return result?.cantidad ?? 0; // Devuelve 0 si no hay resultado
+};
+
 module.exports = {
 	deleteUsers,
 	deleteIngredients,
@@ -174,5 +189,7 @@ module.exports = {
 	createTestUsers,
 	testtingSession,
 	deleteShoppingList,
-	insertShoppigList
+	insertShoppigList,
+	getPantryQuantity,
+	insertPantryAddIngredient
 };

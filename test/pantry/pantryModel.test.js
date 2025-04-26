@@ -45,7 +45,7 @@ describe("Modelo despensa", () => {
 		await db.query("DELETE FROM usuarios");
 	});
 
-	 /**
+	/**
 	 * Prueba para verificar que el método getPantryFromUser devuelve correctamente
 	 * los ingredientes almacenados en la despensa de un usuario específico
 	 */
