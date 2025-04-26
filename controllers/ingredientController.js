@@ -85,3 +85,69 @@ exports.filterIngredients = async (req, res) => {
 		res.json({ mensajeError: "Error al filtrar los ingredientes" });
 	}
 };
+
+/**
+ *
+ * @param {HTTPRequest} req
+ * @param {HTTPResponse} res
+*/
+exports.getIngredientsFromDatabase = async (req, res) => {
+	const ingredients = await ingredientService.getAllIngredientsFromDatabase();
+
+	renderView(res, "ingredientesBD", ok, { ingredients, formData: {} });
+};
+
+/**
+ *
+ * @param {HTTPRequest} req
+ * @param {HTTPResponse} res
+ */
+exports.postIngredienteIntoPantry = async (req, res) => {
+	const userId = req.session.user.id;
+	try {
+		const { ingredientes, cantidad } = req.body;
+
+		const renderWithError = async mensajeError => {
+			const ingredients = await ingredientService.getAllIngredientsFromDatabase();
+			const pantryIngredients = await ingredientService.getIngredientsFromUserPantry(userId);
+
+			return renderView(res, "ingredientesBD", badRequest, {
+				ingredients,
+				pantryIngredients,
+				mensajeError
+			});
+		};
+
+		if (!ingredientes || isNaN(ingredientes)) return await renderWithError("¡Seleccione un ingrediente válido!");
+
+		if (!cantidad || isNaN(cantidad) || Number(cantidad) <= 0) return await renderWithError("¡Seleccione una cantidad válida!");
+
+		const floatQuantity = parseFloat(cantidad);
+		const result = await ingredientService.addIngredientToPantry(userId, ingredientes, floatQuantity);
+
+		const message = result.action === "updated"
+			? `Cantidad actualizada a tu despensa de ${result.nombre}: ${result.quantity} ${normalizarUnidad(result.tipoUnidad)}`
+			: `Nuevo ingrediente: "${result.nombre}" añadido a tu despensa: ${floatQuantity} ${normalizarUnidad(result.tipoUnidad)}`;
+		const ingredients = await ingredientService.getAllIngredientsFromDatabase();
+
+		renderView(res, "ingredientesBD", ok, {
+			ingredients,
+			formData: {},
+			mensajeExito: message
+		});
+	}
+	catch (err) {
+		const ingredients = await ingredientService.getAllIngredientsFromDatabase();
+		const mensajeError = {};
+
+		if (err.message.toLowerCase().includes("cantidad")) mensajeError.cantidad = err.message;
+
+		if (Object.keys(mensajeError).length === 0) mensajeError.general = err.message;
+
+		renderView(res, "ingredientesBD", badRequest, {
+			ingredients,
+			mensajeError,
+			formData: req.body
+		});
+	}
+};

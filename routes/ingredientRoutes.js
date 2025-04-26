@@ -7,6 +7,9 @@ router.get(ingredientRoutes.toIngredient, ingredientController.toIngredient);
 
 router.post(ingredientRoutes.add, ingredientController.addIngredient);
 
+router.get(ingredientRoutes.addBD, ingredientController.getIngredientsFromDatabase);
+router.post(ingredientRoutes.addBD, ingredientController.postIngredienteIntoPantry);
+
 // CHECK igual podemos usarlo en un futuro
 // Router.get("/filter", ingredientController.filterIngredients);
 // Router.get("/filter/:filter", ingredientController.filterIngredients);

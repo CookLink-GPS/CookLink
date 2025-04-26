@@ -32,10 +32,35 @@
                         disabled>
                         <i id="clearIcon" class="bi bi-x-lg text-dark"></i>
                     </button>
-                    <a href="/ingredientes" class="btn btn-custom d-flex align-items-center gap-1">
+                    <button type="button" class="btn btn-custom d-flex align-items-center gap-1"
+                        onclick="openAddIngredientModal()">
                         <i class="bi bi-plus fs-3"></i>
                         Añadir ingrediente
-                    </a>
+                    </button>
+
+
+                    <!-- Modal para añadir ingrediente (personalizado) -->
+                    <div class="addIngredientModal" id="addIngredientModal">
+                        <div class="addIngredientModal-content">
+                            <div class="addIngredientModal-header">
+                                <h5 class="addIngredientModal-title" id="addIngredientModalLabel">Añadir Ingrediente
+                                </h5>
+                            </div>
+                            <div class="addIngredientModal-body">
+                                <p>¿Cómo deseas añadir el ingrediente?</p>
+                                <div class="d-flex flex-column gap-3">
+                                    <a href="/ingredientes/" class="btn btn-light-custom">Añadir manualmente</a>
+                                    <a href="/ingredientes/anyadirBD" class="btn btn-light-custom">Añadir de la base de
+                                        datos</a>
+                                </div>
+                            </div>
+                            <div class="addIngredientModal-footer">
+                                <button type="button" class="btn btn-success"
+                                    onclick="document.getElementById('addIngredientModal').style.display='none'">Cancelar</button>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="table-responsive">
