@@ -2,7 +2,6 @@ const { badRequest, internalServerError } = require("../config/httpcodes");
 const Contains = require("../models/containsModel");
 const Pantry = require("../models/pantryModel");
 const Recipe = require("../models/recipeModel");
-const ShoppingList = require("../models/shoppingListModel");
 
 const AppError = require("../utils/AppError");
 const { stringComparator } = require("../utils/stringFunctions");

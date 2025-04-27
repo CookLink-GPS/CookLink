@@ -63,3 +63,41 @@ exports.getRecipeInfo = async (req, res) => {
 		});
 	}
 };
+
+
+exports.cookRecipe = async (req, res) => {
+	const userId = req.session.user.id;
+	const recipeId = req.params.id;
+	const usados = req.body.usados.map(ingredienteStr => {
+		try {
+			return JSON.parse(ingredienteStr);
+		}
+		catch (error) {
+			console.error("Error parsing ingredient:", error);
+			return null;
+		}
+	}).filter(ingrediente => ingrediente !== null);
+
+	try {
+		const result = await recipeService.cookRecipe({ userId, recipeId, suficientes: usados });
+		const recipe = await recipeService.getRecipeById(recipeId);
+		const ingredients = await recipeService.getIngredients(recipeId);
+		recipe.ingredients = ingredients;
+
+		renderView(res, "recipe-info", ok, {
+			recipe,
+			cocinar: true,
+			usados: result.usados,
+			mensajeExito: result.message
+		});
+
+	}
+	catch (error) {
+		console.error("Error al intentar cocinar la receta:", error);
+		renderView(res, "recipe-info", badRequest, {
+			recipe: null,
+			mensajeError: "Error al intentar cocinar la receta."
+		});
+	}
+
+};
