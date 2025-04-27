@@ -65,8 +65,7 @@ const ShoppingListService = {
 		if (!userId) throw new AppError("Se requiere el ID del usuario", badRequest);
 
 		try {
-		  const items = await ShoppingList.getItems(userId);
-		  return items;
+		  return await ShoppingList.getItems(userId); ;
 		}
 		catch (err) {
 		  throw new AppError(err, badRequest);
