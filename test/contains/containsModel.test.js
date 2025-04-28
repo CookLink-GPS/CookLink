@@ -1,11 +1,12 @@
 /* eslint-disable no-undef */
 
 const assert = require("assert");
-const { deleteRecipes, deleteIngredients, deleteContains, insertIngredients, insertRecetas, insertContains } = require("../testUtils");
+const { deleteRecipes, deleteIngredients, deleteContains, insertIngredients, insertRecetas, insertContains, deleteListaCompra } = require("../testUtils");
 const Contains = require("../../models/containsModel");
 
 describe("Contains test", () => {
 	before(async () => {
+		await deleteListaCompra();
 		await deleteContains();
 		await deleteRecipes();
 		await deleteIngredients();
