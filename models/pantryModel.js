@@ -52,15 +52,15 @@ const Pantry = {
      * @returns {Promise<void>}
      * @throws {Error} - If an error occurs while updating the quantity.
      */
-	async updateIngredientQuantity(userId, ingredientId, newQuantity) {
+	async updateIngredientQuantity(idDespensa, newQuantity) {
 		try {
 			await db.query(
 				pantryQueries.updateIngredientQuantity,
-				[ newQuantity, userId, ingredientId ]
+				[ newQuantity, idDespensa ]
 			);
 		}
 		catch (error) {
-			throw new Error(`Error al actualizar la cantidad del ingrediente ${ingredientId} en la despensa del usuario ${userId}`);
+			throw new Error(`Error updating quantity for pantry item ${idDespensa}`);
 		}
 	},
 	/**

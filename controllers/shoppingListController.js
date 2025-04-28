@@ -3,7 +3,6 @@ const ShoppingListService = require("../services/shoppingListService");
 const { ok, badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const { renderView } = require("../middlewares/viewHelper");
-const { shoppingListRoutes } = require("../config/routes");
 const RecipeService = require("../services/recipeService");
 
 const ShoppingListController = {

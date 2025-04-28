@@ -1,7 +1,7 @@
 const ShoppingList = require("../models/shoppingListModel");
 const Ingredient = require("../models/ingredientModel");
 const AppError = require("../utils/AppError");
-const { badRequest } = require("../config/httpcodes");
+const { badRequest, internalServerError } = require("../config/httpcodes");
 
 const ShoppingListService = {
 	/**

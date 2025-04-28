@@ -3,7 +3,6 @@ const AppError = require("../utils/AppError");
 const Ingredient = require("../models/ingredientModel");
 const { removeAccents } = require("../utils/stringFunctions");
 const Pantry = require("../models/pantryModel");
-const e = require("express");
 
 
 const IngredientService = {

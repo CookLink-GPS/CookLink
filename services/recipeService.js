@@ -2,7 +2,6 @@ const { badRequest, internalServerError } = require("../config/httpcodes");
 const Contains = require("../models/containsModel");
 const Pantry = require("../models/pantryModel");
 const Recipe = require("../models/recipeModel");
-
 const AppError = require("../utils/AppError");
 const { stringComparator } = require("../utils/stringFunctions");
 const CERO = 0;
@@ -127,46 +126,25 @@ const RecipeService = {
 		}
 	},
 	/**
-	 * Cocinar receta
+	 * Cocina una receta restando ingredientes de la despensa
 	 *
 	 * @param {Object} params
 	 * @param {Number} params.userId - ID del usuario
 	 * @param {Number} params.recipeId - ID de la receta
-	 * @returns {Promise<Object>} - Resultado del intento de cocina
+	 * @returns {Promise<Object>} - Ingredientes usados o error si faltan
 	 */
-	async cookRecipe({ userId, recipeId }) {
+	async cookRecipe({ userId, recipeId, suficientes }) {
 		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o de la receta", badRequest);
 
-
 		try {
-			const pantry = await Pantry.getPantryFromUser(userId);
-			const pantryMap = new Map(pantry.map(p => [ p.id_ingrediente, p.cantidad ]));
-			const ingredientes = await Contains.getIngredientsFromRecipe(recipeId);
-
-			const faltantes = [];
-			const suficientes = [];
-
-			for (const { id, nombre, unidades } of ingredientes) {
-				const disponibles = pantryMap.get(id) || 0;
-
-				if (disponibles >= unidades) suficientes.push({ id, nombre, unidades });
-				 else faltantes.push({
-					id,
-					nombre,
-					unidadesNecesarias: unidades - disponibles
-				});
-
+			for (const { id, unidades } of suficientes) {
+				const existe = await Pantry.getPantryItemByIngredient(userId, id);
+				if (existe) {
+					const cantidad = parseFloat(existe.cantidad - unidades);
+					if (cantidad <= 0) await Pantry.deleteIngredient(userId, id);
+					else await Pantry.decreaseQuantity(userId, id, unidades);
+				}
 			}
-
-			if (faltantes.length > 0) return {
-				success: false,
-				message: "Faltan ingredientes para cocinar la receta",
-				faltantes
-			};
-
-
-			for (const { id, unidades } of suficientes) await Pantry.decreaseQuantity(userId, id, unidades);
-
 
 			return {
 				success: true,
@@ -180,36 +158,40 @@ const RecipeService = {
 		}
 	},
 	/**
-	 * Añade a la lista de la compra los ingredientes que faltan
+	 * Mira qué ingredientes tienes y cuáles te faltan para la receta
 	 *
 	 * @param {Number} userId - ID del usuario
 	 * @param {Number} recipeId - ID de la receta
-	 * @returns {Promise<Object>} - Ingredientes añadidos a la lista
+	 * @returns {Promise<{suficientes: Object[], faltantes: Object[]}>}
 	 */
-	async addMissingToShoppingList(userId, recipeId, faltantes) {
+	async checkRecipeRequirements(userId, recipeId) {
 		if (!userId || !recipeId) throw new AppError("Faltan datos del usuario o receta", badRequest);
 
 		try {
+			const pantry = await Pantry.getPantryFromUser(userId);
+			const pantryMap = new Map(pantry.map(p => [ p.id_ingrediente, p.cantidad ]));
+			const ingredientes = await Contains.getIngredientsFromRecipe(recipeId);
 
-			for (const { id, unidadesNecesarias, tipoUnidad } of faltantes) {
-				const existe = await ShoppingList.getItem(userId, id);
-				if (existe) {
-					const cantidad = parseFloat(existe.cantidad + unidadesNecesarias);
-					await ShoppingList.updateQuantity( existe.id_lista_compra, cantidad);
-				}
-				else await ShoppingList.addItem(userId, id, unidadesNecesarias, tipoUnidad);
+			const faltantes = [];
+			const suficientes = [];
+
+			for (const { id, nombre, unidades, tipoUnidad } of ingredientes) {
+				const disponibles = pantryMap.get(id) || 0;
+
+				if (disponibles >= unidades) suficientes.push({ id, nombre, unidades, tipoUnidad });
+				 else faltantes.push({
+					id,
+					nombre,
+					unidadesNecesarias: unidades - disponibles,
+					tipoUnidad
+				});
+
 			}
 
-
-			return {
-				success: true,
-				message: "Ingredientes añadidos a tu lista de la compra",
-				faltantes
-			};
+			return { suficientes, faltantes };
 		}
 		catch (error) {
-			console.error("[RecipeService] Error en addMissingToShoppingList:", error);
-			throw new AppError("Error al añadir ingredientes a la lista de la compra", internalServerError);
+			throw new AppError("Error al comprobar los ingredientes", internalServerError);
 		}
 	}
 

@@ -76,10 +76,9 @@ const PantryService = {
 			if (!pantryItem) throw new AppError("Item not found in pantry", badRequest);
 			if (pantryItem.id_usuario !== userId) throw new AppError("Unauthorized operation", forbidden);
 			if (quantityToDelete > pantryItem.cantidad) throw new AppError("Cannot delete more than available quantity", badRequest);
-			const ingredientId = pantryItem.id_ingrediente;
-			if (quantityToDelete === pantryItem.cantidad) await Pantry.deleteIngredient(userId, pantryItem.id_ingrediente);
-			else await Pantry.updateIngredientQuantity(userId, ingredientId, pantryItem.cantidad - quantityToDelete);
 
+			if (quantityToDelete === pantryItem.cantidad) await Pantry.deleteIngredient(userId, pantryItem.id_ingrediente);
+			else await Pantry.updateIngredientQuantity(idDespensa, pantryItem.cantidad - quantityToDelete);
 		}
 		catch (error) {
 			console.error(error.message);
@@ -111,6 +110,7 @@ const PantryService = {
 				existingItem.id_despensa,
 				existingItem.cantidad + quantity
 			);
+
 			else await Pantry.addIngredient(userId, ingredientId, quantity);
 		}
 		catch (error) {

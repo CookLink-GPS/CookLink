@@ -5,6 +5,7 @@ const Recipe = require("../../services/recipeService");
 const { deleteIngredients, insertIngredients, insertPantry, deletePantry, deleteUsers, insertRecetas, deleteRecipes, insertContains, deleteContains, insertListaCompra, deleteListaCompra } = require("../testUtils");
 const User = require("../../models/userModel");
 const db = require("../../config/database");
+const ShoppingListService = require("../../services/shoppingListService");
 const CERO = 0;
 const QUINIENTOS = 500;
 const SETECIENTOS = 700;
@@ -285,7 +286,7 @@ describe("Servicio de recetas", () => {
 
 		it("Debe de insertar un ingrediente nuevo en la lista", async () => {
 			const requirements = await Recipe.checkRecipeRequirements(user0.id, idrs[2]);
-			const result = await Recipe.addMissingToShoppingList(user0.id, idrs[2], requirements.faltantes);
+			const result = await ShoppingListService.addMissingToShoppingList(user0.id, requirements.faltantes);
 			const cantidadLista= await db.query( "SELECT cantidad FROM lista_compra WHERE id_usuario = ? AND id_ingrediente = ?", [ user0.id, ids[1] ]);
 
 			assert.strictEqual(result.success, true);
@@ -296,7 +297,7 @@ describe("Servicio de recetas", () => {
 
 		it("Debe de aumentar la cantidad de un ingrediente de la lista", async () => {
 			const requirements = await Recipe.checkRecipeRequirements(user.id, idrs[2]);
-			const result = await Recipe.addMissingToShoppingList(user.id, idrs[2], requirements.faltantes);
+			const result = await ShoppingListService.addMissingToShoppingList(user.id, requirements.faltantes);
 			const cantidadLista= await db.query( "SELECT cantidad FROM lista_compra WHERE id_usuario = ? AND id_ingrediente = ?", [ user.id, ids[1] ]);
 
 			assert.strictEqual(result.success, true);
