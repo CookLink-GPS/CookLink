@@ -41,9 +41,9 @@ const deleteIngredients = async () => {
  * @returns {void}
  */
 const insertIngredients = async ingredients => {
-	const insertPromises = ingredients.map(ingredient =>
-		db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingredient));
-	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+
+	for (const ingredient of ingredients) await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingredient);
+
 	return db.query("SELECT id, nombre, tipoUnidad FROM ingredientes");
 };
 
@@ -92,9 +92,9 @@ const deleteRecipes = async () => {
  * @returns {Promise<Array>} - Devuelve una consulta con los id y nombre de las recetas
  */
 const insertRecetas = async recetas => {
-	const insertPromises = recetas.map(receta =>
-		db.query("INSERT INTO recetas (nombre, descripcion) VALUES (?, ?)", receta));
-	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+	for (const receta of recetas) await db.query("INSERT INTO recetas (nombre, descripcion) VALUES (?, ?)", receta);
+
+
 	return db.query("SELECT id, nombre FROM recetas");
 };
 
