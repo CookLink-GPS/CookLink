@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			displayErrorMessages(mensajeError);
 
-
 			if (Object.keys(mensajeError).length === 0) form.classList.add("was-validated");
 			else form.classList.remove("was-validated");
 
@@ -23,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const modalElement = document.getElementById("exitoModal");
 	if (modalElement) {
-		modalElement.style.display = "block";
+		modalElement.style.display = "none";
 
 		modalElement.addEventListener("click", event => {
 			if (event.target === modalElement) modalElement.style.display = "none";
