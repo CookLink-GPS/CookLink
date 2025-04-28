@@ -1,7 +1,7 @@
 const ShoppingList = require("../models/shoppingListModel");
 const Ingredient = require("../models/ingredientModel");
 const AppError = require("../utils/AppError");
-const { badRequest } = require("../config/httpcodes");
+const { badRequest, internalServerError } = require("../config/httpcodes");
 
 const ShoppingListService = {
 	/**
@@ -55,6 +55,38 @@ const ShoppingListService = {
 		}
 		catch (err) {
 			throw new AppError(err, badRequest);
+		}
+	},
+	/**
+	 * Añade a la lista de la compra los ingredientes que faltan
+	 *
+	 * @param {Number} userId - ID del usuario
+	 * @returns {Promise<Object>} - Ingredientes añadidos a la lista
+	 */
+	async addMissingToShoppingList(userId, faltantes) {
+		if (!userId) throw new AppError("Faltan datos del usuario", badRequest);
+
+		try {
+
+			for (const { id, unidadesNecesarias, tipoUnidad } of faltantes) {
+				const existe = await ShoppingList.getItem(userId, id);
+				if (existe) {
+					const cantidad = parseFloat(existe.cantidad + unidadesNecesarias);
+					await ShoppingList.updateQuantity( existe.id_lista_compra, cantidad);
+				}
+				else await ShoppingList.addItem(userId, id, unidadesNecesarias, tipoUnidad);
+			}
+
+
+			return {
+				success: true,
+				message: "Ingredientes añadidos a tu lista de la compra",
+				faltantes
+			};
+		}
+		catch (error) {
+			console.error("[ShoppingListService] Error en addMissingToShoppingList:", error);
+			throw new AppError("Error al añadir ingredientes a la lista de la compra", internalServerError);
 		}
 	}
 };

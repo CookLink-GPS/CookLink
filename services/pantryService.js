@@ -110,6 +110,7 @@ const PantryService = {
 				existingItem.id_despensa,
 				existingItem.cantidad + quantity
 			);
+
 			else await Pantry.addIngredient(userId, ingredientId, quantity);
 		}
 		catch (error) {
