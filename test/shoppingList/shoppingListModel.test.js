@@ -7,7 +7,6 @@ require("dotenv").config();
 const assert = require("assert");
 const db = require("../../config/database");
 const ShoppingList = require("../../models/shoppingListModel");
-const { console } = require("inspector");
 
 describe("Modelo lista_compra", () => {
 	before(async () => {
