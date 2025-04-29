@@ -223,40 +223,33 @@ describe("Rutas lista de la compra", () => {
 			assert.equal(res2.status, badRequest);
 		});
 	});
-
-	// HU_015 – Marcar ingrediente como comprado en ROUTES
-	describe("Ruta para marcar ingrediente como comprado (HU_015)", () => {
-		const baseRoute = `http://${baseUrl}:${port}/lista-compra`;
-
-		beforeEach(async () => {
-			await deleteShoppingList();
-			await deletePantry();
-			await deleteIngredients();
-			await insertIngredients([ [ "Tomate", "kg" ] ]);
-			await fetch(`${baseRoute}/anyadir`, {
-				method: "POST",
-				body: JSON.stringify({ nombre: "Tomate", unidad: "kg", cantidad: 3 }),
-				headers: { "Content-Type": "application/json" }
-			});
+	// HU_015 - Marcar ingrediente como comprado en la lista de la compra
+	it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa", async () => {
+		// Primero añadir un ingrediente a la lista de compra
+		await fetch(`${baseUrl}/lista-compra/anyadir`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				nombre: "Tomate",
+				cantidad: 1,
+				unidad: "kg"
+			})
 		});
 
-		afterEach(async () => {
-			await deleteShoppingList();
-			await deletePantry();
-			await deleteIngredients();
-		});
+		// Recuperar el ID del ingrediente en la lista
+		const responseList = await fetch(`${baseUrl}/lista-compra`);
+		const html = await responseList.text();
+		const idMatch = html.match(/data-id="(\d+)"/);
+		const listId = idMatch ? idMatch[1] : null;
 
-		it("Debe mover el ingrediente de la lista de la compra a la despensa (Routes)", async () => {
-		// Primero obtenemos el id del ingrediente de la lista
-			const resLista = await fetch(`${baseRoute}/ver`);
-			const lista = await resLista.json();
-			const idListaCompra = lista[0].idListaCompra;
+		if (!listId) throw new Error("No se encontró el id_lista_compra en la respuesta HTML");
 
-			// Marcamos como comprado
-			const res = await fetch(`${baseRoute}/comprado/${idListaCompra}`, { method: "POST" });
+		// Marcar como comprado
+		const responseBought = await fetch(`${baseUrl}/lista-compra/comprado/${listId}`, { method: "POST" });
 
-			assert.equal(res.status, 200);
-		});
+
+		expect(responseBought.ok).to.be.true;
+		expect(responseBought.status).to.equal(200);
 	});
 
 
