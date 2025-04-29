@@ -175,3 +175,16 @@ searchInput.addEventListener("input", debounce(async () => {
 
 	await searchIngredients(search);
 }, 100));
+
+function openAddIngredientModal() {
+	const modalElement = document.getElementById("addIngredientModal");
+	if (modalElement) {
+		modalElement.style.display = "block";
+
+		modalElement.addEventListener("click", event => {
+			if (event.target === modalElement) modalElement.style.display = "none";
+
+		});
+	}
+}
+

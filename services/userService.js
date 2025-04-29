@@ -40,7 +40,7 @@ const UserService = {
 	register: async user => {
 		if (!user.username) throw new AppError("Falta el nombre de usuario", badRequest);
 		if (!user.password) throw new AppError("Falta la contraseña", badRequest);
-		if (!user.confirm_password) throw new AppError("Falta la contraseña", badRequest);
+		if (!user.confirm_password) throw new AppError("Falta confirmar la contraseña", badRequest);
 		if (/[\s\t]/.test(user.username)) throw new AppError("El nombre de usuario tiene espacios", badRequest);
 		if (/[\s\t]/.test(user.password)) throw new AppError("La contraseña tiene espacios", badRequest);
 

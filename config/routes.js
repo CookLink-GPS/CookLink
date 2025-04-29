@@ -9,12 +9,17 @@ const Routes = {
 	recipeRoutes: {
 		default: "/recetas",
 		recommendations: "/recomendaciones",
-		recipeInfo: "/:id"
+		recipeInfo: "/:id",
+		cook: "/cocinar/:id",
+		check: "/comprobar/:id",
+		addToShoppingList: "/anyadir-a-lista/:id"
 	},
 	ingredientRoutes: {
 		default: "/ingredientes",
 		toIngredient: "/",
-		add: "/anyadir"
+		add: "/anyadir",
+		addBD: "/anyadirBD",
+		ingredientesBD: "anyadirBD/ok"
 	},
 	pantryRoutes: {
 		default: "/despensa",
@@ -35,7 +40,8 @@ const Routes = {
 	shoppingListRoutes: {
 		default: "/lista-compra",
 		add: "/anyadir",
-		show: "/"
+		show: "/",
+		bought: "/comprado/:id"
 	  }
 };
 

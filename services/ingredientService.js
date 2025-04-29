@@ -27,19 +27,23 @@ const IngredientService = {
 			// 1. Buscar el ingrediente en la tabla ingrediente
 			const ingredienteExistente = await Ingredient.findByName(ingrediente.nombre);
 
+			if (cantidad <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
+			if (cantidad > 100000) throw new AppError("La cantidad no puede ser mayor que 100.000", badRequest);
+
 			let ingredientId;
 			let existsInPantry;
 			let action = "";
 			if (ingredienteExistente) {
 				if (ingredienteExistente.tipoUnidad.trim().toLowerCase() !== ingrediente.tipoUnidad.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredienteExistente.tipoUnidad}`, badRequest);
-
 				ingredientId = ingredienteExistente.id;
 
 				// 3. Verificar si ya está en la despensa
 				existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
 
 				if (existsInPantry) {
-					await Pantry.updateIngredientQuantity(userId, ingredientId, cantidad);
+					const cantidadActual = existsInPantry.cantidad;
+					cantidad = cantidadActual + cantidad;
+					await Pantry.updateIngredientQuantity(existsInPantry.id_despensa, cantidad);
 					action = "updated";
 					return {
 						action,
@@ -85,9 +89,61 @@ const IngredientService = {
 		});
 
 		return res;
+	},
+
+	async getAllIngredientsFromDatabase() {
+		const ingredients = await Ingredient.getAllIngredients();
+
+		return ingredients;
+	},
+
+	async getIngredientsFromUserPantry(userId) {
+		try {
+			const userIngredients = await Pantry.getPantryFromUser(userId);
+			return userIngredients;
+		}
+		catch (error) {
+			console.error("Error usuario:", error);
+			throw error;
+		}
+	},
+
+	async addIngredientToPantry(userId, ingredientId, quantity) {
+		try {
+			const existsInPantry = await Pantry.getPantryItemByIngredient(userId, ingredientId);
+			let action = "";
+			if (quantity <= 0) throw new AppError("La cantidad debe ser mayor que 0", badRequest);
+			if (quantity > 100000) throw new AppError("La cantidad no puede ser mayor que 100.000", badRequest);
+			if (existsInPantry) {
+				const ingredient = await Ingredient.getIngredient(ingredientId);
+				const cantidadActual = existsInPantry.cantidad;
+				quantity = cantidadActual + quantity;
+				await Pantry.updateIngredientQuantity(existsInPantry.id_despensa, quantity);
+				action = "updated";
+				return {
+					action,
+					nombre: ingredient.nombre,
+					tipoUnidad: ingredient.tipoUnidad,
+					quantity
+				};
+			}
+
+			action = "added";
+			await Pantry.addIngredient(userId, ingredientId, quantity);
+			const ingredient = await Ingredient.getIngredient(ingredientId);
+			return {
+				action,
+				nombre: ingredient.nombre,
+				tipoUnidad: ingredient.tipoUnidad,
+				quantity
+			};
+
+		}
+		catch (error) {
+			console.error("Error al añadir el ingrediente a la despensa:", error);
+			throw error;
+		}
 	}
-
 };
-
 
 module.exports = IngredientService;

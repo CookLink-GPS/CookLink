@@ -74,4 +74,52 @@ describe("Modelo ingrediente", () => {
 			assert.ok(good);
 		});
 	});
+
+	describe("Obtener todos los ingredientes", () => {
+		const ingredientes = [
+			[ "harina", "gramos" ],
+			[ "arroz", "gramos" ],
+			[ "leche", "litros" ]
+		];
+
+		it("Debe devolver todos los ingredientes", async () => {
+			await insertIngredients(ingredientes);
+
+			const res = await Ingredient.getAllIngredients();
+
+			ingredientes.forEach(ingrediente => {
+				assert.ok(res.find(({ nombre, tipoUnidad }) => ingrediente[0] === nombre && ingrediente[1] === tipoUnidad));
+			});
+		});
+	});
+
+	describe("Añadir ingrediente de la base de datos a la despensa", () => {
+		const ingredientes = [
+			[ "harina", "gramos" ],
+			[ "arroz", "gramos" ],
+			[ "leche", "litros" ]
+		];
+
+		it("Debe añadir el ingrediente seleccionado de la base de datos a la despensa", async () => {
+			await insertIngredients(ingredientes);
+			const all = await Ingredient.getAllIngredients();
+			const firstId = all[0].id;
+
+			const res = await Ingredient.getIngredient(firstId);
+
+			assert.strictEqual(res.id, firstId);
+			assert.strictEqual(res.nombre, ingredientes[0][0]);
+			assert.strictEqual(res.tipoUnidad, ingredientes[0][1]);
+		});
+
+		it("Debe devolver un error si no selecciona ningún ingrediente de la base de datos", async () => {
+			await insertIngredients(ingredientes);
+			const all = await Ingredient.getAllIngredients();
+			const maxId = all.reduce((m, r) => r.id > m ? r.id : m, 0);
+			const missingId = maxId + 1;
+
+			const res = await Ingredient.getIngredient(missingId);
+			assert.strictEqual(res, undefined, "Debe devolver undefined cuando no hay filas seleccionadas");
+		});
+	});
 });

@@ -41,9 +41,9 @@ const deleteIngredients = async () => {
  * @returns {void}
  */
 const insertIngredients = async ingredients => {
-	const insertPromises = ingredients.map(ingredient =>
-		db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingredient));
-	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+
+	for (const ingredient of ingredients) await db.query("INSERT INTO ingredientes (nombre, tipoUnidad) VALUES (?, ?)", ingredient);
+
 	return db.query("SELECT id, nombre, tipoUnidad FROM ingredientes");
 };
 
@@ -69,6 +69,13 @@ const insertPantry = async pantrys => {
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
 };
 
+const insertPantryAddIngredient = async pantrys => {
+	const insertPromises = pantrys.map(pantry =>
+		db.query("INSERT INTO despensa (id_usuario, id_ingrediente, cantidad) VALUES (?, ?, ?)", pantry));
+	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+	return db.query("SELECT id_usuario, id_ingrediente, cantidad FROM despensa");
+};
+
 /**
  * Elimina todas las recetas de la base de datos.
  *
@@ -85,9 +92,9 @@ const deleteRecipes = async () => {
  * @returns {Promise<Array>} - Devuelve una consulta con los id y nombre de las recetas
  */
 const insertRecetas = async recetas => {
-	const insertPromises = recetas.map(receta =>
-		db.query("INSERT INTO recetas (nombre, descripcion) VALUES (?, ?)", receta));
-	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+	for (const receta of recetas) await db.query("INSERT INTO recetas (nombre, descripcion) VALUES (?, ?)", receta);
+
+
 	return db.query("SELECT id, nombre FROM recetas");
 };
 
@@ -107,9 +114,18 @@ const deleteContains = async () => {
  * @returns {Promise<void>}
  */
 const insertContains = async contains => {
-	const insertPromises = contains.map(contain =>
-		db.query("INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES (?, ?, ?)", contain));
+	const insertPromises = contains.map(contain => db.query("INSERT INTO contiene (id_receta, id_ingrediente, unidades) VALUES (?, ?, ?)", contain));
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+};
+
+const insertListaCompra = async ingredientes => {
+	const insertPromises = ingredientes.map( ingrediente =>
+		db.query("INSERT INTO lista_compra (id_usuario, id_ingrediente, cantidad, unidad_medida) VALUES (?, ?, ?, ?)", ingrediente));
+	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
+};
+
+const deleteListaCompra = async () => {
+	await db.query("DELETE FROM lista_compra");
 };
 
 const insertDummy = async () => {
@@ -159,6 +175,14 @@ const insertShoppigList = async lista => {
 	await Promise.all(insertPromises); // Ejecuta todas las inserciones en paralelo
 };
 
+const getPantryQuantity = async (idUsuario, idIngrediente) => {
+	const [ result ] = await db.query(
+		`SELECT cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ?`,
+		[ idUsuario, idIngrediente ]
+	);
+	return result?.cantidad ?? 0; // Devuelve 0 si no hay resultado
+};
+
 module.exports = {
 	deleteUsers,
 	deleteIngredients,
@@ -169,10 +193,14 @@ module.exports = {
 	insertRecetas,
 	deleteContains,
 	insertContains,
+	insertListaCompra,
+	deleteListaCompra,
 	insertDummy,
 	createuser,
 	createTestUsers,
 	testtingSession,
 	deleteShoppingList,
-	insertShoppigList
+	insertShoppigList,
+	getPantryQuantity,
+	insertPantryAddIngredient
 };

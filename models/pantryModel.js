@@ -93,7 +93,8 @@ const Pantry = {
      * @returns {Promise<PantryIngredient[]>} - Array containing the id and amount
 	 *                                          name and unit type of each ingredient in the pantry.
      */
-	async getIngredientsDetails(userId) {
+	// eslint-disable-next-line no-warning-comments
+	async getIngredientsDetails(userId) { // CHECK ESTA FUNC ES LA DE LA NUEVA QUERY
 		try {
 			const result = await db.query(pantryQueries.getIngredientsDetails, [ userId ]);
 			return result.map(row => ({
@@ -165,7 +166,7 @@ const Pantry = {
 		try {
 			console.log(`[Model] Recibido:`, userId, ingredientId);
 			const rows = await db.query(
-				`SELECT id_ingrediente, cantidad FROM despensa WHERE id_usuario = ? AND id_ingrediente = ? LIMIT 1`,
+				pantryQueries.findItem,
 				[ userId, ingredientId ]
 			);
 			return rows.length > 0 ? rows[0] : null;
@@ -174,7 +175,28 @@ const Pantry = {
 			console.error("[Model pantry] Error al buscar en la despensa:", error);
 			return false;
 		}
+	},
+	/**
+		 * Resta cantidad de un ingrediente de la despensa del usuario
+		 *
+		 * @param {Number} userId - ID del usuario
+		 * @param {Number} ingredientId - ID del ingrediente
+		 * @param {Number} cantidad - Cantidad a restar
+		 * @returns {Promise<void>}
+		 */
+	async decreaseQuantity(userId, ingredientId, cantidad) {
+		try {
+			await db.query(
+				pantryQueries.decreaseQuantity,
+				[ cantidad, userId, ingredientId ]
+			);
+		}
+		catch (error) {
+			throw new Error(error.sqlMessage);
+		}
 	}
+
 };
 
 module.exports = Pantry;
+

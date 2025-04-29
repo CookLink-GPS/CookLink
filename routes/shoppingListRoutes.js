@@ -12,4 +12,7 @@ router.get(shoppingListRoutes.add, ShoppingListController.showAddForm);
 // Para ecribir datos para los CA
 router.post(shoppingListRoutes.add, ShoppingListController.addIngredient);
 
+// Marcar como comprado
+router.post( shoppingListRoutes.bought, ShoppingListController.markAsBought);
+
 module.exports = router;

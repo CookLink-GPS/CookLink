@@ -227,6 +227,8 @@ describe("Rutas lista de la compra", () => {
 			assert.equal(res2.status, badRequest);
 		});
 	});
+
+  
 	// TEST DE INTEGRACION HU_012 VER INGREDIENTES EN LA LISTA DE COMPRAS
 	describe("Ver ingredientes de la lista de la compra", () => {
 		const route = `${baseRoute}/ver`;
@@ -281,6 +283,38 @@ describe("Rutas lista de la compra", () => {
 			assert.deepEqual(data, { mensaje: "No hay ningún ingrediente en la lista de la compra." });
 		});
 	});
+  
+	// HU_015 - Marcar ingrediente como comprado en la lista de la compra
+	it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa", async () => {
+		const responseAdd = await fetch(`http://${baseUrl}:${port}/lista-compra/anyadir`, {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: new URLSearchParams({
+				nombre: "Zanahoria",
+				cantidad: 200,
+				unidad: "g"
+			})
+		});
 
+		assert.strictEqual(responseAdd.status, ok);
+
+		const responseList = await fetch(`http://${baseUrl}:${port}/lista-compra`, { method: "GET" });
+		assert.strictEqual(responseList.status, ok);
+
+		const html = await responseList.text();
+		const match = html.match(/<input[^>]*class="form-check-input checkbox-compra"[^>]*id="(\d+)"/);
+  		assert.ok(match, "No se encontró el checkbox para el ingrediente");
+		const listId = match[1];
+
+		const buyResponse = await fetch(`http://${baseUrl}:${port}/lista-compra/comprado/${listId}`, {
+			method: "POST",
+			redirect: "manual"
+		});
+
+		assert.strictEqual(buyResponse.status, 200, "No se pudo marcar como comprado");
+
+		const updatedHtml = await (await fetch(`http://${baseUrl}:${port}/lista-compra`)).text();
+		assert.ok(!updatedHtml.includes(listId), "El ingrediente no fue eliminado de la lista");
+	});
 
 });

@@ -40,10 +40,10 @@ app.use(errorHandler);
 
 
 const port = config.port;
-const server = app.listen(port, () => {
+
+const server = app.listen(port, config.baseUrl, () => {
 	console.log(`Servidor en ejecución en http://${config.baseUrl}:${port}`);
 });
 
 
 module.exports = server;
-
