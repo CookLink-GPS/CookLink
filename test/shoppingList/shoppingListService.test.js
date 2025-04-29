@@ -211,9 +211,8 @@ describe("Servicio Lista de Compra", () => {
 			assert.ok(good);
 		});
 	});
+
 	// HU_015 – Marcar ingrediente como comprado en SERVICE
-
-
 	describe("Marcar ingrediente como comprado en el servicio (HU_015)", () => {
 		beforeEach(async () => {
 			await deleteShoppingList();

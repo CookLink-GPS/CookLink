@@ -243,10 +243,8 @@ describe("Rutas lista de la compra", () => {
 		assert.strictEqual(responseList.status, ok);
 
 		const html = await responseList.text();
-		const regex = /\/lista-compra\/comprado\/(\d+)/;
-		const match = regex.exec(html);
-
-		assert.ok(match, "No se encontró el botón de comprado para el ingrediente");
+		const match = html.match(/<input[^>]*class="form-check-input checkbox-compra"[^>]*id="(\d+)"/);
+		assert.ok(match, "No se encontró el checkbox para el ingrediente");
 		const listId = match[1];
 
 		// Finalmente, marcamos el ingrediente como comprado
