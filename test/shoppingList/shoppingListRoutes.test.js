@@ -225,31 +225,34 @@ describe("Rutas lista de la compra", () => {
 	});
 	// HU_015 - Marcar ingrediente como comprado en la lista de la compra
 	it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa", async () => {
-		// Primero añadir un ingrediente a la lista de compra
-		await fetch(`${baseUrl}/lista-compra/anyadir`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				nombre: "Tomate",
-				cantidad: 1,
-				unidad: "kg"
-			})
+	// Primero añadimos un ingrediente a la lista de compra
+		const responseAdd = await fetch(`http://${baseUrl}:${port}/lista-compra/anyadir`, {
+	  method: "POST",
+	  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+	  body: new URLSearchParams({
+				nombre: "Zanahoria",
+				cantidad: 200,
+				unidad: "g"
+	  })
 		});
 
-		// Recuperar el ID del ingrediente en la lista
-		const responseList = await fetch(`${baseUrl}/lista-compra`);
+		assert.strictEqual(responseAdd.status, ok);
+
+		// Ahora cogemos la lista actual para obtener el id del ingrediente recién añadido
+		const responseList = await fetch(`http://${baseUrl}:${port}/lista-compra`, { method: "GET" });
+		assert.strictEqual(responseList.status, ok);
+
 		const html = await responseList.text();
-		const idMatch = html.match(/data-id="(\d+)"/);
-		const listId = idMatch ? idMatch[1] : null;
+		const regex = /\/lista-compra\/comprado\/(\d+)/;
+		const match = regex.exec(html);
 
-		if (!listId) throw new Error("No se encontró el id_lista_compra en la respuesta HTML");
+		assert.ok(match, "No se encontró el botón de comprado para el ingrediente");
+		const listId = match[1];
 
-		// Marcar como comprado
-		const responseBought = await fetch(`${baseUrl}/lista-compra/comprado/${listId}`, { method: "POST" });
+		// Finalmente, marcamos el ingrediente como comprado
+		const responseBought = await fetch(`http://${baseUrl}:${port}/lista-compra/comprado/${listId}`, { method: "POST" });
 
-
-		expect(responseBought.ok).to.be.true;
-		expect(responseBought.status).to.equal(200);
+		assert.strictEqual(responseBought.status, ok);
 	});
 
 
