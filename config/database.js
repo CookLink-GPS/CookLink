@@ -14,7 +14,6 @@ const connectionConf = {
 // Certificado de la autoridad certificadora (CA)
 if (process.env.MODE === "prod"  || process.env.MODE === "test") connectionConf.ssl = { ca: fs.readFileSync(path.join(__dirname, "certificates/DigiCertGlobalRootCA.crt.pem")) };
 
-
 const pool = mysql.createPool(connectionConf);
 
 pool.query = util.promisify(pool.query);

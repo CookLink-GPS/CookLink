@@ -18,6 +18,7 @@ describe("Modelo lista_compra", () => {
 
 		await db.query("INSERT INTO usuarios (id, username, password) VALUES (1, 'testuser', '1234')");
 		await db.query("INSERT INTO ingredientes (id, nombre, tipoUnidad) VALUES (200, 'tomate', 'gramos')");
+		await db.query("INSERT INTO ingredientes (id, nombre, tipoUnidad) VALUES (201, 'pan', 'gramos')");
 	});
 
 	after(async () => {
@@ -25,6 +26,12 @@ describe("Modelo lista_compra", () => {
 		await db.query("DELETE FROM lista_compra");
 		await db.query("DELETE FROM ingredientes");
 		await db.query("DELETE FROM usuarios");
+		await db.query("SET FOREIGN_KEY_CHECKS = 1");
+	});
+
+	afterEach(async () => {
+		await db.query("SET FOREIGN_KEY_CHECKS = 0");
+		await db.query("DELETE FROM lista_compra");
 		await db.query("SET FOREIGN_KEY_CHECKS = 1");
 	});
 
@@ -43,6 +50,7 @@ describe("Modelo lista_compra", () => {
 
 	describe("Actualizar cantidad de ingredientes", () => {
 		it("Debe actualizar correctamente la cantidad", async () => {
+			await ShoppingList.addItem(1, 200, 150, "gramos");
 			let existe = await ShoppingList.getItem(1, 200);
 			await ShoppingList.updateQuantity(existe.id_lista_compra, 100);
 
@@ -50,7 +58,27 @@ describe("Modelo lista_compra", () => {
 
 			assert.equal(existe.cantidad, 100);
 		});
+    
+		it("No debe permitir una cantidad negativa", async () => {
+			try {
+				await ShoppingList.addItem(1, 200, 150, "gramos");
+				const existe = await ShoppingList.getItem(1, 200);
+				await ShoppingList.updateQuantity(existe.id_lista_compra, -1);
+			}
+			catch (err) {
+				console.log(err.message);
+			}
+		});
+	});
 
+	describe("Listar ingredientes lista de la compra", () => {
+		it("Debe listar ingredientes de la lista de la compra correctamente", async () => {
+			await ShoppingList.addItem(1, 200, 150, "gramos");
+			await ShoppingList.addItem(1, 201, 150, "gramos");
+
+			const result = await ShoppingList.getItems(1);
+
+			assert.strictEqual(result.length, 2);
 	});
 
 	// Grupo de pruebas para buscar por ID

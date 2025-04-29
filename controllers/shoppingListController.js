@@ -93,7 +93,7 @@ const ShoppingListController = {
 			else mensajeError.general = err.message;
 
 			// Otros errores
-			console.error(err);
+			// Console.error(err);
 			renderView(res, "error", badRequest, { mensajeError });
 		  }
 	  },
