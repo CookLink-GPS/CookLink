@@ -60,15 +60,6 @@ describe("Modelo lista_compra", () => {
 			assert.equal(existe.cantidad, 100);
 		});
 
-		it("No debe permitir una cantidad negativa", async () => {
-			try {
-				const existe = await ShoppingList.getItem(1, 200);
-				await ShoppingList.updateQuantity(existe.id_lista_compra, -1);
-			}
-			catch (err) {
-				console.log(err.message);
-			}
-		});
 	});
 
 	// Grupo de pruebas para buscar por ID
