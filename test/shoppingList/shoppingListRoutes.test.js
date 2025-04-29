@@ -3,7 +3,7 @@ const assert = require("node:assert");
 const { baseUrl, port } = require("../../config/config");
 const { deleteIngredients, deletePantry, deleteUsers, testtingSession, deleteShoppingList, insertIngredients } = require("../testUtils");
 const { badRequest, ok } = require("../../config/httpcodes");
-const UserService = require("../../services/userService");
+// Const UserService = require("../../services/userService");
 
 describe("Rutas lista de la compra", () => {
 	const baseRoute = `http://${baseUrl}:${port}/lista-compra`;
@@ -223,5 +223,41 @@ describe("Rutas lista de la compra", () => {
 			assert.equal(res2.status, badRequest);
 		});
 	});
+
+	// HU_015 – Marcar ingrediente como comprado en ROUTES
+	describe("Ruta para marcar ingrediente como comprado (HU_015)", () => {
+		const baseRoute = `http://${baseUrl}:${port}/lista-compra`;
+
+		beforeEach(async () => {
+			await deleteShoppingList();
+			await deletePantry();
+			await deleteIngredients();
+			await insertIngredients([ [ "Tomate", "kg" ] ]);
+			await fetch(`${baseRoute}/anyadir`, {
+				method: "POST",
+				body: JSON.stringify({ nombre: "Tomate", unidad: "kg", cantidad: 3 }),
+				headers: { "Content-Type": "application/json" }
+			});
+		});
+
+		afterEach(async () => {
+			await deleteShoppingList();
+			await deletePantry();
+			await deleteIngredients();
+		});
+
+		it("Debe mover el ingrediente de la lista de la compra a la despensa (Routes)", async () => {
+		// Primero obtenemos el id del ingrediente de la lista
+			const resLista = await fetch(`${baseRoute}/ver`);
+			const lista = await resLista.json();
+			const idListaCompra = lista[0].idListaCompra;
+
+			// Marcamos como comprado
+			const res = await fetch(`${baseRoute}/comprado/${idListaCompra}`, { method: "POST" });
+
+			assert.equal(res.status, 200);
+		});
+	});
+
 
 });
