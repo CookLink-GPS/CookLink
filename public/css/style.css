@@ -220,4 +220,18 @@ h1 {
 	cursor: default;
 }
 
+.checkbox-compra {
+    accent-color: #333;
+    background-color: #f0f0f0;
+    border: 2px solid #8a7d7d; 
+}
 
+.checkbox-compra:checked {
+    accent-color: #a25e4b;
+    background-color: #a25e4b;
+    border-color: #a25e4b;
+}
+
+.checkbox-compra:focus {
+    outline: none;
+}
