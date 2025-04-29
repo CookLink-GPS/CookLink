@@ -225,35 +225,40 @@ describe("Rutas lista de la compra", () => {
 	});
 	// HU_015 - Marcar ingrediente como comprado en la lista de la compra
 	it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa", async () => {
-	// Primero añadimos un ingrediente a la lista de compra
 		const responseAdd = await fetch(`http://${baseUrl}:${port}/lista-compra/anyadir`, {
-	  method: "POST",
-	  headers: { "Content-Type": "application/x-www-form-urlencoded" },
-	  body: new URLSearchParams({
-				nombre: "Zanahoria",
-				cantidad: 200,
-				unidad: "g"
-	  })
+		  method: "POST",
+		  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+		  body: new URLSearchParams({
+				nombre: "TestMarcarComprado",
+				cantidad: "1",
+				unidad: "gramos"
+		  }),
+		  redirect: "manual"
 		});
 
-		assert.strictEqual(responseAdd.status, ok);
+		const status = responseAdd.status;
+		const body = await responseAdd.text();
 
-		// Ahora cogemos la lista actual para obtener el id del ingrediente recién añadido
-		const responseList = await fetch(`http://${baseUrl}:${port}/lista-compra`, { method: "GET" });
-		assert.strictEqual(responseList.status, ok);
+		assert.strictEqual(status, 200, `No se pudo añadir el ingrediente antes de marcar como comprado.\nCódigo: ${status}\nRespuesta: ${body}`);
 
-		const html = await responseList.text();
-		const regex = /\/lista-compra\/comprado\/(\d+)/;
-		const match = regex.exec(html);
 
-		assert.ok(match, "No se encontró el botón de comprado para el ingrediente");
-		const listId = match[1];
+		const html = await (await fetch(`http://${baseUrl}:${port}/lista-compra`)).text();
+		const match = html.match(/input[^>]+class="[^"]*checkbox-compra[^"]*"[^>]+id="(\d+)"/);
+		assert.ok(match, "No se encontró el checkbox de ingrediente para marcar como comprado");
 
-		// Finalmente, marcamos el ingrediente como comprado
-		const responseBought = await fetch(`http://${baseUrl}:${port}/lista-compra/comprado/${listId}`, { method: "POST" });
+		const id = match[1];
 
-		assert.strictEqual(responseBought.status, ok);
-	});
 
+		const buyResponse = await fetch(`http://${baseUrl}:${port}/lista-compra/comprado/${id}`, {
+		  method: "POST",
+		  redirect: "manual"
+		});
+
+		assert.strictEqual(buyResponse.status, 200, "No se pudo marcar como comprado");
+
+
+		const updatedHtml = await (await fetch(`http://${baseUrl}:${port}/lista-compra`)).text();
+		assert.ok(!updatedHtml.includes(id), "El ingrediente no fue eliminado de la lista");
+	  });
 
 });
