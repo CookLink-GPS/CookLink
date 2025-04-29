@@ -1,7 +1,8 @@
 const ShoppingList = require("../models/shoppingListModel");
+const PantryService = require("../services/pantryService");
 const Ingredient = require("../models/ingredientModel");
 const AppError = require("../utils/AppError");
-const { badRequest, internalServerError } = require("../config/httpcodes");
+const { badRequest } = require("../config/httpcodes");
 
 const ShoppingListService = {
 	/**
@@ -51,7 +52,6 @@ const ShoppingListService = {
 				q
 			};
 
-
 		}
 		catch (err) {
 			throw new AppError(err, badRequest);
@@ -88,6 +88,47 @@ const ShoppingListService = {
 			console.error("[ShoppingListService] Error en addMissingToShoppingList:", error);
 			throw new AppError("Error al añadir ingredientes a la lista de la compra", internalServerError);
 		}
+	},
+
+
+	/**
+   * Recupera la lista de compra de un usuario.
+   * CL_012_01 y CL_012_02.
+   */
+	async getList(userId) {
+		// Fase previa de comprobración de la ausencia de datos
+		if (!userId) throw new AppError("Se requiere el ID del usuario", badRequest);
+
+		try {
+		  const items = await ShoppingList.getItems(userId);
+		  return items;
+		}
+		catch (err) {
+		  throw new AppError(err, badRequest);
+		}
+	  },
+
+	/**	CL_015_01
+		 * Marca un ítem de la lista como comprado:
+		 * 1) lo añade/actualiza en la despensa
+		 * 2) lo borra de la lista de compra
+	*/
+	async markAsBought(userId, listId) {
+		// Fase previa de comprobración de la ausencia de datos
+		if (!userId || !listId) throw new AppError("Faltan datos para marcar como comprado", badRequest);
+
+		// 1) Recuperar el item para conocer ingrediente y cantidad
+		const item = await ShoppingList.getById(listId);
+		if (!item || item.id_usuario !== userId) throw new AppError("Ítem no encontrado en la lista de compra", badRequest);
+
+		// 2) Delegamos la inserción/actualización en la despensa
+		//    PantryService.addIngredient ya comprueba existencia y suma cantidades
+		await PantryService.addIngredient(userId, item.id_ingrediente, item.cantidad);
+
+		// 3) Eliminamos de la lista de la compra
+		await ShoppingList.deleteItem(listId);
+
+		return { ingredientId: item.id_ingrediente, quantity: item.cantidad };
 	}
 };
 

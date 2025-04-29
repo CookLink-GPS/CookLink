@@ -17,7 +17,6 @@ const ShoppingListController = {
 			const userId = req.session.user.id;
 			const { nombre, cantidad, unidad } = req.body;
 			await ShoppingListService.addIngredient(userId, nombre, cantidad, unidad, UNITS);
-			// Res.redirect(shoppingListRoutes.default);
 			renderView(res, "shoppingListAdd", ok, {
 				mensajeExito: `Ingrediente "${nombre}" añadido a la lista de la compra: ${cantidad} ${unidad}`,
 				formData: {}
@@ -27,7 +26,6 @@ const ShoppingListController = {
 			const mensajeError = {};
 
 			if (err.message.toLowerCase().includes("ingrediente")) mensajeError.nombre = err.message;
-
 			if (err.message.toLowerCase().includes("unidad")) mensajeError.unidad = err.message;
 			if (err.message.toLowerCase().includes("cantidad")) mensajeError.cantidad = err.message;
 
@@ -76,6 +74,53 @@ const ShoppingListController = {
 		catch (error) {
 			console.error("Error al intentar añadir ingredientes a la lista de la compra:", error);
 			renderView(res, "recipe-info", badRequest, { mensajeError: "Error al intentar añadir ingredientes a la lista de la compra." });
+		}
+	},
+	/**
+   * CL_012_01 y CL_012_02:
+   * Muestra la lista de compra, o mensaje si está vacía.
+   */
+	 async showList(req, res) {
+		try {
+		  const userId = req.session.user.id;
+		  const items = await ShoppingListService.getList(userId);
+		  renderView(res, "shoppingList", ok, { items });
+		}
+		catch (err) {
+			const mensajeError = {};
+
+			if (err.message.toLowerCase().includes("usuario")) mensajeError.usuario = err.message;
+			else mensajeError.general = err.message;
+
+			// Otros errores
+			console.error(err);
+			renderView(res, "error", badRequest, { mensajeError });
+		  }
+	  },
+
+	/**
+   * CL_015_01: Marca un ingrediente como comprado, moviéndolo a la despensa.
+   */
+	async markAsBought(req, res) {
+		try {
+			const userId = req.session.user.id;
+			const listId = parseInt(req.params.id, 10);
+			await ShoppingListService.markAsBought(userId, listId);
+
+			const items = await ShoppingListService.getList(userId);
+			return renderView(res, "shoppingList", ok, {
+				items,
+				mensajeExito: "Ingrediente marcado como comprado y movido a la despensa."
+			});
+		}
+		catch (err) {
+			const mensajeError = {};
+			if (err.message.toLowerCase().includes("usuario")) mensajeError.usuario = err.message;
+			else mensajeError.general = err.message;
+
+			// Otros errores
+			console.error(err);
+			renderView(res, "error", badRequest, { mensajeError });
 		}
 	}
 };

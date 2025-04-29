@@ -223,5 +223,39 @@ describe("Rutas lista de la compra", () => {
 			assert.equal(res2.status, badRequest);
 		});
 	});
+	// HU_015 - Marcar ingrediente como comprado en la lista de la compra
+	it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa", async () => {
+		const responseAdd = await fetch(`http://${baseUrl}:${port}/lista-compra/anyadir`, {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: new URLSearchParams({
+				nombre: "Zanahoria",
+				cantidad: 200,
+				unidad: "g"
+			})
+		});
+
+		assert.strictEqual(responseAdd.status, ok);
+
+		const responseList = await fetch(`http://${baseUrl}:${port}/lista-compra`, { method: "GET" });
+		assert.strictEqual(responseList.status, ok);
+
+		const html = await responseList.text();
+		const regex = /\/lista-compra\/comprado\/(\d+)/;
+		const match = regex.exec(html);
+
+		assert.ok(match, "No se encontró el botón de comprado para el ingrediente");
+		const listId = match[1];
+
+		const buyResponse = await fetch(`http://${baseUrl}:${port}/lista-compra/comprado/${listId}`, {
+			method: "POST",
+			redirect: "manual"
+		});
+
+		assert.strictEqual(buyResponse.status, 200, "No se pudo marcar como comprado");
+
+		const updatedHtml = await (await fetch(`http://${baseUrl}:${port}/lista-compra`)).text();
+		assert.ok(!updatedHtml.includes(listId), "El ingrediente no fue eliminado de la lista");
+	});
 
 });

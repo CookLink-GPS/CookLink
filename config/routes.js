@@ -39,8 +39,9 @@ const Routes = {
 	},
 	shoppingListRoutes: {
 		default: "/lista-compra",
-		toShop: "/",
-		add: "/anyadir"
+		add: "/anyadir",
+		show: "/",
+		bought: "/comprado/:id"
 	  }
 };
 
