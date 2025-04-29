@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Despensa</title>
-    
+
     <!-- Estilos y fuentes -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -23,12 +23,12 @@
     <!-- Contenido principal -->
     <div class="container content text-center py-5">
 
-         <!-- Título de la sección -->
+        <!-- Título de la sección -->
         <h1 class="mb-4 p-3 text-white rounded">Mi lista de la compra</h1>
 
         <!-- Tabla de ingredientes -->
         <div class="light-red-container" style="width: 80%; margin: auto;">
-            
+
             <!-- Botón para añadir ingredientes -->
             <div class="mb-3 d-flex justify-content-center">
                 <div class="input-group" style="width: 80%;">
@@ -44,7 +44,7 @@
             <!-- Tabla con ingredientes -->
             <div class="table-responsive">
                 <table class="table shadow-sm" style="background-color: #EBD4C3; border: 2px solid #A25E4B;">
-                  
+
                     <!-- Encabezado de la tabla -->
                     <thead style="background-color: #8C4A3D; color: #EBD4C3;">
                         <tr>
@@ -76,7 +76,7 @@
                                         <%= item.nombre %>
                                     </td>
 
-                                     <!-- Cantidad del ingrediente -->
+                                    <!-- Cantidad del ingrediente -->
                                     <td class="ingredient-quantity">
                                         <%= item.cantidad %>
                                     </td>
@@ -101,29 +101,43 @@
             <!-- Botón de Volver -->
             <a href="/inicio" class="btn btn-custom btn-lg m-2">Volver</a>
         </div>
-        
-        <!-- Modal personalizado para confirmar compra -->
-        <div class="buyIngredientModal" id="buyIngredientModal">
-            <div class="buyIngredientModal-content">
-                <div class="buyIngredientModal-header">
-                    <h5 class="buyIngredientModal-title">¿Comprar este elemento?</h5>
-                </div>
-                <div class="buyIngredientModal-body">
-                    <p id="buyModalText"></p>
-                </div>
-                <div class="buyIngredientModal-footer d-flex justify-content-end gap-2">
-
-                    <!-- Cancelar la acción -->
-                    <button class="btn btn-secondary"
-                        onclick="document.getElementById('buyIngredientModal').style.display='none'">Cancelar</button>
-
-                    <!-- Formulario para confirmar compra -->
-                    <form id="buyForm" method="POST">
-                        <button type="submit" class="btn btn-success">Sí, comprar</button>
-                    </form>
+        <% if (mensajeExito) { %>
+            <div class="exitoModal" id="exitoModal">
+                <div class="exitoModal-content">
+                    <div class="exitoModal-header bg-success text-green">
+                        <h5 class="exitoModal-title" id="exitoModalLabel">¡Éxito!</h5>
+                    </div>
+                    <div class="exitoModal-body">
+                        <%= mensajeExito %>
+                    </div>
+                    <div class="exitoModal-footer">
+                        <a href="/lista-compra/" class="btn btn-success">Aceptar</a>
+                    </div>
                 </div>
             </div>
-        </div>
+            <% } %>
+                <!-- Modal personalizado para confirmar compra -->
+                <div class="buyIngredientModal" id="buyIngredientModal">
+                    <div class="buyIngredientModal-content">
+                        <div class="buyIngredientModal-header">
+                            <h5 class="buyIngredientModal-title">¿Comprar este elemento?</h5>
+                        </div>
+                        <div class="buyIngredientModal-body">
+                            <p id="buyModalText"></p>
+                        </div>
+                        <div class="buyIngredientModal-footer d-flex justify-content-end gap-2">
+
+                            <!-- Cancelar la acción -->
+                            <button class="btn btn-secondary"
+                                onclick="document.getElementById('buyIngredientModal').style.display='none'">Cancelar</button>
+
+                            <!-- Formulario para confirmar compra -->
+                            <form id="buyForm" method="POST">
+                                <button type="submit" class="btn btn-success">Sí, comprar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
 
 

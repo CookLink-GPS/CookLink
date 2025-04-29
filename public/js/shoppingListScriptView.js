@@ -24,3 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	});
 });
+
+// Mostrar el modal personalizado
+const modalElement = document.getElementById("exitoModal");
+if (modalElement) {
+	modalElement.style.display = "block";
+
+	modalElement.addEventListener("click", event => {
+		if (event.target === modalElement) modalElement.style.display = "none";
+
+	});
+}

@@ -110,7 +110,7 @@ const ShoppingListController = {
 			const items = await ShoppingListService.getList(userId);
 			return renderView(res, "shoppingList", ok, {
 				items,
-				mensajeExito: "Ingrediente marcado como comprado y movido a la despensa."
+				mensajeExito: "Ingrediente comprado y movido a la despensa."
 			});
 		}
 		catch (err) {
