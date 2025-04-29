@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-env mocha */
 /* eslint-disable no-undef */
 require("dotenv").config({ path: ".env.test" });
@@ -6,6 +7,7 @@ require("dotenv").config();
 const assert = require("assert");
 const db = require("../../config/database");
 const ShoppingList = require("../../models/shoppingListModel");
+const { console } = require("inspector");
 
 describe("Modelo lista_compra", () => {
 	before(async () => {
@@ -37,5 +39,56 @@ describe("Modelo lista_compra", () => {
 		// Comprobamos que se insertó correctamente
 		assert.strictEqual(result.cantidad, 150);
 		assert.strictEqual(result.unidad_medida, "gramos");
+	});
+
+	describe("Actualizar cantidad de ingredientes", () => {
+		it("Debe actualizar correctamente la cantidad", async () => {
+			let existe = await ShoppingList.getItem(1, 200);
+			await ShoppingList.updateQuantity(existe.id_lista_compra, 100);
+
+			existe = await ShoppingList.getItem(1, 200);
+
+			assert.equal(existe.cantidad, 100);
+		});
+
+		it("No debe permitir una cantidad negativa", async () => {
+			try {
+				const existe = await ShoppingList.getItem(1, 200);
+				await ShoppingList.updateQuantity(existe.id_lista_compra, -1);
+			}
+			catch (err) {
+				console.log(err.message);
+			}
+		});
+	});
+
+	describe("Buscar por id", () => {
+		it("Busca por id correctamente", async () => {
+			const existe = await ShoppingList.getItem(1, 200);
+			const filaListaCompra = await ShoppingList.getById(existe.id_lista_compra);
+
+			assert.equal(filaListaCompra.id_usuario, 1);
+			assert.equal(filaListaCompra.id_ingrediente, 200);
+		});
+	});
+
+	describe("Borrar de la lista", () => {
+		it("Borrar de la lista correctamente", async () => {
+			let existe = await ShoppingList.getItem(1, 200);
+			await ShoppingList.deleteItem(existe.id_lista_compra);
+			existe = await ShoppingList.getById(existe.id_lista_compra);
+
+			assert(!existe);
+		});
+
+		it("Borrar un elemento inexistente", async () => {
+
+			try {
+			await ShoppingList.deleteItem(-1);
+			}
+			catch (err) {
+				console.log(err.message);
+			}
+		});
 	});
 });
