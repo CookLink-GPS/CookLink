@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-env mocha */
 /* eslint-disable no-undef */
 require("dotenv").config({ path: ".env.test" });
@@ -32,10 +33,61 @@ describe("Modelo lista_compra", () => {
 		// Insertamos en la lista
 		await ShoppingList.addItem(1, 200, 150, "gramos");
 
+		// Obtiene el ítem insertado
 		const result = await ShoppingList.getItem(1, 200);
 
 		// Comprobamos que se insertó correctamente
 		assert.strictEqual(result.cantidad, 150);
 		assert.strictEqual(result.unidad_medida, "gramos");
+	});
+
+	describe("Actualizar cantidad de ingredientes", () => {
+		it("Debe actualizar correctamente la cantidad", async () => {
+			let existe = await ShoppingList.getItem(1, 200);
+			await ShoppingList.updateQuantity(existe.id_lista_compra, 100);
+
+			existe = await ShoppingList.getItem(1, 200);
+
+			assert.equal(existe.cantidad, 100);
+		});
+
+	});
+
+	// Grupo de pruebas para buscar por ID
+	describe("Buscar por id", () => {
+		it("Busca por id correctamente", async () => {
+			const existe = await ShoppingList.getItem(1, 200);
+			const filaListaCompra = await ShoppingList.getById(existe.id_lista_compra);
+
+			// Verifica que coincidan los datos
+			assert.equal(filaListaCompra.id_usuario, 1);
+			assert.equal(filaListaCompra.id_ingrediente, 200);
+		});
+	});
+
+	// Grupo de pruebas para eliminar elementos
+	describe("Borrar de la lista", () => {
+		it("Borrar de la lista correctamente", async () => {
+			let existe = await ShoppingList.getItem(1, 200);
+
+			// Elimina el ítem
+			await ShoppingList.deleteItem(existe.id_lista_compra);
+
+			// Intenta obtenerlo nuevamente
+			existe = await ShoppingList.getById(existe.id_lista_compra);
+
+			// Verifica que ya no exista
+			assert(!existe);
+		});
+
+		it("Borrar un elemento inexistente", async () => {
+			try {
+			// Intenta borrar un ID que no existe
+			await ShoppingList.deleteItem(-1);
+			}
+			catch (err) {
+				console.log(err.message);
+			}
+		});
 	});
 });

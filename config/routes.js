@@ -9,7 +9,10 @@ const Routes = {
 	recipeRoutes: {
 		default: "/recetas",
 		recommendations: "/recomendaciones",
-		recipeInfo: "/:id"
+		recipeInfo: "/:id",
+		cook: "/cocinar/:id",
+		check: "/comprobar/:id",
+		addToShoppingList: "/anyadir-a-lista/:id"
 	},
 	ingredientRoutes: {
 		default: "/ingredientes",
@@ -36,8 +39,9 @@ const Routes = {
 	},
 	shoppingListRoutes: {
 		default: "/lista-compra",
-		toShop: "/",
-		add: "/anyadir"
+		add: "/anyadir",
+		show: "/",
+		bought: "/comprado/:id"
 	  }
 };
 

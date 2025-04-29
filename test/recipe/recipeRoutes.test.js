@@ -54,5 +54,6 @@ describe("Rutas de recetas", () => {
 
 			assert.equal(res.status, ok); // 200 éxito
 		});
+
 	});
 });

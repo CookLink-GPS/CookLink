@@ -1,5 +1,6 @@
 DROP TABLE contiene;
 DROP TABLE despensa;
+DROP TABLE lista_compra;
 DROP TABLE usuarios;
 DROP TABLE ingredientes;
 DROP TABLE recetas;

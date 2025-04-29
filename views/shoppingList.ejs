@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Configuración básica del documento -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Despensa</title>
+
+    <!-- Estilos y fuentes -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/img/Logo.ico" type="image/x-icon">
+</head>
+
+<body class="bg-light">
+    <!-- NavBar -->
+    <div>
+        <%- include("fragments/nav") %>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container content text-center py-5">
+
+        <!-- Título de la sección -->
+        <h1 class="mb-4 p-3 text-white rounded">Mi lista de la compra</h1>
+
+        <!-- Tabla de ingredientes -->
+        <div class="light-red-container" style="width: 80%; margin: auto;">
+
+            <!-- Botón para añadir ingredientes -->
+            <div class="mb-3 d-flex justify-content-center">
+                <div class="input-group" style="width: 80%;">
+                    <div class="d-flex justify-content-end" style="width: 100%;">
+                        <a href="/lista-compra/anyadir" class="btn btn-custom d-flex align-items-center gap-1">
+                            <i class="bi bi-plus fs-3"></i>
+                            Añadir ingrediente
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla con ingredientes -->
+            <div class="table-responsive">
+                <table class="table shadow-sm" style="background-color: #EBD4C3; border: 2px solid #A25E4B;">
+
+                    <!-- Encabezado de la tabla -->
+                    <thead style="background-color: #8C4A3D; color: #EBD4C3;">
+                        <tr>
+                            <th>Comprado</th>
+                            <th>Nombre Ingrediente</th>
+                            <th>Cantidad</th>
+                            <th>Tipo Unidad</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Cuerpo de la tabla -->
+                    <tbody id="ingredientList">
+
+                        <!-- Renderizado condicional de la lista de ingredientes -->
+                        <% if (items && items.length> 0) { %>
+                            <% items.forEach(item=> { %>
+                                <tr>
+                                    <!-- Checkbox para marcar como comprado -->
+                                    <td>
+                                        <div class="form-check d-flex justify-content-center">
+                                            <input class="form-check-input checkbox-compra" type="checkbox"
+                                                id="<%= item.idListaCompra %>" data-nombre="<%= item.nombre %>"
+                                                data-cantidad="<%= item.cantidad %>" data-unidad="<%= item.unidad %>">
+                                        </div>
+                                    </td>
+
+                                    <!-- Nombre del ingrediente -->
+                                    <td>
+                                        <%= item.nombre %>
+                                    </td>
+
+                                    <!-- Cantidad del ingrediente -->
+                                    <td class="ingredient-quantity">
+                                        <%= item.cantidad %>
+                                    </td>
+
+                                    <!-- Unidad de medida -->
+                                    <td class="tipo-unidad">
+                                        <%= item.unidad %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                                    <!-- Mensaje si no hay ingredientes -->
+                                    <% } else { %>
+                                        <tr id="noIngredientsRow">
+                                            <td colspan="4" class="text-center text-muted">No tienes ingredientes en la
+                                                despensa</td>
+                                        </tr>
+                                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Botón de Volver -->
+            <a href="/inicio" class="btn btn-custom btn-lg m-2">Volver</a>
+        </div>
+        <% if (mensajeExito) { %>
+            <div class="exitoModal" id="exitoModal">
+                <div class="exitoModal-content">
+                    <div class="exitoModal-header bg-success text-green">
+                        <h5 class="exitoModal-title" id="exitoModalLabel">¡Éxito!</h5>
+                    </div>
+                    <div class="exitoModal-body">
+                        <%= mensajeExito %>
+                    </div>
+                    <div class="exitoModal-footer">
+                        <a href="/lista-compra/" class="btn btn-success">Aceptar</a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+                <!-- Modal personalizado para confirmar compra -->
+                <div class="buyIngredientModal" id="buyIngredientModal">
+                    <div class="buyIngredientModal-content">
+                        <div class="buyIngredientModal-header">
+                            <h5 class="buyIngredientModal-title">¿Comprar este elemento?</h5>
+                        </div>
+                        <div class="buyIngredientModal-body">
+                            <p id="buyModalText"></p>
+                        </div>
+                        <div class="buyIngredientModal-footer d-flex justify-content-end gap-2">
+
+                            <!-- Cancelar la acción -->
+                            <button class="btn btn-secondary"
+                                onclick="document.getElementById('buyIngredientModal').style.display='none'">Cancelar</button>
+
+                            <!-- Formulario para confirmar compra -->
+                            <form id="buyForm" method="POST">
+                                <button type="submit" class="btn btn-success">Sí, comprar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+    </div>
+    <!-- Footer -->
+    <div>
+        <%- include("fragments/footer") %>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/shoppingListScriptView.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
