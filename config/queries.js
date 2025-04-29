@@ -46,7 +46,6 @@ module.exports.shoppingListQueries = {
 		FROM lista_compra
 		WHERE id_usuario = ? AND id_ingrediente = ?
   `,
-
 	addItem: `
 	  INSERT INTO lista_compra
 		(id_usuario, id_ingrediente, cantidad, unidad_medida)

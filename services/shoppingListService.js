@@ -29,6 +29,7 @@ const ShoppingListService = {
 			}
 
 			const ingredientId = ingredient.id;
+			// Fase de comprobación sobre la coincidencia correcta del tipo de unidad esperado
 			if (ingredient.tipoUnidad.trim().toLowerCase() !== unit.trim().toLowerCase()) throw new AppError(`El tipo de unidad no coincide. Esperado: ${ingredient.tipoUnidad}`, badRequest);
 
 			// CL_011_06: si ya existe, sumar; si no, insertar
@@ -49,8 +50,6 @@ const ShoppingListService = {
 				ingredientId,
 				q
 			};
-
-
 		}
 		catch (err) {
 			throw new AppError(err, badRequest);
@@ -63,6 +62,7 @@ const ShoppingListService = {
    * CL_012_01 y CL_012_02.
    */
 	async getList(userId) {
+		// Fase previa de comprobración de la ausencia de datos
 		if (!userId) throw new AppError("Se requiere el ID del usuario", badRequest);
 
 		try {
@@ -80,6 +80,7 @@ const ShoppingListService = {
 		 * 2) lo borra de la lista de compra
 	*/
 	async markAsBought(userId, listId) {
+		// Fase previa de comprobración de la ausencia de datos
 		if (!userId || !listId) throw new AppError("Faltan datos para marcar como comprado", badRequest);
 
 		// 1) Recuperar el item para conocer ingrediente y cantidad

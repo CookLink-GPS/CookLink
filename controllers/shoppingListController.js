@@ -3,7 +3,6 @@ const ShoppingListService = require("../services/shoppingListService");
 const { ok, badRequest } = require("../config/httpcodes");
 const AppError = require("../utils/AppError");
 const { renderView } = require("../middlewares/viewHelper");
-// Const { shoppingListRoutes } = require("../config/routes");
 
 const ShoppingListController = {
 	/** Muestra el formulario */
@@ -27,7 +26,6 @@ const ShoppingListController = {
 			const mensajeError = {};
 
 			if (err.message.toLowerCase().includes("ingrediente")) mensajeError.nombre = err.message;
-
 			if (err.message.toLowerCase().includes("unidad")) mensajeError.unidad = err.message;
 			if (err.message.toLowerCase().includes("cantidad")) mensajeError.cantidad = err.message;
 
