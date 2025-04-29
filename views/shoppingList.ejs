@@ -58,9 +58,11 @@
                                 <tr>
                                     <td>
                                         <div class="form-check d-flex justify-content-center">
-                                          <input class="form-check-input checkbox-compra" type="checkbox" id="checkbox-<%= item.id %>">
+                                            <input class="form-check-input checkbox-compra" type="checkbox"
+                                                id="<%= item.idListaCompra %>" data-nombre="<%= item.nombre %>"
+                                                data-cantidad="<%= item.cantidad %>" data-unidad="<%= item.unidad %>">
                                         </div>
-                                      </td>
+                                    </td>
                                     <td>
                                         <%= item.nombre %>
                                     </td>
@@ -121,6 +123,26 @@
                 </div>
             </div>
         </div> -->
+        <!-- Modal personalizado para confirmar compra -->
+        <div class="buyIngredientModal" id="buyIngredientModal">
+            <div class="buyIngredientModal-content">
+                <div class="buyIngredientModal-header">
+                    <h5 class="buyIngredientModal-title">¿Comprar este elemento?</h5>
+                </div>
+                <div class="buyIngredientModal-body">
+                    <p id="buyModalText"></p>
+                </div>
+                <div class="buyIngredientModal-footer d-flex justify-content-end gap-2">
+                    <button class="btn btn-secondary"
+                        onclick="document.getElementById('buyIngredientModal').style.display='none'">Cancelar</button>
+                    <form id="buyForm" method="POST">
+                        <button type="submit" class="btn btn-success">Sí, comprar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
 
     </div>
     <!-- Footer -->
@@ -128,7 +150,7 @@
         <%- include("fragments/footer") %>
     </div>
 
-    <script src="/js/shoppingListScript.js"></script>
+    <script src="/js/shoppingListScriptView.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
