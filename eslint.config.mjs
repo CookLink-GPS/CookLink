@@ -56,6 +56,7 @@ export default [
 			"func-style": [ "error", "declaration", { "allowArrowFunctions": true } ],
 			"function-paren-newline": "warn",
 			"indent": [ "error", "tab" ],
+			"no-undef": "error",
 			"key-spacing": "error",
 			"keyword-spacing": "error",
 			"max-len": "off",
