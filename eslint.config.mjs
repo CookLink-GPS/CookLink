@@ -52,6 +52,7 @@ export default [
 			"comma-style": "error",
 			"computed-property-spacing": "error",
 			"eol-last": [ "error", "always" ],
+			"no-undef": "error",
 			"func-call-spacing": "error",
 			"func-style": [ "error", "declaration", { "allowArrowFunctions": true } ],
 			"function-paren-newline": "warn",
