@@ -3,7 +3,11 @@ const assert = require("node:assert");
 const { baseUrl, port } = require("../../config/config");
 const { deleteIngredients, deletePantry, deleteUsers, testtingSession, deleteShoppingList, insertIngredients } = require("../testUtils");
 const { badRequest, ok } = require("../../config/httpcodes");
-const UserService = require("../../services/userService");
+require("dotenv").config({ path: ".env.test" });
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_PASS:", process.env.DB_PASS);
+
+// Const UserService = require("../../services/userService");
 
 describe("Rutas lista de la compra", () => {
 	const baseRoute = `http://${baseUrl}:${port}/lista-compra`;
@@ -222,6 +226,95 @@ describe("Rutas lista de la compra", () => {
 			assert.equal(res.status, ok);
 			assert.equal(res2.status, badRequest);
 		});
+	});
+
+  
+	// TEST DE INTEGRACION HU_012 VER INGREDIENTES EN LA LISTA DE COMPRAS
+	describe("Ver ingredientes de la lista de la compra", () => {
+		const route = `${baseRoute}/ver`;
+
+		beforeEach(async () => {
+			await deleteShoppingList();
+			await deletePantry();
+			await deleteIngredients();
+			await insertIngredients([
+				[ "Tomate", "kg" ],
+				[ "Arroz", "gramos" ],
+				[ "Leche", "litros" ]
+			]);
+		});
+
+		after(async () => {
+			await deleteShoppingList();
+			await deleteIngredients();
+			await deletePantry();
+
+		});
+
+		it("Debe devolver un listado de ingredientes ordenado alfabéticamente si hay elementos en la lista", async () => {
+			await fetch(`${baseRoute}/anyadir`, {
+				method: "POST",
+				body: JSON.stringify({ nombre: "Leche", unidad: "litros", cantidad: 2 }),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			await fetch(`${baseRoute}/anyadir`, {
+				method: "POST",
+				body: JSON.stringify({ nombre: "Arroz", unidad: "gramos", cantidad: 500 }),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			const res = await fetch(route);
+			const data = await res.json();
+
+			assert.equal(res.status, 200);
+			assert.ok(Array.isArray(data));
+			assert.equal(data.length, 2);
+			assert.deepStrictEqual(data.map(i => i.nombre), [ "Arroz", "Leche" ]);
+		});
+
+		it("Debe devolver un mensaje si la lista de la compra está vacía", async () => {
+			await deleteShoppingList();
+
+			const res = await fetch(route);
+			const data = await res.json();
+
+			assert.equal(res.status, 200);
+			assert.deepEqual(data, { mensaje: "No hay ningún ingrediente en la lista de la compra." });
+		});
+	});
+  
+	// HU_015 - Marcar ingrediente como comprado en la lista de la compra
+	it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa", async () => {
+		const responseAdd = await fetch(`http://${baseUrl}:${port}/lista-compra/anyadir`, {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: new URLSearchParams({
+				nombre: "Zanahoria",
+				cantidad: 200,
+				unidad: "g"
+			})
+		});
+
+		assert.strictEqual(responseAdd.status, ok);
+
+		const responseList = await fetch(`http://${baseUrl}:${port}/lista-compra`, { method: "GET" });
+		assert.strictEqual(responseList.status, ok);
+
+		const html = await responseList.text();
+		const match = html.match(/<input[^>]*class="form-check-input checkbox-compra"[^>]*id="(\d+)"/);
+  		assert.ok(match, "No se encontró el checkbox para el ingrediente");
+		const listId = match[1];
+
+		const buyResponse = await fetch(`http://${baseUrl}:${port}/lista-compra/comprado/${listId}`, {
+			method: "POST",
+			redirect: "manual"
+		});
+
+		assert.strictEqual(buyResponse.status, 200, "No se pudo marcar como comprado");
+
+		const updatedHtml = await (await fetch(`http://${baseUrl}:${port}/lista-compra`)).text();
+		assert.ok(!updatedHtml.includes(listId), "El ingrediente no fue eliminado de la lista");
 	});
 
 });

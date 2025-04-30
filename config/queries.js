@@ -55,7 +55,6 @@ module.exports.shoppingListQueries = {
 		FROM lista_compra
 		WHERE id_usuario = ? AND id_ingrediente = ?
   `,
-
 	addItem: `
 	  INSERT INTO lista_compra
 		(id_usuario, id_ingrediente, cantidad, unidad_medida)
@@ -65,5 +64,25 @@ module.exports.shoppingListQueries = {
 	  UPDATE lista_compra
 	  SET cantidad = ?
 	  WHERE id_lista_compra = ?
+	`,
+	getList: `
+    SELECT 
+      li.id_lista_compra, 
+      i.nombre, 
+      li.cantidad, 
+      li.unidad_medida
+    FROM lista_compra li
+    JOIN ingredientes i ON li.id_ingrediente = i.id
+    WHERE li.id_usuario = ?
+    ORDER BY i.nombre ASC
+  `,
+	getById: `
+	SELECT id_lista_compra, id_usuario, id_ingrediente, cantidad
+	FROM lista_compra
+	WHERE id_lista_compra = ?
+	`,
+	deleteItem: `
+	DELETE FROM lista_compra
+	WHERE id_lista_compra = ?
 	`
 };

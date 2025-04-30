@@ -3,6 +3,7 @@
 const assert = require("node:assert");
 const ShoppingListService = require("../../services/shoppingListService");
 const { deleteIngredients, insertIngredients, testtingSession, deletePantry, deleteUsers, deleteShoppingList } = require("../testUtils");
+const PantryModel = require("../../models/pantryModel");
 
 describe("Servicio Lista de Compra", () => {
 	before(testtingSession);
@@ -210,4 +211,62 @@ describe("Servicio Lista de Compra", () => {
 			assert.ok(good);
 		});
 	});
+
+	// VER LISTA DE COMPRAS
+	describe("Ver ingredientes de la lista de la compra", () => {
+
+		// CL_012_01
+		it("Debe devolver un listado de ingredientes ordenado alfabéticamente si hay elementos en la lista", async () => {
+			await ShoppingListService.addIngredient(1, "Leche", 1, "litros", [ "litros", "gramos", "kg" ]);
+			await ShoppingListService.addIngredient(1, "Arroz", 500, "gramos", [ "litros", "gramos", "kg" ]);
+
+			const lista = await ShoppingListService.getList(1);
+
+
+			assert.ok(Array.isArray(lista));
+			assert.equal(lista.length, 2);
+			assert.deepStrictEqual(lista.map(i => i.nombre), [ "Arroz", "Leche" ]);
+		});
+
+		// CL_012_02
+		it("Debe devolver un mensaje si la lista de la compra está vacía", async () => {
+			await deleteShoppingList();
+
+			const lista = await ShoppingListService.getList(1);
+			assert.deepStrictEqual(lista, []);
+    });
+  });
+
+	// HU_015 – Marcar ingrediente como comprado en SERVICE
+	describe("Marcar ingrediente como comprado en el servicio (HU_015)", () => {
+		beforeEach(async () => {
+			await deleteShoppingList();
+			await deletePantry();
+			await deleteIngredients();
+			await insertIngredients([ [ "Tomate", "kg" ] ]);
+			await ShoppingListService.addIngredient(1, "Tomate", 3, "kg", [ "kg" ]);
+		});
+
+		afterEach(async () => {
+			await deleteShoppingList();
+			await deletePantry();
+			await deleteIngredients();
+		});
+
+		it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa (Service)", async () => {
+			const lista = await ShoppingListService.getList(1);
+			const idListaCompra = lista[0].idListaCompra;
+
+			await ShoppingListService.markAsBought(1, idListaCompra);
+
+			const listaDespues = await ShoppingListService.getList(1);
+			assert.deepStrictEqual(listaDespues, []); // La lista debe quedar vacía
+
+			const pantry = await PantryModel.getPantryFromUser(1);
+			assert.equal(pantry.length, 1);
+			assert.equal(pantry[0].nombre_ingrediente, "Tomate");
+			assert.equal(pantry[0].cantidad, 3);
+		});
+	});
+
 });
