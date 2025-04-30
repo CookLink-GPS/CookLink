@@ -228,7 +228,7 @@ describe("Rutas lista de la compra", () => {
 		});
 	});
 
-  
+
 	// TEST DE INTEGRACION HU_012 VER INGREDIENTES EN LA LISTA DE COMPRAS
 	describe("Ver ingredientes de la lista de la compra", () => {
 		const route = `${baseRoute}/ver`;
@@ -283,7 +283,7 @@ describe("Rutas lista de la compra", () => {
 			assert.deepEqual(data, { mensaje: "No hay ningún ingrediente en la lista de la compra." });
 		});
 	});
-  
+
 	// HU_015 - Marcar ingrediente como comprado en la lista de la compra
 	it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa", async () => {
 		const responseAdd = await fetch(`http://${baseUrl}:${port}/lista-compra/anyadir`, {

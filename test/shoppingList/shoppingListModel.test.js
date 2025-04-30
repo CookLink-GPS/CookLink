@@ -58,7 +58,7 @@ describe("Modelo lista_compra", () => {
 
 			assert.equal(existe.cantidad, 100);
 		});
-    
+
 		it("No debe permitir una cantidad negativa", async () => {
 			try {
 				await ShoppingList.addItem(1, 200, 150, "gramos");
@@ -79,6 +79,7 @@ describe("Modelo lista_compra", () => {
 			const result = await ShoppingList.getItems(1);
 
 			assert.strictEqual(result.length, 2);
+		});
 	});
 
 	// Grupo de pruebas para buscar por ID
