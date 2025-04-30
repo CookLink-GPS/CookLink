@@ -84,6 +84,9 @@ describe("Modelo lista_compra", () => {
 
 	// Grupo de pruebas para buscar por ID
 	describe("Buscar por id", () => {
+		before(async () => {
+			await db.query("INSERT INTO lista_compra (id_usuario, id_ingrediente, cantidad, unidad_medida) VALUES (1, 200, 10, 'gramos')");
+		});
 		it("Busca por id correctamente", async () => {
 			const existe = await ShoppingList.getItem(1, 200);
 			const filaListaCompra = await ShoppingList.getById(existe.id_lista_compra);
@@ -96,6 +99,9 @@ describe("Modelo lista_compra", () => {
 
 	// Grupo de pruebas para eliminar elementos
 	describe("Borrar de la lista", () => {
+		before(async () => {
+			await db.query("INSERT INTO lista_compra (id_usuario, id_ingrediente, cantidad, unidad_medida) VALUES (1, 200, 10, 'gramos')");
+		});
 		it("Borrar de la lista correctamente", async () => {
 			let existe = await ShoppingList.getItem(1, 200);
 
