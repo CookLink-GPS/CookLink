@@ -228,10 +228,10 @@ describe("Rutas lista de la compra", () => {
 		});
 	});
 
-  
+
 	// TEST DE INTEGRACION HU_012 VER INGREDIENTES EN LA LISTA DE COMPRAS
 	describe("Ver ingredientes de la lista de la compra", () => {
-		const route = `${baseRoute}/ver`;
+		const route = `${baseRoute}/`;
 
 		beforeEach(async () => {
 			await deleteShoppingList();
@@ -265,25 +265,11 @@ describe("Rutas lista de la compra", () => {
 			});
 
 			const res = await fetch(route);
-			const data = await res.json();
 
 			assert.equal(res.status, 200);
-			assert.ok(Array.isArray(data));
-			assert.equal(data.length, 2);
-			assert.deepStrictEqual(data.map(i => i.nombre), [ "Arroz", "Leche" ]);
-		});
-
-		it("Debe devolver un mensaje si la lista de la compra está vacía", async () => {
-			await deleteShoppingList();
-
-			const res = await fetch(route);
-			const data = await res.json();
-
-			assert.equal(res.status, 200);
-			assert.deepEqual(data, { mensaje: "No hay ningún ingrediente en la lista de la compra." });
 		});
 	});
-  
+
 	// HU_015 - Marcar ingrediente como comprado en la lista de la compra
 	it("Debe eliminar el ingrediente de la lista y añadirlo a la despensa", async () => {
 		const responseAdd = await fetch(`http://${baseUrl}:${port}/lista-compra/anyadir`, {

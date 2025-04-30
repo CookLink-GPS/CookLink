@@ -234,8 +234,8 @@ describe("Servicio Lista de Compra", () => {
 
 			const lista = await ShoppingListService.getList(1);
 			assert.deepStrictEqual(lista, []);
-    });
-  });
+		});
+	});
 
 	// HU_015 – Marcar ingrediente como comprado en SERVICE
 	describe("Marcar ingrediente como comprado en el servicio (HU_015)", () => {
