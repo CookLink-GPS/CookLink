@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const modalElement = document.getElementById("exitoModal");
 	if (modalElement) {
-		modalElement.style.display = "none";
+		modalElement.style.display = "block";
 
 		modalElement.addEventListener("click", event => {
 			if (event.target === modalElement) modalElement.style.display = "none";
